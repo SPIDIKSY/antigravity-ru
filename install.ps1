@@ -1,139 +1,185 @@
-# ==============================================================================
-# Antigravity 2.0 - Русификатор (Russian Localization)
-# Репозиторий: https://github.com/
-# ==============================================================================
+﻿<#
+.SYNOPSIS
+    Google Antigravity 2.0 — Установщик русской локализации (Open Source)
+.DESCRIPTION
+    Устанавливает или удаляет русификацию десктопного приложения Google Antigravity 2.0.
+    Поддерживает запуск одной строкой через консоль:
+    irm https://raw.githubusercontent.com/SPIDIKSY/antigravity-ru/main/install.ps1 | iex
+.LINK
+    https://github.com/SPIDIKSY/antigravity-ru
+#>
 
 param(
-    [ValidateSet("main", "isolated", "interactive")]
-    [string]$Mode = "interactive",
+    [switch]$Install,
+    [switch]$Uninstall,
     [string]$AppDir = "$env:LOCALAPPDATA\Programs\antigravity"
 )
 
-$Host.UI.RawUI.WindowTitle = "Русификатор Google Antigravity 2.0"
+$Host.UI.RawUI.WindowTitle = "Google Antigravity 2.0 - Русификатор"
+
 Write-Host "==========================================================" -ForegroundColor Cyan
-Write-Host "     Google Antigravity 2.0 - Русификатор (RU)           " -ForegroundColor Green
+Write-Host "     Google Antigravity 2.0 - Русская локализация (RU)    " -ForegroundColor Green
+Write-Host "     Репозиторий: https://github.com/SPIDIKSY/antigravity-ru" -ForegroundColor Gray
 Write-Host "==========================================================" -ForegroundColor Cyan
 Write-Host ""
 
-$ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-
-# 1. Проверка пути Antigravity
+# 1. Проверка установки Google Antigravity
 if (-not (Test-Path "$AppDir\Antigravity.exe")) {
     Write-Host "[!] Antigravity не найден в стандартном каталоге: $AppDir" -ForegroundColor Yellow
-    $AppDir = Read-Host "Введите полный путь к папке с Antigravity.exe"
+    $AppDir = Read-Host "Введите полный путь к каталогу с Antigravity.exe"
     if (-not (Test-Path "$AppDir\Antigravity.exe")) {
-        Write-Host "[-] Ошибка: Antigravity.exe не найден. Прерывание." -ForegroundColor Red
-        Pause
-        exit 1
+        Write-Host "[-] Ошибка: Antigravity.exe не найден по указанному пути. Прерывание." -ForegroundColor Red
+        return
     }
 }
-Write-Host "[+] Обнаружен Google Antigravity: $AppDir" -ForegroundColor Green
-Write-Host ""
+Write-Host "[+] Каталог Google Antigravity 2.0: $AppDir" -ForegroundColor Green
 
-# 2. Выбор режима установки
-if ($Mode -eq "interactive") {
-    Write-Host "Выберите вариант установки:" -ForegroundColor Yellow
-    Write-Host " [1] Русифицировать ОСНОВНУЮ версию Antigravity (Рекомендуется)" -ForegroundColor White
-    Write-Host "     • Сохраняет все ваши проекты, чаты, профиль, сессии и логины."
-    Write-Host "     • Автоматически создаёт резервную копию для отката."
+# 2. Определение режима работы
+if (-not $Install -and -not $Uninstall) {
     Write-Host ""
-    Write-Host " [2] Создать ОТДЕЛЬНУЮ тестовую версию (Antigravity RU)" -ForegroundColor White
-    Write-Host "     • Создаёт изолированную копию в Programs\antigravity_ru."
-    Write-Host "     • Свой отдельный профиль и ярлык на Рабочем столе."
+    Write-Host "Выберите действие:" -ForegroundColor Yellow
+    Write-Host " [1] Установить русификацию (Рекомендуется)" -ForegroundColor White
+    Write-Host "     • Полный перевод интерфейса, меню, трея и настроек."
+    Write-Host "     • Проекты, чаты, профиль и ключи API остаются нетронутыми."
+    Write-Host "     • Создаётся резервная копия оригинального ядра."
     Write-Host ""
-    
-    $choice = Read-Host "Введите номер (1 или 2) [по умолчанию 1]"
+    Write-Host " [2] Удалить русификацию (Восстановить официальный оригинал)" -ForegroundColor White
+    Write-Host "     • Возвращает оригинальный английский app.asar от Google."
+    Write-Host ""
+    Write-Host " [0] Отмена" -ForegroundColor Gray
+    Write-Host ""
+    $choice = Read-Host "Введите номер действия [1]"
     if ($choice -eq "2") {
-        $Mode = "isolated"
+        $Uninstall = $true
+    } elseif ($choice -eq "0") {
+        Write-Host "[*] Отменено пользователем." -ForegroundColor Yellow
+        return
     } else {
-        $Mode = "main"
+        $Install = $true
     }
 }
 
-# --- РЕЖИМ 1: ОСНОВНАЯ ВЕРСИЯ ---
-if ($Mode -eq "main") {
+$ResourcesDir = Join-Path $AppDir "resources"
+$TargetAsar = Join-Path $ResourcesDir "app.asar"
+$BackupAsar = Join-Path $ResourcesDir "app.asar.original_backup"
+$TargetBundle = Join-Path $ResourcesDir "web_bundle_ru"
+
+# --- РЕЖИМ УДАЛЕНИЯ (ВОССТАНОВЛЕНИЕ ОРИГИНАЛА) ---
+if ($Uninstall) {
     Write-Host ""
-    Write-Host "[*] Выбран режим: Русификация основной версии" -ForegroundColor Cyan
+    Write-Host "[*] Восстановление оригинальной версии от Google..." -ForegroundColor Cyan
 
-    $ResourcesDir = "$AppDir\resources"
-    $TargetAsar = "$ResourcesDir\app.asar"
-    $TargetBundle = "$ResourcesDir\web_bundle_ru"
-    $BackupAsar = "$ResourcesDir\app.asar.original_backup"
-
-    # Резервная копия
-    if (-not (Test-Path $BackupAsar)) {
-        Write-Host "[*] Создание резервной копии оригинального app.asar..." -ForegroundColor Cyan
-        Copy-Item -Path $TargetAsar -Destination $BackupAsar -Force
+    # Закрываем Antigravity перед изменениями
+    $proc = Get-Process -Name "Antigravity" -ErrorAction SilentlyContinue
+    if ($proc) {
+        Write-Host "[*] Закрытие запущенных процессов Antigravity..." -ForegroundColor Yellow
+        $proc | Stop-Process -Force -ErrorAction SilentlyContinue
+        Start-Sleep -Seconds 1
     }
 
-    # Копирование веб-бандла
-    Write-Host "[*] Установка интерфейсного словаря и стилей (web_bundle_ru)..." -ForegroundColor Cyan
-    if (-not (Test-Path $TargetBundle)) {
-        New-Item -ItemType Directory -Path $TargetBundle -Force | Out-Null
+    if (Test-Path $BackupAsar) {
+        Copy-Item -Path $BackupAsar -Destination $TargetAsar -Force
+        Write-Host "[+] Оригинальный app.asar успешно восстановлен из резервной копии." -ForegroundColor Green
+    } else {
+        Write-Host "[!] Резервная копия app.asar.original_backup не найдена. Файл app.asar не изменён." -ForegroundColor Yellow
     }
-    Copy-Item -Path "$ScriptDir\resources\web_bundle_ru\*" -Destination $TargetBundle -Recurse -Force
 
-    # Установка русифицированного app.asar
-    Write-Host "[*] Установка локализованного ядра Electron..." -ForegroundColor Cyan
-    $SourceAsar = "$ScriptDir\resources\app.asar.main_app"
-    Copy-Item -Path $SourceAsar -Destination $TargetAsar -Force
+    if (Test-Path $TargetBundle) {
+        Remove-Item -Path $TargetBundle -Recurse -Force
+        Write-Host "[+] Каталог web_bundle_ru удалён." -ForegroundColor Green
+    }
 
     Write-Host ""
     Write-Host "==========================================================" -ForegroundColor Green
-    Write-Host "  Основная версия Antigravity успешно русифицирована!    " -ForegroundColor Green
+    Write-Host "  Оригинальная версия Google Antigravity 2.0 восстановлена!" -ForegroundColor Green
     Write-Host "==========================================================" -ForegroundColor Green
-    Write-Host "• Все ваши проекты, чаты и настройки полностью сохранены." -ForegroundColor White
-    Write-Host "• Чтобы увидеть изменения: перезапустите Antigravity." -ForegroundColor White
-    Write-Host "• Для отката запустите uninstall.bat" -ForegroundColor Gray
+    return
 }
 
-# --- РЕЖИМ 2: ИЗОЛИРОВАННАЯ ВЕРСИЯ ---
-if ($Mode -eq "isolated") {
-    $IsolatedDir = "$env:LOCALAPPDATA\Programs\antigravity_ru"
-    Write-Host ""
-    Write-Host "[*] Выбран режим: Создание отдельной версии в $IsolatedDir" -ForegroundColor Cyan
-
-    # Закрытие запущенных процессов русской версии
-    Get-Process -Name "Antigravity" -ErrorAction SilentlyContinue | Where-Object { $_.Path -like "*antigravity_ru*" } | Stop-Process -Force -ErrorAction SilentlyContinue
-    Start-Sleep -Seconds 1
-
-    if (-not (Test-Path $IsolatedDir)) {
-        New-Item -ItemType Directory -Path $IsolatedDir -Force | Out-Null
-    }
-
-    Write-Host "[*] Копирование системных файлов..." -ForegroundColor Cyan
-    Robocopy $AppDir $IsolatedDir /E /XD "web_bundle_ru" /XF "app.asar" /NDL /NFL /NJH /NJS | Out-Null
-
-    Write-Host "[*] Установка русифицированного ядра и словаря..." -ForegroundColor Cyan
-    Copy-Item -Path "$ScriptDir\resources\app.asar.isolated" -Destination "$IsolatedDir\resources\app.asar" -Force
-    $TargetBundle = "$IsolatedDir\resources\web_bundle_ru"
-    if (-not (Test-Path $TargetBundle)) {
-        New-Item -ItemType Directory -Path $TargetBundle -Force | Out-Null
-    }
-    Copy-Item -Path "$ScriptDir\resources\web_bundle_ru\*" -Destination $TargetBundle -Recurse -Force
-
-    # Профиль и ярлык
-    $ProfileDir = "$env:USERPROFILE\.gemini\antigravity_ru_profile"
-    if (-not (Test-Path $ProfileDir)) {
-        New-Item -ItemType Directory -Path $ProfileDir -Force | Out-Null
-    }
-
-    Write-Host "[*] Создание ярлыка 'Antigravity RU' на Рабочем столе..." -ForegroundColor Cyan
-    $WshShell = New-Object -ComObject WScript.Shell
-    $DesktopPath = [System.Environment]::GetFolderPath([System.Environment+SpecialFolder]::Desktop)
-    $ShortcutPath = Join-Path $DesktopPath "Antigravity RU.lnk"
-    $Shortcut = $WshShell.CreateShortcut($ShortcutPath)
-    $Shortcut.TargetPath = "$IsolatedDir\Antigravity.exe"
-    $Shortcut.WorkingDirectory = $IsolatedDir
-    $Shortcut.IconLocation = "$IsolatedDir\Antigravity.exe,0"
-    $Shortcut.Description = "Google Antigravity 2.0 (Русская версия)"
-    $Shortcut.Save()
-
-    Write-Host ""
-    Write-Host "==========================================================" -ForegroundColor Green
-    Write-Host "  Изолированная версия успешно установлена!              " -ForegroundColor Green
-    Write-Host "==========================================================" -ForegroundColor Green
-    Write-Host "• Ярлык на Рабочем столе: 'Antigravity RU'" -ForegroundColor White
-}
-
+# --- РЕЖИМ УСТАНОВКИ ---
 Write-Host ""
+Write-Host "[*] Подготовка к установке русификатора..." -ForegroundColor Cyan
+
+# Проверяем, откуда запущен скрипт: локально или через веб (iex / WebClient)
+$ScriptDir = $PSScriptRoot
+$IsRemote = $false
+
+if ([string]::IsNullOrWhiteSpace($ScriptDir) -or (-not (Test-Path "$ScriptDir\resources\app.asar"))) {
+    $IsRemote = $true
+}
+
+$TempDir = $null
+if ($IsRemote) {
+    Write-Host "[*] Загрузка актуальных файлов локализации с GitHub..." -ForegroundColor Cyan
+    $ZipUrl = "https://github.com/SPIDIKSY/antigravity-ru/archive/refs/heads/main.zip"
+    $TempDir = Join-Path $env:TEMP ("antigravity_ru_" + [guid]::NewGuid().ToString().Substring(0, 8))
+    $TempZip = "$TempDir.zip"
+
+    New-Item -ItemType Directory -Path $TempDir -Force | Out-Null
+    try {
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+        Invoke-WebRequest -Uri $ZipUrl -OutFile $TempZip -UseBasicParsing
+        Expand-Archive -Path $TempZip -DestinationPath $TempDir -Force
+        $ScriptDir = Join-Path $TempDir "antigravity-ru-main"
+        if (-not (Test-Path "$ScriptDir\resources\app.asar")) {
+            throw "Не удалось обнаружить распакованные ресурсы."
+        }
+        Write-Host "[+] Файлы успешно загружены." -ForegroundColor Green
+    } catch {
+        Write-Host "[-] Ошибка загрузки архива: $_" -ForegroundColor Red
+        if ($TempDir -and (Test-Path $TempDir)) { Remove-Item -Path $TempDir -Recurse -Force -ErrorAction SilentlyContinue }
+        if ($TempZip -and (Test-Path $TempZip)) { Remove-Item -Path $TempZip -Force -ErrorAction SilentlyContinue }
+        return
+    }
+}
+
+# Закрываем Antigravity перед заменой файлов
+$proc = Get-Process -Name "Antigravity" -ErrorAction SilentlyContinue
+if ($proc) {
+    Write-Host "[*] Закрытие запущенных процессов Antigravity..." -ForegroundColor Yellow
+    $proc | Stop-Process -Force -ErrorAction SilentlyContinue
+    Start-Sleep -Seconds 1
+}
+
+try {
+    # 1. Резервная копия оригинального ядра Google
+    if (-not (Test-Path $BackupAsar)) {
+        if (Test-Path $TargetAsar) {
+            Write-Host "[*] Создание резервной копии оригинального app.asar..." -ForegroundColor Cyan
+            Copy-Item -Path $TargetAsar -Destination $BackupAsar -Force
+            Write-Host "[+] Резервная копия сохранена: app.asar.original_backup" -ForegroundColor Green
+        }
+    } else {
+        Write-Host "[*] Резервная копия уже существует: app.asar.original_backup" -ForegroundColor Gray
+    }
+
+    # 2. Копирование интерфейсного бандла web_bundle_ru
+    Write-Host "[*] Копирование языкового бандла (web_bundle_ru)..." -ForegroundColor Cyan
+    if (-not (Test-Path $TargetBundle)) {
+        New-Item -ItemType Directory -Path $TargetBundle -Force | Out-Null
+    }
+    Copy-Item -Path "$ScriptDir\resources\web_bundle_ru\*" -Destination $TargetBundle -Recurse -Force
+
+    # 3. Копирование русифицированного app.asar
+    Write-Host "[*] Установка локализованного ядра Electron (app.asar)..." -ForegroundColor Cyan
+    Copy-Item -Path "$ScriptDir\resources\app.asar" -Destination $TargetAsar -Force
+
+    Write-Host ""
+    Write-Host "==========================================================" -ForegroundColor Green
+    Write-Host "  Русификация Google Antigravity 2.0 успешно установлена!  " -ForegroundColor Green
+    Write-Host "==========================================================" -ForegroundColor Green
+    Write-Host "• Все ваши проекты, чаты, сессии и ключи полностью сохранены." -ForegroundColor White
+    Write-Host "• Запустите Google Antigravity 2.0, чтобы начать работу на русском!" -ForegroundColor White
+    Write-Host "• Для отката запустите скрипт с параметром -Uninstall" -ForegroundColor Gray
+    Write-Host ""
+} catch {
+    Write-Host "[-] Ошибка установки: $_" -ForegroundColor Red
+} finally {
+    # Очистка временных файлов загрузки
+    if ($TempDir -and (Test-Path $TempDir)) {
+        Remove-Item -Path $TempDir -Recurse -Force -ErrorAction SilentlyContinue
+    }
+    if ($TempZip -and (Test-Path $TempZip)) {
+        Remove-Item -Path $TempZip -Force -ErrorAction SilentlyContinue
+    }
+}
