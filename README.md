@@ -1,6 +1,6 @@
-# Русификатор Google Antigravity 2 — Русский язык для Antigravity
+# Русификатор Antigravity 2 — Русский язык для Antigravity
 
-Полный рабочий русификатор десктопного приложения **Google Antigravity 2** (Windows).  
+Полный рабочий русификатор десктопного приложения **Antigravity 2** (Windows).  
 Переводит интерфейс, все разделы настроек, профили безопасности, консольные меню и панель изменений на понятный русский язык.  
 Протестировано и стабильно работает на версии **2.11.0**.
 
@@ -15,7 +15,7 @@ irm https://raw.githubusercontent.com/SPIDIKSY/antigravity-ru/main/install.ps1 |
 ```
 
 Скрипт сам скачает необходимые файлы с GitHub, создаст резервную копию оригинального приложения и включит русский язык.  
-После установки просто перезапустите Google Antigravity.
+После установки просто перезапустите Antigravity.
 
 ---
 
@@ -71,7 +71,7 @@ powershell -ExecutionPolicy Bypass -File install.ps1 -Uninstall
 
 ---
 
-## Что делать, если Google Antigravity обновился
+## Что делать, если Antigravity обновился
 
 Когда Google выпустит обновление программы:
 
@@ -102,7 +102,7 @@ powershell -ExecutionPolicy Bypass -File install.ps1 -Uninstall
 
 ## Часто задаваемые вопросы (FAQ)
 
-**В: Как сделать русский язык в Google Antigravity?**  
+**В: Как сделать русский язык в Antigravity?**  
 О: Запустите консоль PowerShell и выполните команду: `irm https://raw.githubusercontent.com/SPIDIKSY/antigravity-ru/main/install.ps1 | iex`.
 
 **В: Слетят ли мои проекты, диалоги или аккаунт?**  
