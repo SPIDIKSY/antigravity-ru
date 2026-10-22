@@ -6,6 +6,90 @@
   'use strict';
 
   const DICT = {
+  // --- Antigravity 2.25.0 Translations & UI Updates ---
+  "Open File Search": "Поиск файлов",
+  "Open file search": "Поиск файлов",
+  "Previous Pane Tab": "Предыдущая вкладка",
+  "Previous pane tab": "Предыдущая вкладка",
+  "Next Pane Tab": "Следующая вкладка",
+  "Next pane tab": "Следующая вкладка",
+  "Toggle Maximize Auxiliary Pane": "Развернуть/свернуть боковую панель",
+  "Toggle Overview Panel": "Показать/скрыть панель обзора",
+  "Equalize Split Panes": "Выровнять разделители панелей",
+  "Focus in Input Field": "Фокус в поле ввода",
+  "Focus in input field": "Фокус в поле ввода",
+  "Search Conversations": "Поиск диалогов",
+  "Comment on Selection": "Комментировать выделенное",
+  "Copy Conversation Markdown": "Скопировать диалог в Markdown",
+  "Archive This Conversation": "Архивировать этот диалог",
+  "Pin This Conversation": "Закрепить этот диалог",
+  "Unpin This Conversation": "Открепить этот диалог",
+  "Find in Conversation": "Найти в диалоге",
+  "Cancel Generation": "Отменить генерацию",
+  "Open Trajectory Debug View": "Открыть отладку траектории",
+  "Copy Conversation ID": "Скопировать ID диалога",
+  "Copy Trajectory ID": "Скопировать ID траектории",
+  "Confirm Undo": "Подтверждение отмены",
+  "Confirm undo": "Подтверждение отмены",
+  "This undo action will not make any code changes.": "Это действие отмены не внесёт изменений в код.",
+  "Confirming this undo action will make the following changes:": "Подтверждение этого действия отмены внесёт следующие изменения:",
+  "Undo": "Отменить",
+  "Confirm": "Подтвердить",
+  "Accent": "Цвет акцента",
+  "Preset": "Предустановка",
+  "Default Light": "Стандартная Светлая",
+  "Default Dark": "Стандартная Тёмная",
+  "Atom One Light": "Atom One Светлая",
+  "Atom One Dark": "Atom One Тёмная",
+  "Model": "Модель",
+  "View Usage": "Просмотр расхода",
+  "View usage": "Просмотр расхода",
+  "Unavailable": "Недоступно",
+  "Remaining weekly quota": "Остаток недельного лимита",
+  "Notice": "Уведомление",
+  "Models within this group:": "Модели в этой группе:",
+  "Gemini 4 Argon is currently available to Ultra and paid Pro plan subscribers.": "Gemini 4 Argon в настоящее время доступна только подписчикам Ultra и платного тарифа Pro.",
+  "Explore the plugin marketplace": "Каталог плагинов",
+  "Create a Plugin with the Agent": "Создать плагин с помощью агента",
+  "Create plugin": "Создать плагин",
+  "Add MCP Server": "Добавить сервер MCP",
+  "Search MCP servers by name": "Поиск серверов MCP по имени",
+  "Search for MCP servers to add to your configuration": "Поиск серверов MCP для добавления в конфигурацию",
+  "Delete MCP Server": "Удалить сервер MCP",
+  "Fix with Agent": "Исправить с агентом",
+  "Plugins": "Плагины",
+  "See more in Plugins": "Подробнее в Плагинах",
+  "See less in Plugins": "Скрыть в Плагинах",
+  "Plugin update required": "Требуется обновление плагина",
+  "Unnamed MCP Server": "Безымянный сервер MCP",
+  "Managed by plugin": "Управляется плагином",
+  "Agent Edits": "Правки агента",
+  "Custom Agents": "Пользовательские агенты",
+  "MCP Servers": "Серверы MCP",
+  "Agent Auto-Fix Lints": "Автоисправление ошибок линтера агентом",
+  "Agent Non-Workspace File Access": "Доступ агента к файлам вне рабочей области",
+  "Agent Host Address": "Адрес хоста агента",
+  "Enable Sounds for Agent": "Звуковые эффекты для агента",
+  "Enable Notifications for Agent": "Уведомления для агента",
+  "Open Agent on Reload": "Открывать агента при перезагрузке",
+  "Verbose Agent Chat": "Подробный чат агента",
+  "Enable Browser Tools": "Включить инструменты браузера",
+  "Update Available": "Доступно обновление",
+  "Downloading Update": "Загрузка обновления",
+  "Install Update": "Установить обновление",
+  "Installing Update": "Установка обновления",
+  "Mark All as Read": "Отметить все как прочитанные",
+  "Mark This Conversation as Read": "Отметить этот диалог как прочитанный",
+  "Mark This Conversation as Unread": "Отметить этот диалог как непрочитанный",
+  "Rename This Conversation": "Переименовать этот диалог",
+  "Move to New Group": "Переместить в новую группу",
+  "Remove from Group": "Удалить из группы",
+  "Staged Changes": "Индексированные изменения",
+  "Branch Changes": "Изменения ветки",
+  "NAVIGATION": "НАВИГАЦИЯ",
+  "RECOMMENDED": "РЕКОМЕНДУЕТСЯ",
+  "CONVERSATION": "ДИАЛОГ",
+
   "New Conversation": "Новый диалог",
   "New conversation": "Новый диалог",
   "Conversation History": "История диалогов",
@@ -740,6 +824,23 @@
 
   const RULES = [
     {
+      regex: /^Models within this group:\s*(.*)$/i,
+      replace: function (m) { return "Модели в этой группе: " + m[1]; }
+    },
+    {
+      regex: /^(.*)\s+is currently available to Ultra and paid Pro plan subscribers\.?$/i,
+      replace: function (m) { return m[1] + " в настоящее время доступна только подписчикам Ultra и платного тарифа Pro."; }
+    },
+    {
+      regex: /^This undo action will not make any code changes\.?$/i,
+      replace: function (m) { return "Это действие отмены не внесёт изменений в код."; }
+    },
+    {
+      regex: /^Confirming this undo action will make the following changes:?$/i,
+      replace: function (m) { return "Подтверждение этого действия отмены внесёт следующие изменения:"; }
+    },
+
+    {
       regex: /^Select (.*) Theme$/i,
       replace: function (m) { return "Выберите тему Antigravity"; }
     },
@@ -987,7 +1088,7 @@
         } else if (m.type === 'characterData') {
           translateNode(m.target);
         } else if (m.type === 'attributes') {
-          if (['placeholder', 'title', 'aria-label'].includes(m.attributeName)) {
+          if (['placeholder', 'title', 'aria-label', 'data-tooltip', 'data-title', 'data-tip'].includes(m.attributeName)) {
             const val = m.target.getAttribute(m.attributeName);
             const trans = translateString(val);
             if (trans && trans !== val) {
@@ -1003,7 +1104,7 @@
       subtree: true,
       characterData: true,
       attributes: true,
-      attributeFilter: ['placeholder', 'title', 'aria-label']
+      attributeFilter: ['placeholder', 'title', 'aria-label', 'data-tooltip', 'data-title', 'data-tip']
     });
 
     setInterval(() => {

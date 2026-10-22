@@ -80,6 +80,9 @@ function patchExtractedAsar(extractedDir) {
         'Zoom In': 'Увеличить',
         'Zoom Out': 'Уменьшить',
         'Minimize': 'Свернуть',
+        'Maximize': 'Развернуть',
+        'Unmaximize': 'Восстановить',
+        'Zoom': 'Масштабировать',
         'Close': 'Закрыть',
         'Close Window': 'Закрыть окно',
         'Quit': 'Выход'
