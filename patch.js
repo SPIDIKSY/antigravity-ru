@@ -130,6 +130,7 @@ function patchExtractedAsar(extractedDir) {
     main = main.replace("title: 'Confirm Quit'", "title: 'Подтверждение выхода'");
     main = main.replace("message: 'Are you sure you want to quit?'", "message: 'Вы действительно хотите выйти?'");
     main = main.replace("detail: 'All running agents will be stopped.'", "detail: 'Все запущенные агенты будут остановлены.'");
+    main = main.replace("detail: 'There may be agents or background tasks running.'", "detail: 'Возможно, есть работающие агенты или фоновые задачи.'");
     fs.writeFileSync(mainPath, main, 'utf8');
     console.log('[+] dist/main.js успешно пропатчен');
   }
@@ -150,7 +151,11 @@ function patchExtractedAsar(extractedDir) {
   const overlayPath = path.join(extractedDir, 'dist/loadingOverlay.js');
   if (fs.existsSync(overlayPath)) {
     let overlay = fs.readFileSync(overlayPath, 'utf8');
-    overlay = overlay.replace('Loading Antigravity...', 'Загрузка Antigravity...');
+    if (overlay.includes('Loading Antigravity...')) {
+      overlay = overlay.replace('Loading Antigravity...', 'Загрузка Antigravity...');
+    } else if (overlay.includes('</svg>') && !overlay.includes('Загрузка Antigravity...')) {
+      overlay = overlay.replace('</svg>', '</svg>\n  <div style="margin-top: 16px; font-size: 13px; font-family: system-ui, sans-serif; opacity: 0.7;">Загрузка Antigravity...</div>');
+    }
     fs.writeFileSync(overlayPath, overlay, 'utf8');
     console.log('[+] dist/loadingOverlay.js успешно пропатчен');
   }
@@ -162,6 +167,15 @@ function patchExtractedAsar(extractedDir) {
     wiz = wiz.replace('Install Antigravity', 'Установка Antigravity');
     wiz = wiz.replace('Installing...', 'Установка...');
     wiz = wiz.replace('Installation complete', 'Установка завершена');
+    wiz = wiz.replace('<title>Welcome to Antigravity</title>', '<title>Добро пожаловать в Antigravity</title>');
+    wiz = wiz.replace('Setting up…', 'Настройка…');
+    wiz = wiz.replace('<h1>Welcome to the new Antigravity!</h1>', '<h1>Добро пожаловать в новый Antigravity!</h1>');
+    wiz = wiz.replace(
+      "Antigravity has been redesigned to put agents first with new capabilities. If you'd still like a code editor, you can download it as a separate app named <b>Antigravity IDE</b>.",
+      'Antigravity был обновлён с фокусом на возможности агентов. Если вам по-прежнему нужен редактор кода, вы можете скачать его отдельно как <b>Antigravity IDE</b>.'
+    );
+    wiz = wiz.replace('<span>Download the Antigravity IDE</span>', '<span>Загрузить Antigravity IDE</span>');
+    wiz = wiz.replace('Explore the new Antigravity', 'Попробовать новый Antigravity');
     fs.writeFileSync(wizPath, wiz, 'utf8');
     console.log('[+] dist/ideInstall/wizardHtml.js успешно пропатчен');
   }

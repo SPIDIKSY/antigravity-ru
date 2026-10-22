@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     Antigravity 2.0 — Установщик русской локализации (Open Source)
 .DESCRIPTION
@@ -12,13 +12,14 @@
 param(
     [switch]$Install,
     [switch]$Uninstall,
+    [switch]$NoKill,
     [string]$AppDir = "$env:LOCALAPPDATA\Programs\antigravity"
 )
 
 $Host.UI.RawUI.WindowTitle = "Antigravity 2.0 - Русификатор"
 
 Write-Host "==========================================================" -ForegroundColor Cyan
-Write-Host "        Antigravity 2.0 - Русская локализация (RU)        " -ForegroundColor Green
+Write-Host "    Antigravity 2.0 (v2.25.0) - Русская локализация (RU)   " -ForegroundColor Green
 Write-Host "     Репозиторий: https://github.com/SPIDIKSY/antigravity-ru" -ForegroundColor Gray
 Write-Host "==========================================================" -ForegroundColor Cyan
 Write-Host ""
@@ -75,16 +76,20 @@ if ($Uninstall) {
     Write-Host "[*] Восстановление оригинальной версии от Google..." -ForegroundColor Cyan
 
     # Закрываем Antigravity перед изменениями
-    $proc = Get-Process -Name "Antigravity" -ErrorAction SilentlyContinue
-    if ($proc) {
-        Write-Host "[*] Закрытие запущенных процессов Antigravity..." -ForegroundColor Yellow
-        $proc | Stop-Process -Force -ErrorAction SilentlyContinue
-        $timeout = 10
-        while ((Get-Process -Name "Antigravity" -ErrorAction SilentlyContinue) -and ($timeout -gt 0)) {
-            Start-Sleep -Milliseconds 500
-            $timeout--
+    if (-not $NoKill) {
+        $proc = Get-Process -Name "Antigravity" -ErrorAction SilentlyContinue
+        if ($proc) {
+            Write-Host "[*] Закрытие запущенных процессов Antigravity..." -ForegroundColor Yellow
+            $proc | Stop-Process -Force -ErrorAction SilentlyContinue
+            $timeout = 10
+            while ((Get-Process -Name "Antigravity" -ErrorAction SilentlyContinue) -and ($timeout -gt 0)) {
+                Start-Sleep -Milliseconds 500
+                $timeout--
+            }
+            Start-Sleep -Seconds 1
         }
-        Start-Sleep -Seconds 1
+    } else {
+        Write-Host "[*] Параметр -NoKill: пропуск закрытия процессов Antigravity." -ForegroundColor Gray
     }
 
     if (Test-Path $BackupAsar) {
@@ -154,16 +159,20 @@ if ($IsRemote) {
 }
 
 # Закрываем Antigravity перед заменой файлов
-$proc = Get-Process -Name "Antigravity" -ErrorAction SilentlyContinue
-if ($proc) {
-    Write-Host "[*] Закрытие запущенных процессов Antigravity..." -ForegroundColor Yellow
-    $proc | Stop-Process -Force -ErrorAction SilentlyContinue
-    $timeout = 10
-    while ((Get-Process -Name "Antigravity" -ErrorAction SilentlyContinue) -and ($timeout -gt 0)) {
-        Start-Sleep -Milliseconds 500
-        $timeout--
+if (-not $NoKill) {
+    $proc = Get-Process -Name "Antigravity" -ErrorAction SilentlyContinue
+    if ($proc) {
+        Write-Host "[*] Закрытие запущенных процессов Antigravity..." -ForegroundColor Yellow
+        $proc | Stop-Process -Force -ErrorAction SilentlyContinue
+        $timeout = 10
+        while ((Get-Process -Name "Antigravity" -ErrorAction SilentlyContinue) -and ($timeout -gt 0)) {
+            Start-Sleep -Milliseconds 500
+            $timeout--
+        }
+        Start-Sleep -Seconds 1
     }
-    Start-Sleep -Seconds 1
+} else {
+    Write-Host "[*] Параметр -NoKill: пропуск закрытия процессов Antigravity." -ForegroundColor Gray
 }
 
 try {
@@ -191,7 +200,7 @@ try {
 
     Write-Host ""
     Write-Host "==========================================================" -ForegroundColor Green
-    Write-Host "  Русификация Antigravity 2.0 успешно установлена!  " -ForegroundColor Green
+    Write-Host "  Русификация Antigravity 2.0 (v2.25.0) успешно установлена!  " -ForegroundColor Green
     Write-Host "==========================================================" -ForegroundColor Green
     Write-Host "• Все ваши проекты, чаты, сессии и ключи полностью сохранены." -ForegroundColor White
     Write-Host "• Запустите Antigravity 2.0, чтобы начать работу на русском!" -ForegroundColor White

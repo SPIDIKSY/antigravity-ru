@@ -2,7 +2,7 @@
 
 Полный рабочий русификатор десктопного приложения **Antigravity 2** (Windows).  
 Переводит интерфейс, все разделы настроек, профили безопасности, консольные меню и панель изменений на понятный русский язык.  
-Протестировано и стабильно работает на версии **2.11.0**.
+Протестировано и стабильно работает на версии **2.25.0** (а также линейке 2.11.x – 2.25.x).
 
 ---
 
@@ -55,6 +55,9 @@ irm https://raw.githubusercontent.com/SPIDIKSY/antigravity-ru/main/install.ps1 |
 git clone https://github.com/SPIDIKSY/antigravity-ru.git
 cd antigravity-ru
 powershell -ExecutionPolicy Bypass -File install.ps1 -Install
+
+# Для установки без принудительного закрытия запущенных окон Antigravity:
+powershell -ExecutionPolicy Bypass -File install.ps1 -Install -NoKill
 ```
 
 ---
