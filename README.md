@@ -156,26 +156,3 @@ powershell -ExecutionPolicy Bypass -File install.ps1 -Install -NoKill
 <summary><b>Помогает ли русификатор обойти региональные ограничения?</b></summary>
 <b>Нет.</b> Это исключительно перевод интерфейса программы. Для работы с моделями в неподдерживаемых регионах по-прежнему необходим рабочий прокси или VPN.
 </details>
-
----
-
-## Сообщество и баг-репорты
-
-Проект активно развивается! Если вы заметили непереведённую фразу после обновления, кривой перенос текста или ошибку:
-
-<div align="center">
-
-[![Присоединиться к чату в Telegram](https://img.shields.io/badge/Написать%20в%20Telegram--чат-@spididyanty-26A5E4?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/spididyanty)
-
-**Прямая ссылка:** [https://t.me/spididyanty](https://t.me/spididyanty)
-
-</div>
-
----
-
-<div align="center">
-
-**MIT License** • Свободный открытый проект для русскоязычного сообщества разработчиков  
-Если русификатор оказался полезен — поставьте звезду репозиторию на GitHub!
-
-</div>
