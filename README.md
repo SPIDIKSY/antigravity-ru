@@ -85,10 +85,10 @@ irm https://raw.githubusercontent.com/SPIDIKSY/antigravity-ru/main/install.ps1 |
 
 ### Как вернуть английский язык (Откат к оригиналу)
 
-Запустите команду установки повторно и выберите пункт **`[2] Удалить русификацию`**, либо выполните напрямую:
+Откройте **PowerShell** и выполните одну строку (скачивать репозиторий не нужно):
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File install.ps1 -Uninstall
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/SPIDIKSY/antigravity-ru/main/install.ps1))) -Uninstall
 ```
 Оригинальный `app.asar` мгновенно восстановится из резервной копии.
 
@@ -104,17 +104,20 @@ powershell -ExecutionPolicy Bypass -File install.ps1 -Uninstall
 <summary><b>Установка вручную через Git (для разработчиков)</b></summary>
 <br>
 
-Если вы хотите склонировать репозиторий локально и запускать патчер вручную:
+Если вы хотите склонировать репозиторий локально и запускать патчер вручную. Нужен **PowerShell 7** (`pwsh`): встроенный Windows PowerShell 5.1 читает файл без метки кодировки как Windows-1251 и ломает русский текст.
 
 ```bash
 git clone https://github.com/SPIDIKSY/antigravity-ru.git
 cd antigravity-ru
 
 # Обычная установка
-powershell -ExecutionPolicy Bypass -File install.ps1 -Install
+pwsh -ExecutionPolicy Bypass -File install.ps1 -Install
 
 # Установка без принудительного закрытия запущенных окон Antigravity
-powershell -ExecutionPolicy Bypass -File install.ps1 -Install -NoKill
+pwsh -ExecutionPolicy Bypass -File install.ps1 -Install -NoKill
+
+# Удаление русификации
+pwsh -ExecutionPolicy Bypass -File install.ps1 -Uninstall
 ```
 </details>
 
