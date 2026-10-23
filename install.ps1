@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Antigravity 2.0 — Установщик русской локализации (Open Source)
 .DESCRIPTION
