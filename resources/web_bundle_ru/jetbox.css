@@ -3330,3 +3330,138 @@ canvas.hiddenCanvasElement {
   background: var(--sdk-background-tertiary);
 }
 }
+@scope (.pdf-sdk-root) {
+  :scope,
+  .pdf-sdk-root {
+    --sdk-toolbar-border-radius: 10px;
+    --sdk-coordinator-breakpoint-hide-panels: 0;
+    --sdk-coordinator-scrollbar-width: 0px;
+    --sdk-sidebar-margin: 12px 8px 12px 12px;
+    container-type: inline-size;
+    container-name: pdf-viewer;
+  }
+
+  .pdf-viewer-container > .pdf-toolbar:not([data-jetski-pdf-toolbar="true"]),
+  .jetski-hidden-sdk-toolbar,
+  .custom-scrollbar,
+  .custom-horizontal-scrollbar,
+  .page-loading-overlay {
+    display: none !important;
+  }
+
+  .pdf-sidebar-wrapper {
+    overflow: hidden;
+  }
+
+  .pdf-sidebar {
+    margin-top: 12px;
+    transition:
+      margin-left 200ms cubic-bezier(0.2, 0, 0, 1),
+      margin-right 200ms cubic-bezier(0.2, 0, 0, 1),
+      opacity 150ms ease;
+    will-change: margin-left, margin-right, opacity;
+  }
+
+  &:is([data-sidebar-open='false']) .pdf-sidebar {
+    margin-left: calc(-1 * clamp(80px, 13cqi, 160px));
+    margin-right: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .pdf-viewport {
+    padding-top: 16px;
+  }
+
+  .pdf-viewport:focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  /* Reserve 64px of bottom scroll clearance so the floating bottom pill never
+   * obscures the bottom of the final PDF page when scrolled to the end, and
+   * center sizingWrapper synchronously via CSS block layout so closing the
+   * thumbnail sidebar never overshoots for 1 frame before ResizeObserver runs. */
+  .pdf-viewport > div {
+    padding-bottom: 64px;
+    margin-inline: auto !important;
+    width: max(100%, var(--jetski-current-page-width, 100%)) !important;
+    overflow-x: clip;
+  }
+
+  /* Keep contentWrapper aligned with the already-centered sizingWrapper so left
+   * and right viewport margins are symmetric (while :first-child leaves the
+   * sibling region-drag selectionBox div untouched). */
+  .pdf-viewport > div > div:first-child {
+    left: 0 !important;
+    width: max(100%, var(--jetski-current-page-width, 100%)) !important;
+  }
+
+  .pdf-toolbar[data-jetski-pdf-toolbar="true"] {
+    position: absolute;
+    bottom: var(--sdk-spacing-xl, 16px);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 25;
+    padding: var(--sdk-toolbar-padding-y) var(--sdk-toolbar-padding-x);
+    margin: 0;
+    border-radius: var(--sdk-toolbar-border-radius);
+    border: var(--sdk-toolbar-border-width) solid var(--sdk-toolbar-border);
+    background: var(--sdk-toolbar-bg);
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: var(--sdk-toolbar-gap);
+    row-gap: var(--sdk-toolbar-gap);
+    min-height: var(--sdk-toolbar-min-height);
+    box-shadow: var(--sdk-toolbar-shadow);
+    width: max-content;
+    max-width: calc(100% - 24px);
+    box-sizing: border-box;
+    overflow: visible;
+  }
+
+  .page-input-field:focus,
+  .page-input-field:focus-visible,
+  .zoom-input-field:focus,
+  .zoom-input-field:focus-visible {
+    background: var(--sdk-search-focus-bg);
+    outline: none;
+    box-shadow: none;
+  }
+
+  .page-input-wrapper:focus-within,
+  .zoom-input-wrapper:focus-within {
+    border-color: var(--sdk-border-color-hover);
+    box-shadow: none;
+  }
+
+  .toolbar-overflow-dropdown {
+    bottom: calc(100% + 6px);
+    top: auto;
+  }
+
+  .pdf-toolbar button[data-tooltip] {
+    position: relative;
+  }
+
+  .pdf-toolbar button[data-tooltip]:not(:disabled):hover::after,
+  .pdf-toolbar button[data-tooltip]:not(:disabled):focus-visible::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 4px 8px;
+    border-radius: var(--sdk-border-radius-sm);
+    background: var(--sdk-toolbar-bg);
+    color: var(--sdk-text-primary);
+    border: var(--sdk-border-width) solid var(--sdk-toolbar-border);
+    box-shadow: var(--sdk-shadow-sm);
+    font-family: var(--sdk-font-family);
+    font-size: var(--sdk-font-size-xs);
+    line-height: 1.2;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: var(--sdk-z-index-tooltip, 1070);
+  }
+}

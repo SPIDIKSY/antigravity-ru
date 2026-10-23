@@ -19,7 +19,7 @@ param(
 $Host.UI.RawUI.WindowTitle = "Antigravity 2.0 - Русификатор"
 
 Write-Host "==========================================================" -ForegroundColor Cyan
-Write-Host "    Antigravity 2.0 (v2.25.0) - Русская локализация (RU)   " -ForegroundColor Green
+Write-Host "    Antigravity 2.0 (v2.26.0) - Русская локализация (RU)   " -ForegroundColor Green
 Write-Host "     Репозиторий: https://github.com/SPIDIKSY/antigravity-ru" -ForegroundColor Gray
 Write-Host "==========================================================" -ForegroundColor Cyan
 Write-Host ""
@@ -200,7 +200,7 @@ try {
 
     Write-Host ""
     Write-Host "==========================================================" -ForegroundColor Green
-    Write-Host "  Русификация Antigravity 2.0 (v2.25.0) успешно установлена!  " -ForegroundColor Green
+    Write-Host "  Русификация Antigravity 2.0 (v2.26.0) успешно установлена!  " -ForegroundColor Green
     Write-Host "==========================================================" -ForegroundColor Green
     Write-Host "• Все ваши проекты, чаты, сессии и ключи полностью сохранены." -ForegroundColor White
     Write-Host "• Запустите Antigravity 2.0, чтобы начать работу на русском!" -ForegroundColor White

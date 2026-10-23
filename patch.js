@@ -52,10 +52,19 @@ function patchExtractedAsar(extractedDir) {
     let menu = fs.readFileSync(menuPath, 'utf8');
     menu = menu.replace("label: 'New Window'", "label: 'Новое окно'");
     menu = menu.replace("label: 'Docs'", "label: 'Документация'");
+    menu = menu.replace("label: 'Connect to WSL'", "label: 'Подключиться к WSL'");
+    menu = menu.replace("label: 'Reopen Locally'", "label: 'Переоткрыть локально'");
+    menu = menu.replace(
+      'const submenuItem = appMenu.items.find((item) => item.label === submenuLabel);',
+      "const submenuItem = appMenu.items.find((item) => item.label === submenuLabel || (submenuLabel === 'File' && item.label === 'Файл') || (submenuLabel === 'Help' && item.label === 'Справка'));"
+    );
 
-    const menuHook = 'hideDevTools(menu);';
-    if (menu.includes(menuHook) && !menu.includes('MENU_TRANSLATIONS')) {
-      const menuRepl = `hideDevTools(menu);
+    const menuHook26 = '(0, debugConsole_1.configureDebugConsoleMenu)(menu);';
+    const menuHook25 = 'hideDevTools(menu);';
+    const activeHook = menu.includes(menuHook26) ? menuHook26 : (menu.includes(menuHook25) ? menuHook25 : null);
+
+    if (activeHook && !menu.includes('MENU_TRANSLATIONS')) {
+      const menuRepl = `${activeHook}
     const MENU_TRANSLATIONS = {
         'File': 'Файл',
         'Edit': 'Правка',
@@ -100,7 +109,7 @@ function patchExtractedAsar(extractedDir) {
     }
     translateMenuItems(menu.items);`;
 
-      menu = menu.replace('hideDevTools(menu);', menuRepl);
+      menu = menu.replace(activeHook, menuRepl);
       fs.writeFileSync(menuPath, menu, 'utf8');
       console.log('[+] dist/menu.js успешно пропатчен');
     }
