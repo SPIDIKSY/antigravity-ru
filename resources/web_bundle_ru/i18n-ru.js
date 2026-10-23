@@ -1088,6 +1088,8 @@
   "Global Permissions": "Глобальные разрешения",
   "Configure global allowed and denied resource permissions.": "Настройка глобально разрешённых и запрещённых ресурсов.",
   "Modified in": "Изменено в",
+  // Кнопка «Modified in N projects»: число и « projects» — отдельные куски текста, шаблон (\d+) projects их не видит.
+  "projects": "проектах",
   "Tool Permissions": "Разрешения инструментов",
   "Modify permissions for file, terminal, and MCP tools.": "Разрешения для файлов, терминала и MCP-инструментов.",
   "Modify permissions for file and terminal tools.": "Разрешения для файлов и терминала.",
