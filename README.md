@@ -7,7 +7,7 @@
 
 [![Antigravity Version](https://img.shields.io/badge/Antigravity-2.11.x%20–%202.26.0-6366f1?style=for-the-badge&logo=google&logoColor=white)](https://github.com/SPIDIKSY/antigravity-ru)
 [![Platform](https://img.shields.io/badge/Платформа-Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/SPIDIKSY/antigravity-ru)
-[![Translated](https://img.shields.io/badge/Перевод-990%2B%20строк-10b981?style=for-the-badge)](https://github.com/SPIDIKSY/antigravity-ru)
+[![Translated](https://img.shields.io/badge/Перевод-1090%2B%20строк-10b981?style=for-the-badge)](https://github.com/SPIDIKSY/antigravity-ru)
 [![License](https://img.shields.io/badge/Лицензия-MIT-f59e0b?style=for-the-badge)](https://github.com/SPIDIKSY/antigravity-ru/blob/main/LICENSE)
 
 [![Telegram Chat](https://img.shields.io/badge/Наш%20Telegram--чат-Сообщить%20об%20ошибке%20%2F%20Обсуждение-26A5E4?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/spididyanty)
@@ -48,18 +48,18 @@ irm https://raw.githubusercontent.com/SPIDIKSY/antigravity-ru/main/install.ps1 |
 
 <div align="center">
 
+### Главное окно
+<img src="screenshots/main-window.png" alt="Главное окно" width="90%">
+
+<br><br>
+
 ### Настройки (Общие и Поведение агента)
 <img src="screenshots/general-settings.png" alt="Общие настройки" width="90%">
 
 <br><br>
 
-### Настройки (Внешний вид и Интерфейс)
-<img src="screenshots/appearance.png" alt="Внешний вид" width="90%">
-
-<br><br>
-
-### Настройки проекта и Расход токенов
-<img src="screenshots/project-settings.png" alt="Настройки проекта" width="90%">
+### Дополнения и Маркетплейс
+<img src="screenshots/customizations.png" alt="Дополнения и Маркетплейс" width="90%">
 
 </div>
 
@@ -69,7 +69,9 @@ irm https://raw.githubusercontent.com/SPIDIKSY/antigravity-ru/main/install.ps1 |
 
 | Раздел | Детали перевода |
 | :--- | :--- |
-| **Все вкладки настроек** | Общие, Приложение, Внешний вид, Модели, Настройки проекта, Браузер (более **990 фраз**). |
+| **Все вкладки настроек** | Общие, Приложение, Внешний вид, Модели, Настройки проекта, Браузер (более **1090 фраз**). |
+| **Дополнения и Маркетплейс** | Разделы «Маркетплейс» и «Установлено», описания плагинов Google, поиск и фильтры. |
+| **Слэш-команды и меню** | Описания команд (`/goal`, `/plan`, `/schedule` и др.), меню проекта, добавление контекста, режимы разрешений. |
 | **Безопасность и доступы** | Профили поведения агента, права на чтение и запись файлов, сетевой доступ, терминал и MCP. |
 | **Расход токенов** | Статистика контекста на правила (`Rules`), навыки (`Skills`) и MCP-серверы с выпадающими списками. |
 | **Контроль версий (Git)** | Незафиксированные файлы, изменения агента, переключение веток и статусы репозитория. |
