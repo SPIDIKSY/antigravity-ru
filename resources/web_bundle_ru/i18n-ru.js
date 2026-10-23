@@ -134,7 +134,7 @@
   "Collapse idle": "Свернуть неактивные",
   "Cancel Sending Message": "Отменить отправку сообщения",
   "Cancel Step": "Отменить шаг",
-  "Configure workspace-specific permissions, resources, and customizations.": "Настройка разрешений, ресурсов и параметров рабочей области.",
+  "Configure workspace-specific permissions, resources, and customizations.": "Настройка разрешений, ресурсов и дополнений рабочей области.",
   "Configure the default width of markdown artifacts.": "Настроить ширину Markdown-артефактов по умолчанию.",
   "Commands and files these agents can use.": "Команды и файлы, доступные этим агентам.",
   "Commands the agent can run outside the sandbox in this workspace.": "Команды, разрешённые вне песочницы в этой рабочей области.",
@@ -326,10 +326,10 @@
   "Projects": "Проекты",
   "Scheduled Tasks": "Запланированные задачи",
   "Scheduled tasks": "Запланированные задачи",
-  "Skills & Customizations": "Навыки и настройки",
-  "Skills & customizations": "Навыки и настройки",
-  "Customizations": "Настройки",
-  "Customization": "Настройки",
+  "Skills & Customizations": "Навыки и дополнения",
+  "Skills & customizations": "Навыки и дополнения",
+  "Customizations": "Дополнения",
+  "Customization": "Дополнение",
   "Settings": "Настройки",
   "UI Plugins": "UI Плагины",
   "UI plugins": "UI Плагины",
@@ -517,10 +517,10 @@
   "Browser CDP Port": "Порт CDP браузера",
   "Port number for Chrome DevTools Protocol remote debugging. Leave empty for default (9222).": "Порт для удаленной отладки Chrome DevTools Protocol. По умолчанию (9222).",
   "Show Selection Actions": "Действия с выделенным текстом",
-  "Include Jetski Default Customizations": "Включить стандартные настройки",
+  "Include Jetski Default Customizations": "Включить стандартные дополнения",
   "Include default customizations, such as default skills.": "Включать базовые навыки и правила по умолчанию.",
-  "Enable Personal Customizations": "Включить персональные настройки",
-  "Layer your personal customizations (skills, rules, etc.) from your config on top of the active profile.": "Применять персональные настройки (навыки, правила и др.) поверх активного профиля.",
+  "Enable Personal Customizations": "Включить персональные дополнения",
+  "Layer your personal customizations (skills, rules, etc.) from your config on top of the active profile.": "Применять персональные дополнения (навыки, правила и др.) поверх активного профиля.",
   "Inline Actions": "Быстрые действия",
   "Show a floating notification card when background conversations need your input. Answer questions, approve commands, and grant permissions without leaving your current conversation. Share feedback at go/inline-actions-feedback.": "Отображать карточку уведомлений, когда фоновым задачам требуется подтверждение.",
   "Always Proceed": "Всегда продолжать",
@@ -882,10 +882,10 @@
   "A high-risk mode that disables all safety barriers. The agent operates with full system access, auto-executes all terminal commands, and reads or writes to all local files without review prompts.": "Режим повышенного риска без ограничений. Агент выполняет команды терминала и работает с файлами без запросов подтверждения.",
   "Configure default behaviors, skills, and MCP servers.": "Настройка поведения по умолчанию, навыков и серверов MCP.",
   "Token Usage": "Использование токенов",
-  "The breakdown below shows token usage from customizations like skills, rules, and MCP. If the budget is exceeded, large customizations will be truncated automatically.": "Расход токенов на настройки (навыки, правила, MCP). При превышении лимита крупные элементы автоматически усекаются.",
-  "% of the customization budget is available.": "% бюджета настроек доступно.",
-  "Customization token budget exceeded. Large customizations will be truncated.": "Лимит токенов на настройки превышен. Крупные элементы будут усечены.",
-  "There are no customizations enabled.": "Настройки не включены.",
+  "The breakdown below shows token usage from customizations like skills, rules, and MCP. If the budget is exceeded, large customizations will be truncated automatically.": "Расход токенов на дополнения (навыки, правила, MCP). При превышении лимита крупные элементы автоматически усекаются.",
+  "% of the customization budget is available.": "% бюджета дополнений доступно.",
+  "Customization token budget exceeded. Large customizations will be truncated.": "Лимит токенов на дополнения превышен. Крупные элементы будут усечены.",
+  "There are no customizations enabled.": "Дополнения не включены.",
   "Loading token usage...": "Загрузка расхода токенов...",
   "Rules": "Правила",
   "Skills": "Навыки",
@@ -895,9 +895,9 @@
   "tokens": "токенов",
   "token": "токен",
   "Hide breakdown": "Скрыть детали",
-  "Default Customizations": "Настройки по умолчанию",
-  "Personal Customizations": "Персональные настройки",
-  "When enabled, the agent will include default customizations, including default skills.": "При включении агент будет использовать стандартные настройки и навыки.",
+  "Default Customizations": "Дополнения по умолчанию",
+  "Personal Customizations": "Персональные дополнения",
+  "When enabled, the agent will include default customizations, including default skills.": "При включении агент будет использовать стандартные дополнения и навыки.",
   "Plugins": "Плагины",
   "Build With Google Plugins": "Плагины Build With Google",
   "Browse and enable plugins from the Build With Google catalog.": "Просмотр и включение плагинов из каталога Build With Google.",
@@ -999,7 +999,7 @@
   "Workspace File Access": "Доступ к файлам рабочей области",
   "Workspace Command Access": "Доступ к командам рабочей области",
   "Workspace Web Access": "Веб-доступ рабочей области",
-  "Search customizations...": "Поиск настроек...",
+  "Search customizations...": "Поиск дополнений...",
   "Search flags": "Поиск флагов",
   "Search all convos...": "Поиск по всем диалогам...",
   "Enter file or directory path...": "Введите путь к файлу или папке...",
@@ -1039,7 +1039,121 @@
   "Privacy Notice": "Уведомление о конфиденциальности",
   "Google Privacy Policy": "Политика конфиденциальности Google",
   "Email": "Электронная почта",
-  "You cannot sign out from Remote Control. Please sign out on your local application.": "Нельзя выйти через Remote Control. Выйдите в локальном приложении."
+  "You cannot sign out from Remote Control. Please sign out on your local application.": "Нельзя выйти через Remote Control. Выйдите в локальном приложении.",
+
+  // --- 2.26.0: строки со скриншотов (выбор проекта, дополнения, автоматизации, история) ---
+  "No Project": "Без проекта",
+  "Search Projects": "Поиск проектов",
+  "Search Recent Workspaces": "Поиск недавних рабочих областей",
+  "Quick Start": "Быстрый старт",
+  "Outside of Project": "Вне проекта",
+  "Marketplace": "Маркетплейс",
+  "No custom agents yet.": "Пользовательских агентов пока нет.",
+  "Global": "Глобальный",
+  "Create with Prompt": "Создать по запросу",
+  "New": "Создать",
+  "No automations configured.": "Автоматизации не настроены.",
+  "No automations matching your search": "Нет автоматизаций по запросу",
+  "This page is going away soon": "Эта страница скоро исчезнет",
+  "Search conversations with": "Ищите диалоги через",
+  "in the top left.": "в левом верхнем углу.",
+  "View archived in the sidebar": "Архивные — в боковой панели",
+  "View archived in the sidebar (": "Архивные — в боковой панели (",
+  "menu)": "меню)",
+  "menu).": "меню).",
+  "Conversation Archived": "Диалог перенесён в архив",
+  "now": "сейчас",
+
+  // --- 2.26.0: палитра команд, боковая панель, меню отображения ---
+  "Commands": "Команды",
+  "Search for commands...": "Поиск команд...",
+  "Open Project Picker": "Открыть выбор проекта",
+  "Display Options": "Параметры отображения",
+  "Create New Project": "Создать проект",
+  "Project": "Проект",
+  "Status": "Статус",
+  "None": "Нет",
+  "Last Updated": "Последнее обновление",
+  "Last Prompt": "Последний запрос",
+  "Sort Projects": "Сортировка проектов",
+  "Sort Workspaces": "Сортировка рабочих областей",
+  "Custom Order": "Свой порядок",
+  "Display": "Отображение",
+  "Show All": "Показать все",
+  "Show Less": "Свернуть",
+  "See more": "Показать ещё",
+
+  // --- 2.26.0: настройки (общие, внешний вид, уведомления, проект) ---
+  // "Type" в подсказке «Type / and select plan…» не переводится: та же строка — заголовок «Тип» в фильтрах.
+  "Global Permissions": "Глобальные разрешения",
+  "Configure global allowed and denied resource permissions.": "Настройка глобально разрешённых и запрещённых ресурсов.",
+  "Modified in": "Изменено в",
+  "Tool Permissions": "Разрешения инструментов",
+  "Modify permissions for file, terminal, and MCP tools.": "Разрешения для файлов, терминала и MCP-инструментов.",
+  "Modify permissions for file and terminal tools.": "Разрешения для файлов и терминала.",
+  "Plan Review Policy": "Проверка планов",
+  "Whether the agent asks you to review its documents.": "Просит ли агент проверить его документы.",
+  "and select": "и выберите",
+  "to have the agent generate a plan.": "чтобы агент составил план.",
+  "Contrast": "Контраст",
+  "Strong": "Высокий",
+  "Show system notifications when your action is needed or the agent finishes.": "Системные уведомления, когда нужно ваше действие или агент закончил работу.",
+  "Sound": "Звук",
+  "Play a sound when your action is needed or the agent finishes.": "Звуковой сигнал, когда нужно ваше действие или агент закончил работу.",
+  "Volume": "Громкость",
+  "Set the volume of agent sounds.": "Громкость звуков агента.",
+  "Permission Settings": "Настройки разрешений",
+  "Also includes": "Также действуют",
+  "when working": "при работе",
+  "in this project": "в этом проекте",
+  "in these conversations": "в этих диалогах",
+  "tokens (": "токенов (",
+  "Other Customizations": "Прочие дополнения",
+  "The breakdown below shows token usage from customizations like rules, skills, and MCP. If a budget is exceeded, large rules are demoted to path pointers and large customizations are excluded automatically.": "Ниже — расход токенов на дополнения: правила, навыки и MCP. При превышении лимита крупные правила заменяются ссылками на файлы, а крупные дополнения автоматически отключаются.",
+
+  // --- 2.26.0: Marketplace. Тексты приходят с сервера; оригиналы — в ~/.gemini/antigravity/cache/marketplaces/*/marketplace.json ---
+  "Connect to Google Workspace, including Docs, Sheets, Slides, Drive, and Calendar.": "Подключение к Google Workspace: Документы, Таблицы, Презентации, Диск и Календарь.",
+  "Build on Google's developer platforms, including Android, Chrome, Gemini, and Google Cloud.": "Разработка на платформах Google: Android, Chrome, Gemini и Google Cloud.",
+  "This plugin provides a specialized suite of skills for data engineers and database practitioners working on Google Cloud. It acts as an expert assistant, allowing you to use natural language prompts in your preferred coding agent to architect complex data pipelines, transform data with dbt, write Spark and BigQuery SQL notebooks, and orchestrate end-to-end workflows across GCP's data ecosystem.": "Набор навыков для инженеров данных и специалистов по базам данных в Google Cloud. Помогает на естественном языке проектировать сложные конвейеры данных, преобразовывать данные с dbt, писать блокноты Spark и BigQuery SQL и управлять сквозными процессами в экосистеме данных GCP.",
+  "Check availability, schedule events, and RSVP.": "Проверка занятости, планирование событий и ответы на приглашения.",
+  "Read, draft, and edit docs.": "Чтение, написание и редактирование документов.",
+  "Search, upload, download, and share files.": "Поиск, загрузка, скачивание файлов и общий доступ к ним.",
+  "Read, write, and format spreadsheets.": "Чтение, запись и форматирование таблиц.",
+  "Read, edit, and export presentations.": "Чтение, редактирование и экспорт презентаций.",
+  "Core tools and knowledge required to develop for Android.": "Основные инструменты и знания для разработки под Android.",
+  "Reliable automation, in-depth debugging, and performance analysis in Chrome using Chrome DevTools and Puppeteer": "Надёжная автоматизация, глубокая отладка и анализ производительности в Chrome с помощью Chrome DevTools и Puppeteer",
+  "Prototype, build & run modern apps that users love with Firebase's backend, AI, and operational infrastructure.": "Прототипы, разработка и запуск современных приложений на бэкенде, ИИ и инфраструктуре Firebase.",
+  "Using the Google Antigravity Python SDK to build AI agents": "Создание ИИ-агентов с помощью Google Antigravity Python SDK",
+  "Search and retrieve official documentation across Google Cloud, Gemini, Android, Firebase, Flutter, and Web. Requires Google Cloud credentials (ADC) or an API key.": "Поиск официальной документации по Google Cloud, Gemini, Android, Firebase, Flutter и Web. Нужны учётные данные Google Cloud (ADC) или ключ API.",
+  "Integration skill and tools for Google Maps Platform APIs": "Навык интеграции и инструменты для API Google Maps Platform",
+  "Curated collection of agent skills for science tasks.": "Подборка навыков агента для научных задач.",
+  "Build applications with the Gemini Interactions API and Live API, including text, image, video, and speech generation, managed agents, and real-time multimodal streaming.": "Создание приложений на Gemini Interactions API и Live API: генерация текста, изображений, видео и речи, управляемые агенты и мультимодальная потоковая передача в реальном времени.",
+  "Google Cloud guidance for coding agents: first-project onboarding, authentication and credential selection, and safety-critical validation for gcloud CLI commands. Includes the Google Developer Knowledge MCP server for grounded, up-to-date Google Cloud documentation.": "Руководство по Google Cloud для агентов: первый проект, аутентификация и выбор учётных данных, проверка опасных команд gcloud CLI. Включает MCP-сервер Google Developer Knowledge с актуальной документацией Google Cloud.",
+  "Keep your coding agent up to date with the latest web best practices.": "Держит агента в курсе актуальных практик веб-разработки.",
+  "Official plugin for Dart and Flutter that installs Flutter/Dart Skills, Rules, Custom Agents, and Dart MCP server for building natively compiled, visually stunning applications for mobile, web, desktop, and embedded devices from a single codebase": "Официальный плагин Dart и Flutter: устанавливает навыки, правила и агентов Flutter/Dart и MCP-сервер Dart для нативных приложений под мобильные, веб, десктоп и встраиваемые устройства из одной кодовой базы",
+
+  // --- 2.26.0: меню проекта, добавление контекста, слэш-команды, режимы разрешений ---
+  "Copy Project Name": "Скопировать название проекта",
+  "Copy Workspace Name": "Скопировать название рабочей области",
+  "Show in File Explorer": "Показать в проводнике",
+  "Delete Project": "Удалить проект",
+  "Delete Workspace": "Удалить рабочую область",
+  "Add context": "Добавить контекст",
+  "Files": "Файлы",
+  "Folder": "Папка",
+  "Mentions": "Упоминания",
+  "Actions": "Действия",
+  "Extensions": "Расширения",
+  "Run until the specified goal is completely finished.": "Работать, пока указанная цель не будет полностью достигнута.",
+  "Compact the conversation now (summarize history to free up the context window).": "Сжать диалог сейчас (кратко пересказать историю, чтобы освободить контекстное окно).",
+  "Run an instruction on a recurring schedule or as a one-time timer.": "Выполнять инструкцию по расписанию или один раз по таймеру.",
+  "Invoke a browser agent for web tasks.": "Вызвать агента-браузер для веб-задач.",
+  "Plan carefully before executing a task.": "Тщательно спланировать задачу перед выполнением.",
+  "Interview me to align on a plan.": "Расспросить меня, чтобы согласовать план.",
+  "Invoke a team of agents to autonomously tackle large projects.": "Вызвать команду агентов для самостоятельной работы над крупными проектами.",
+  "Reflect on recent successes or corrections to capture reusable skills or rules.": "Разобрать недавние удачи и исправления и сохранить их как навыки или правила.",
+  "Every command requires approval.": "Каждая команда требует подтверждения.",
+  "Run all commands without restrictions.": "Выполнять все команды без ограничений."
 };
 
   function formatTime(str) {
@@ -1186,6 +1300,30 @@
     {
       regex: /^(\d+)\s+items?$/i,
       replace: function (m) { return m[1] + " эл."; }
+    },
+    {
+      regex: /^(\d+) tools? enabled$/,
+      replace: function (m) { return "Включено инструментов: " + m[1]; }
+    },
+    {
+      regex: /^(\d+) tools? disabled$/,
+      replace: function (m) { return "Отключено инструментов: " + m[1]; }
+    },
+    {
+      regex: /^See (\d+) more$/,
+      replace: function (m) { return "Ещё " + m[1]; }
+    },
+    {
+      regex: /^Inherits your Global Permissions when working (.+)\.$/,
+      replace: function (m) { return "Наследует глобальные разрешения при работе " + (DICT[m[1]] || m[1]) + "."; }
+    },
+    // Короткое «сколько прошло» в списке диалогов: 6m, 17h, 19d. Регистр важен: «6M» — это не минуты.
+    {
+      regex: /^(\d+)(m|h|d|w|mo|y)$/,
+      replace: function (m) {
+        const UNITS = { m: "мин", h: "ч", d: "д", w: "нед", mo: "мес", y: "г" };
+        return m[1] + " " + UNITS[m[2]];
+      }
     }
   ];
 
@@ -1247,7 +1385,10 @@
         node.nodeValue = translated;
       }
     } else if (node.nodeType === Node.ELEMENT_NODE) {
-      if (isIgnored(node)) return;
+      // INPUT и TEXTAREA в IGNORE_TAGS, чтобы не трогать набранный текст. Но их подсказки
+      // (placeholder, title) переводить нужно, поэтому для полей проверяем только предков.
+      const isField = node.tagName === 'INPUT' || node.tagName === 'TEXTAREA';
+      if (isIgnored(isField ? node.parentElement : node)) return;
 
       if (node.hasAttribute('placeholder')) {
         const trans = translateString(node.getAttribute('placeholder'));
