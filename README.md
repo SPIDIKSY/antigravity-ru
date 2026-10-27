@@ -54,7 +54,7 @@ irm https://raw.githubusercontent.com/SPIDIKSY/antigravity-ru/main/install.ps1 |
 <br><br>
 
 ### Настройки (Общие и Поведение агента)
-<img src="screenshots/general-settings.png" alt="Общие настройки" width="90%">
+<img src="screenshots/settings-general.png" alt="Общие настройки" width="90%">
 
 <br><br>
 
