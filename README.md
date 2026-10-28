@@ -35,6 +35,8 @@
 
 > [!IMPORTANT]
 > Файлы русификатора собраны под **Antigravity 2.28.0**. Если у вас другая версия — сначала обновите Antigravity до 2.28.0, потом ставьте русификатор.
+> Установщик сам проверяет версию и при несовпадении ничего не меняет. Поставить всё равно, на свой риск:
+> `& ([scriptblock]::Create((irm https://raw.githubusercontent.com/SPIDIKSY/antigravity-ru/main/install.ps1))) -Force`
 
 ---
 

@@ -13,13 +13,17 @@ param(
     [switch]$Install,
     [switch]$Uninstall,
     [switch]$NoKill,
+    [switch]$Force,
     [string]$AppDir = "$env:LOCALAPPDATA\Programs\antigravity"
 )
+
+# Версия Antigravity, под которую собраны файлы в resources\. app.asar от другой версии может сломать приложение.
+$SupportedVersion = "2.28.0"
 
 $Host.UI.RawUI.WindowTitle = "Antigravity 2.0 - Русификатор"
 
 Write-Host "==========================================================" -ForegroundColor Cyan
-Write-Host "    Antigravity 2.0 (v2.28.0) - Русская локализация (RU)   " -ForegroundColor Green
+Write-Host "    Antigravity 2.0 (v$SupportedVersion) - Русская локализация (RU)   " -ForegroundColor Green
 Write-Host "     Репозиторий: https://github.com/SPIDIKSY/antigravity-ru" -ForegroundColor Gray
 Write-Host "==========================================================" -ForegroundColor Cyan
 Write-Host ""
@@ -115,6 +119,20 @@ if ($Uninstall) {
 Write-Host ""
 Write-Host "[*] Подготовка к установке русификатора..." -ForegroundColor Cyan
 
+# Проверка версии: до загрузки и до закрытия Antigravity, чтобы при отказе ничего не трогать.
+$AppVersion = (Get-Item "$AppDir\Antigravity.exe").VersionInfo.FileVersion
+if ($AppVersion -ne $SupportedVersion) {
+    Write-Host "[!] У вас Antigravity $AppVersion, а русификатор собран под $SupportedVersion." -ForegroundColor Yellow
+    if (-not $Force) {
+        Write-Host "[-] Установка отменена: файлы от другой версии могут сломать приложение." -ForegroundColor Red
+        Write-Host "    Обновите Antigravity до $SupportedVersion и запустите установку снова." -ForegroundColor White
+        Write-Host "    Поставить всё равно, на свой риск:" -ForegroundColor Gray
+        Write-Host "    & ([scriptblock]::Create((irm https://raw.githubusercontent.com/SPIDIKSY/antigravity-ru/main/install.ps1))) -Force" -ForegroundColor Gray
+        return
+    }
+    Write-Host "[*] Параметр -Force: установка продолжается." -ForegroundColor Gray
+}
+
 # Проверяем, откуда запущен скрипт: локально или через веб (iex / WebClient)
 $ScriptDir = $PSScriptRoot
 $IsRemote = $false
@@ -200,7 +218,7 @@ try {
 
     Write-Host ""
     Write-Host "==========================================================" -ForegroundColor Green
-    Write-Host "  Русификация Antigravity 2.0 (v2.28.0) успешно установлена!  " -ForegroundColor Green
+    Write-Host "  Русификация Antigravity 2.0 (v$SupportedVersion) успешно установлена!  " -ForegroundColor Green
     Write-Host "==========================================================" -ForegroundColor Green
     Write-Host "• Все ваши проекты, чаты, сессии и ключи полностью сохранены." -ForegroundColor White
     Write-Host "• Запустите Antigravity 2.0, чтобы начать работу на русском!" -ForegroundColor White
