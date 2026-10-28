@@ -38,6 +38,7 @@
   "Open Link in External Browser": "Открыть ссылку во внешнем браузере",
   "Open Link in New Tab": "Открыть ссылку в новой вкладке",
   "Sort and filter conversations": "Сортировка и фильтр диалогов",
+  "Only Unread": "Только непрочитанные",
   "Only Archived": "Только архивные",
   "Only Automations": "Только автоматизации",
   "Only Scheduled": "Только запланированные",
@@ -557,6 +558,12 @@
   "Model Quota": "Квота модели",
   "Model quota reached": "Квота модели исчерпана",
   "Recommended": "Рекомендуется",
+  // Уровень «усилия» модели в выборе модели
+  "Low": "Низкий",
+  "Medium": "Средний",
+  "High": "Высокий",
+  "Extra": "Очень высокий",
+  "Max": "Максимальный",
   "Experimental": "Экспериментальная",
   "Experimental model. Click to provide feedback or opt out.": "Экспериментальная модель. Нажмите, чтобы оставить отзыв.",
   "Error Loading Models": "Ошибка загрузки моделей",
@@ -1155,17 +1162,110 @@
   "Invoke a team of agents to autonomously tackle large projects.": "Вызвать команду агентов для самостоятельной работы над крупными проектами.",
   "Reflect on recent successes or corrections to capture reusable skills or rules.": "Разобрать недавние удачи и исправления и сохранить их как навыки или правила.",
   "Every command requires approval.": "Каждая команда требует подтверждения.",
-  "Run all commands without restrictions.": "Выполнять все команды без ограничений."
+  "Run all commands without restrictions.": "Выполнять все команды без ограничений.",
+  "Waiting for user input": "Ожидание ответа пользователя",
+  "Other (write your answer)": "Другое (свой вариант)",
+  // Приставка перед «N вопросов» (сами вопросы — шаблон в rules.js)
+  "Asking": "Задаёт",
+  "Asked": "Задал",
+  "Worktrees are available for Git repositories": "Рабочие деревья доступны для Git-репозиториев",
+  "Worktrees are not available for this project": "Рабочие деревья недоступны для этого проекта",
+  "Local Checkout": "Локально",
+  // Настройки: встроенный браузер и субагент браузера
+  "Built-in Browser": "Встроенный браузер",
+  "External Browser": "Внешний браузер",
+  "Configure link opening and built-in browser preferences.": "Настройка открытия ссылок и встроенного браузера.",
+  "Side Panel Preview": "Предпросмотр в боковой панели",
+  "Configure link opening and side panel preview preferences.": "Настройка открытия ссылок и предпросмотра в боковой панели.",
+  "Open Links In": "Где открывать ссылки",
+  "Choose where links open by default when clicked.": "Где по умолчанию открываются ссылки при нажатии.",
+  "Browser Subagent": "Субагент браузера",
+  // Хвост фразы «Configure the browser subagent. It requires Google Chrome to be installed…»
+  "to be installed. The browser subagent can be invoked by typing /browser in the conversation input box.": "— установите его, если ещё нет. Субагент вызывается командой /browser в поле ввода.",
+  // Горячие клавиши
+  "New Tab": "Новая вкладка",
+  "Reopen Closed Tab": "Открыть закрытую вкладку",
+  "Move Conversation Up": "Переместить диалог вверх",
+  "Move Conversation Down": "Переместить диалог вниз",
+  "Navigation": "Навигация",
+  "Conversation": "Диалог",
+  "Layout Controls": "Управление панелями",
+  // Меню ⋮ в чате и его подменю
+  "Pin": "Закрепить",
+  "Unpin": "Открепить",
+  "Archive": "Архивировать",
+  "Restore": "Восстановить",
+  "Split": "Разделить",
+  "Fork": "Ответвить",
+  "Share": "Поделиться",
+  "Split Right": "Разделить вправо",
+  "Split Down": "Разделить вниз",
+  "Replace with New": "Заменить новым",
+  "Remove from Split": "Убрать из разделения",
+  "Conversation Name": "Название диалога",
+  "Mark Unread": "Отметить как непрочитанное",
+  "Mark Read": "Отметить как прочитанное",
+  // Вкладка артефакта (план агента task.md) и её меню
+  "Task": "Задача",
+  "Export Artifact": "Экспортировать артефакт",
+  "Saved!": "Сохранено!",
+  "Export as PDF": "Экспорт в PDF",
+  "Toggle sidebar": "Показать/скрыть боковую панель",
+  // Панель обзора
+  "Review": "Проверка",
+  "Customize Sections": "Настроить разделы",
+  "Background Commands": "Фоновые команды",
+  "Goals": "Цели",
+  "Documents": "Документы",
+  "Links": "Ссылки",
+  "Modified Files": "Изменённые файлы",
+  // Подсказка к квоте Argon приходит с сервера, текст взят со скриншота
+  "For paid Pro plans, Argon quota is separate. Higher Argon quota (included as part of the larger Gemini quota bucket) is available on Ultra plans.": "На платных тарифах Pro квота Argon отдельная. Увеличенная квота Argon (в составе общей квоты Gemini) доступна на тарифах Ultra."
 };
 
   function formatTime(str) {
     if (!str) return '';
+    // Точку в конце английской фразы убираем: иначе после «ч.» выходит «ч..».
     return str
+      .replace(/\.$/, '')
       .replace(/(\d+)\s+days?/gi, '$1 дн.')
       .replace(/(\d+)\s+hours?/gi, '$1 ч.')
       .replace(/(\d+)\s+minutes?/gi, '$1 мин.')
       .replace(/(\d+)\s+seconds?/gi, '$1 сек.');
   }
+
+  // Окончание по числу: 1 вопрос, 3 вопроса, 5 вопросов.
+  function plural(n, one, few, many) {
+    const n10 = n % 10, n100 = n % 100;
+    if (n10 === 1 && n100 !== 11) return one;
+    if (n10 >= 2 && n10 <= 4 && (n100 < 12 || n100 > 14)) return few;
+    return many;
+  }
+
+  // Короткая длительность из интерфейса: «1d 21h», «2h 5m», «45s» → «1 д 21 ч», «2 ч 5 мин», «45 с».
+  function shortDuration(str) {
+    return str
+      .replace(/(\d+)d\b/g, "$1 д")
+      .replace(/(\d+)h\b/g, "$1 ч")
+      .replace(/(\d+)m\b/g, "$1 мин")
+      .replace(/(\d+)s\b/g, "$1 с");
+  }
+
+  // Куски сводки шагов агента: «Explored file, ran command, edited artifact».
+  const STEP_SUMMARY_PARTS = {
+    "explored": "просмотрено",
+    "explored file": "просмотрен файл",
+    "explored files": "просмотрены файлы",
+    "explored artifact": "просмотрен артефакт",
+    "explored artifacts": "просмотрены артефакты",
+    "ran command": "выполнена команда",
+    "ran commands": "выполнены команды",
+    "edited": "изменено",
+    "edited file": "изменён файл",
+    "edited files": "изменены файлы",
+    "edited artifact": "изменён артефакт",
+    "edited artifacts": "изменены артефакты"
+  };
 
   const RULES = [
     {
@@ -1318,6 +1418,49 @@
     {
       regex: /^Inherits your Global Permissions when working (.+)\.$/,
       replace: function (m) { return "Наследует глобальные разрешения при работе " + (DICT[m[1]] || m[1]) + "."; }
+    },
+    {
+      regex: /^(\d+) questions?$/,
+      replace: function (m) { return m[1] + " " + plural(+m[1], "вопрос", "вопроса", "вопросов"); }
+    },
+    // Одиночное «Edited» не трогаем: это слово есть и в других местах интерфейса.
+    {
+      regex: /^(?:Explored(?: files?| artifacts?)?|Ran commands?|Edited (?:files?|artifacts?))(?:, (?:ran commands?|edited(?: files?| artifacts?)?))*$/,
+      replace: function (m) {
+        const text = m[0].split(", ").map(function (part) { return STEP_SUMMARY_PARTS[part.toLowerCase()]; }).join(", ");
+        return text.charAt(0).toUpperCase() + text.slice(1);
+      }
+    },
+    // Время до сброса квоты: «Resets in 1d 21h», «Resets in <1m».
+    {
+      regex: /^Resets in (.+)$/,
+      replace: function (m) {
+        return "Сброс через " + shortDuration(m[1]);
+      }
+    },
+    // Время работы агента: «Worked for 2h 5m».
+    {
+      regex: /^Worked for (\d.*)$/,
+      replace: function (m) { return "Работал " + shortDuration(m[1]); }
+    },
+    // Подсказка у диалога в списке: «Updated 1:39», «Updated 5 окт., 1:39» (дата уже по-русски).
+    {
+      regex: /^Updated (\d.*)$/,
+      replace: function (m) { return "Обновлено " + m[1]; }
+    },
+    // Подзаголовок настроек проекта: слово project/workspace подставляется в фразу.
+    {
+      regex: /^Manage (\S+) (folders|resources), agent settings, and permissions\.$/,
+      replace: function (m) {
+        const KIND = { project: "проекта", workspace: "рабочей области" };
+        const what = m[2] === "folders" ? "папками" : "ресурсами";
+        return "Управление " + what + " " + (KIND[m[1]] || m[1]) + ", настройками агента и разрешениями.";
+      }
+    },
+    // Название лимита приходит с сервера: «Gemini 4 Argon Weekly Limit».
+    {
+      regex: /^(.+) Weekly Limit$/,
+      replace: function (m) { return m[1] + " — недельный лимит"; }
     },
     // Короткое «сколько прошло» в списке диалогов: 6m, 17h, 19d. Регистр важен: «6M» — это не минуты.
     {

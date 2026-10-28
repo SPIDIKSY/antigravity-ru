@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <title>Antigravity</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, interactive-widget=resizes-content" />
     <!-- Preconnect secondary CDNs for dynamic UI icons (Drive, Docs, Colab) -->
     <link rel="preconnect" href="https://www.gstatic.com" />
     <link rel="preconnect" href="https://ssl.gstatic.com" />
@@ -51,8 +51,11 @@
     <!-- Inline styles to prevent flash before app loads -->
     <style>
       html,
-      body {
+      body,
+      #root {
         height: 100%;
+        margin: 0;
+        overflow: hidden;
         background-color: transparent;
         overscroll-behavior: none;
       }
@@ -80,6 +83,14 @@
     </script>
     <style>
       span.capitalize[id^="dropdown-value-"] { text-transform: none; }
+    </style>
+    <style>
+      span[data-scope-kind="file"], span[data-scope-kind="file"] *, span[data-scope-kind="directory"], span[data-scope-kind="directory"] *, span[data-scope-kind="fileLineRange"], span[data-scope-kind="fileLineRange"] *, span[data-scope-kind="codeContext"], span[data-scope-kind="codeContext"] *, [data-context-item="Files"], [data-context-item="Files"] *, [data-context-item="Folder"], [data-context-item="Folder"] * { color: #4c9aff !important; }
+      span[data-scope-kind="conversation"], span[data-scope-kind="conversation"] * { color: #b07cff !important; }
+      span[data-scope-kind="rule"], span[data-scope-kind="rule"] *, span[data-scope-kind="knowledge"], span[data-scope-kind="knowledge"] * { color: #d4a72c !important; }
+      span[data-scope-kind="slashCommand"], span[data-scope-kind="slashCommand"] *, span[data-scope-kind="recipe"], span[data-scope-kind="recipe"] *, span[data-scope-kind="plugin"], span[data-scope-kind="plugin"] *, span[data-scope-kind="mcpPrompt"], span[data-scope-kind="mcpPrompt"] *, span[data-scope-kind="mcpResource"], span[data-scope-kind="mcpResource"] *, [data-context-item="Actions"], [data-context-item="Actions"] * { color: #3fb950 !important; }
+      span[data-scope-kind="browserPage"], span[data-scope-kind="browserPage"] *, span[data-scope-kind="link"], span[data-scope-kind="link"] *, span[data-scope-kind="browserText"], span[data-scope-kind="browserText"] *, span[data-scope-kind="domElement"], span[data-scope-kind="domElement"] *, span[data-scope-kind="consoleLog"], span[data-scope-kind="consoleLog"] *, span[data-scope-kind="slashCommand"][data-scope-name="browser"], span[data-scope-kind="slashCommand"][data-scope-name="browser"] *, [data-context-item="Browser"], [data-context-item="Browser"] * { color: #22b8cf !important; }
+      span[data-scope-kind="terminal"], span[data-scope-kind="terminal"] * { color: #f0883e !important; }
     </style>
   </head>
   <body>
