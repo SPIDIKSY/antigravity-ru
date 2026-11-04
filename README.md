@@ -7,7 +7,7 @@
 
 [![Antigravity Version](https://img.shields.io/badge/Antigravity-2.29.0-6366f1?style=for-the-badge&logo=google&logoColor=white)](https://github.com/SPIDIKSY/antigravity-ru)
 [![Platform](https://img.shields.io/badge/Платформа-Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/SPIDIKSY/antigravity-ru)
-[![Translated](https://img.shields.io/badge/Перевод-1450%2B%20строк-10b981?style=for-the-badge)](https://github.com/SPIDIKSY/antigravity-ru)
+[![Translated](https://img.shields.io/badge/Перевод-1470%2B%20строк-10b981?style=for-the-badge)](https://github.com/SPIDIKSY/antigravity-ru)
 [![License](https://img.shields.io/badge/Лицензия-MIT-f59e0b?style=for-the-badge)](https://github.com/SPIDIKSY/antigravity-ru/blob/main/LICENSE)
 
 [![Telegram Chat](https://img.shields.io/badge/Наш%20Telegram--чат-Сообщить%20об%20ошибке%20%2F%20Обсуждение-26A5E4?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/spididyanty)
@@ -29,7 +29,9 @@
 - Русификатор собран под **Antigravity 2.29.0**.
 - **Боковые вопросы (Side questions):** параллельные вопросы агенту без прерывания главного чата, остановка и превращение в отдельный диалог («Превратить в диалог»).
 - **Разделение панелей и новое меню вкладок:** независимые боковая панель («Side Panel») и нижняя панель терминала («Terminal Panel»); пункт «Закрыть вкладки слева», закрепление и открепление вкладок.
-- **Автоматизации и планировщик:** создание задач по расписанию, выбор периодичности (каждый день, час, неделя, будни), просмотр истории и статусов запусков.
+- **Автоматизации и планировщик:** создание задач по расписанию, выбор периодичности (каждый день, час, неделя, будни), просмотр истории и статусов запусков; русифицированы списки («Пока нет автоматизаций», «Пока нет запланированных задач», «Нет по запросу») и кнопки создания.
+- **Расход и лимиты моделей:** панель расхода («Расход», «Недельный лимит», «Дневной лимит», «% осталось», «История расхода», «Получить кредиты AI»).
+- **Статусы работы агента:** «Работаю», «Работал», «Сжатие контекста», «Выполнено: <действие>», «· Код выхода <код>», «Ждёт вашего подтверждения».
 - **Встроенный браузер нового поколения (WebContentsView):** подсказки адресной строки, предупреждения безопасности SSL-сертификатов, шаги браузера и очистка истории.
 - **Голосовой режим и опросники:** интерфейс голосового диалога («Слушаю. Спрашивайте что угодно.»), сворачивание/разворачивание опросников.
 - **Темы оформления:** поддержка тем «Классическая тёмная» (Legacy Dark) и «Классическая светлая» (Legacy Light) наряду с новой темой по умолчанию.
@@ -57,7 +59,7 @@ irm https://raw.githubusercontent.com/SPIDIKSY/antigravity-ru/main/install.ps1 |
 
 **Что сделает установщик за пару секунд:**
 1. Найдёт установленный `Antigravity` на вашем ПК.
-2. Создаст резервную копию оригинального файла `app.asar.bak`.
+2. Создаст резервную копию оригинального файла `app.asar.original_backup`.
 3. Скачает свежий языковой пакет с GitHub и применит русификацию.
 
 После завершения просто **перезапустите Antigravity**.
@@ -129,20 +131,20 @@ irm https://raw.githubusercontent.com/SPIDIKSY/antigravity-ru/main/install.ps1 |
 <summary><b>Установка вручную через Git (для разработчиков)</b></summary>
 <br>
 
-Если вы хотите склонировать репозиторий локально и запускать патчер вручную. Нужен **PowerShell 7** (`pwsh`): встроенный Windows PowerShell 5.1 читает файл без метки кодировки как Windows-1251 и ломает русский текст.
+Если вы хотите склонировать репозиторий локально и запускать установщик вручную. Поддерживаются как стандартный **Windows PowerShell 5.1** (`powershell`), так и **PowerShell 7** (`pwsh`):
 
 ```bash
 git clone https://github.com/SPIDIKSY/antigravity-ru.git
 cd antigravity-ru
 
 # Обычная установка
-pwsh -ExecutionPolicy Bypass -File install.ps1 -Install
+powershell -ExecutionPolicy Bypass -File install.ps1 -Install
 
 # Установка без принудительного закрытия запущенных окон Antigravity
-pwsh -ExecutionPolicy Bypass -File install.ps1 -Install -NoKill
+powershell -ExecutionPolicy Bypass -File install.ps1 -Install -NoKill
 
 # Удаление русификации
-pwsh -ExecutionPolicy Bypass -File install.ps1 -Uninstall
+powershell -ExecutionPolicy Bypass -File install.ps1 -Uninstall
 ```
 </details>
 
