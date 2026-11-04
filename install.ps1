@@ -17,13 +17,13 @@ param(
     [string]$AppDir = "$env:LOCALAPPDATA\Programs\antigravity"
 )
 
-# Версия Antigravity, под которую собраны файлы в resources\. app.asar от другой версии может сломать приложение.
-$SupportedVersion = "2.29.0"
+# Поддерживаемые версии Antigravity, для которых подготовлены файлы в resources\<версия>\.
+$SupportedVersions = @("2.25.0", "2.26.0", "2.28.0", "2.29.0")
 
 $Host.UI.RawUI.WindowTitle = "Antigravity 2.0 - Русификатор"
 
 Write-Host "==========================================================" -ForegroundColor Cyan
-Write-Host "    Antigravity 2.0 (v$SupportedVersion) - Русская локализация (RU)   " -ForegroundColor Green
+Write-Host "    Antigravity 2.0 (v$($SupportedVersions -join ', ')) - Русская локализация (RU)   " -ForegroundColor Green
 Write-Host "     Репозиторий: https://github.com/SPIDIKSY/antigravity-ru" -ForegroundColor Gray
 Write-Host "==========================================================" -ForegroundColor Cyan
 Write-Host ""
@@ -121,23 +121,29 @@ Write-Host "[*] Подготовка к установке русификато�
 
 # Проверка версии: до загрузки и до закрытия Antigravity, чтобы при отказе ничего не трогать.
 $AppVersion = (Get-Item "$AppDir\Antigravity.exe").VersionInfo.FileVersion
-if ($AppVersion -ne $SupportedVersion) {
-    Write-Host "[!] У вас Antigravity $AppVersion, а русификатор собран под $SupportedVersion." -ForegroundColor Yellow
+$ChosenVersion = $null
+if ($SupportedVersions -contains $AppVersion) {
+    $ChosenVersion = $AppVersion
+} else {
+    Write-Host "[!] У вас Antigravity $AppVersion, а русификатор поддерживает версии: $($SupportedVersions -join ', ')." -ForegroundColor Yellow
     if (-not $Force) {
         Write-Host "[-] Установка отменена: файлы от другой версии могут сломать приложение." -ForegroundColor Red
-        Write-Host "    Обновите Antigravity до $SupportedVersion и запустите установку снова." -ForegroundColor White
-        Write-Host "    Поставить всё равно, на свой риск:" -ForegroundColor Gray
+        Write-Host "    Обновите Antigravity или запустите установку с параметром -Force:" -ForegroundColor White
         Write-Host "    & ([scriptblock]::Create((irm https://raw.githubusercontent.com/SPIDIKSY/antigravity-ru/main/install.ps1))) -Force" -ForegroundColor Gray
         return
     }
-    Write-Host "[*] Параметр -Force: установка продолжается." -ForegroundColor Gray
+    $ChosenVersion = $SupportedVersions[$SupportedVersions.Count - 1]
+    Write-Host "[*] Параметр -Force: устанавливается набор для $ChosenVersion (самый новый доступный)." -ForegroundColor Yellow
 }
 
 # Проверяем, откуда запущен скрипт: локально или через веб (iex / WebClient)
 $ScriptDir = $PSScriptRoot
+if ([string]::IsNullOrWhiteSpace($ScriptDir) -and (Test-Path (Join-Path (Get-Location).Path "resources\$ChosenVersion\app.asar"))) {
+    $ScriptDir = (Get-Location).Path
+}
 $IsRemote = $false
 
-if ([string]::IsNullOrWhiteSpace($ScriptDir) -or (-not (Test-Path "$ScriptDir\resources\app.asar"))) {
+if ([string]::IsNullOrWhiteSpace($ScriptDir) -or (-not (Test-Path "$ScriptDir\resources\$ChosenVersion\app.asar"))) {
     $IsRemote = $true
 }
 
@@ -158,14 +164,14 @@ if ($IsRemote) {
         Expand-Archive -Path $TempZip -DestinationPath $TempDir -Force
         
         $extractedRoot = Get-ChildItem -Path $TempDir -Directory | Select-Object -First 1
-        if ($extractedRoot -and (Test-Path (Join-Path $extractedRoot.FullName "resources\app.asar"))) {
+        if ($extractedRoot -and (Test-Path (Join-Path $extractedRoot.FullName "resources\$ChosenVersion\app.asar"))) {
             $ScriptDir = $extractedRoot.FullName
         } else {
             $ScriptDir = Join-Path $TempDir "antigravity-ru-main"
         }
 
-        if (-not (Test-Path "$ScriptDir\resources\app.asar")) {
-            throw "Не удалось обнаружить распакованные ресурсы в загруженном архиве."
+        if (-not (Test-Path "$ScriptDir\resources\$ChosenVersion\app.asar")) {
+            throw "Не удалось обнаружить распакованные ресурсы для версии $ChosenVersion в загруженном архиве."
         }
         Write-Host "[+] Файлы успешно загружены." -ForegroundColor Green
     } catch {
@@ -195,30 +201,41 @@ if (-not $NoKill) {
 
 try {
     # 1. Резервная копия оригинального ядра Google
-    if (-not (Test-Path $BackupAsar)) {
-        if (Test-Path $TargetAsar) {
-            Write-Host "[*] Создание резервной копии оригинального app.asar..." -ForegroundColor Cyan
-            Copy-Item -Path $TargetAsar -Destination $BackupAsar -Force
-            Write-Host "[+] Резервная копия сохранена: app.asar.original_backup" -ForegroundColor Green
+    $isClean = $false
+    if (Test-Path $TargetAsar) {
+        $hasWebBundle = [IO.File]::ReadAllText($TargetAsar, [Text.Encoding]::GetEncoding(28591)).Contains('web_bundle_ru')
+        if (-not $hasWebBundle) {
+            $isClean = $true
         }
+    }
+
+    if ($isClean) {
+        Write-Host "[*] Обнаружен чистый оригинальный app.asar, сохранение в резервную копию..." -ForegroundColor Cyan
+        Copy-Item -Path $TargetAsar -Destination $BackupAsar -Force
+        Write-Host "[+] Резервная копия сохранена: app.asar.original_backup" -ForegroundColor Green
     } else {
-        Write-Host "[*] Резервная копия уже существует: app.asar.original_backup" -ForegroundColor Gray
+        if (Test-Path $BackupAsar) {
+            Write-Host "[*] Резервная копия уже существует: app.asar.original_backup" -ForegroundColor Gray
+        } else {
+            Write-Host "[!] Внимание: текущий app.asar уже модифицирован, а резервная копия отсутствует. Откат будет невозможен." -ForegroundColor Yellow
+        }
     }
 
     # 2. Копирование интерфейсного бандла web_bundle_ru
-    Write-Host "[*] Копирование языкового бандла (web_bundle_ru)..." -ForegroundColor Cyan
-    if (-not (Test-Path $TargetBundle)) {
-        New-Item -ItemType Directory -Path $TargetBundle -Force | Out-Null
+    Write-Host "[*] Копирование языкового бандла (web_bundle_ru для $ChosenVersion)..." -ForegroundColor Cyan
+    if (Test-Path $TargetBundle) {
+        Remove-Item -Path $TargetBundle -Recurse -Force
     }
-    Copy-Item -Path "$ScriptDir\resources\web_bundle_ru\*" -Destination $TargetBundle -Recurse -Force
+    New-Item -ItemType Directory -Path $TargetBundle -Force | Out-Null
+    Copy-Item -Path "$ScriptDir\resources\$ChosenVersion\web_bundle_ru\*" -Destination $TargetBundle -Recurse -Force
 
     # 3. Копирование русифицированного app.asar
-    Write-Host "[*] Установка локализованного ядра Electron (app.asar)..." -ForegroundColor Cyan
-    Copy-Item -Path "$ScriptDir\resources\app.asar" -Destination $TargetAsar -Force
+    Write-Host "[*] Установка локализованного ядра Electron (app.asar для $ChosenVersion)..." -ForegroundColor Cyan
+    Copy-Item -Path "$ScriptDir\resources\$ChosenVersion\app.asar" -Destination $TargetAsar -Force
 
     Write-Host ""
     Write-Host "==========================================================" -ForegroundColor Green
-    Write-Host "  Русификация Antigravity 2.0 (v$SupportedVersion) успешно установлена!  " -ForegroundColor Green
+    Write-Host "  Русификация Antigravity 2.0 (набор v$ChosenVersion) успешно установлена!  " -ForegroundColor Green
     Write-Host "==========================================================" -ForegroundColor Green
     Write-Host "• Все ваши проекты, чаты, сессии и ключи полностью сохранены." -ForegroundColor White
     Write-Host "• Запустите Antigravity 2.0, чтобы начать работу на русском!" -ForegroundColor White

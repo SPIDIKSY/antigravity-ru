@@ -1,0 +1,3332 @@
+/* Scoped Prism themes for light and dark modes using CSS Nesting. Token colors
+ * are driven by --syntax-* CSS variables so a selected theme preset can
+ * override the syntax palette without re-tokenizing (a preset just swaps the
+ * vars). The defaults below reproduce the original bundled prismjs palettes
+ * exactly (light: prism default; dark: okaidia), so this is a no-op until
+ * presets seed --syntax-*. Backgrounds/structural colors stay app-native and
+ * are intentionally not preset-driven. */
+
+.theme-light {
+  /* Default syntax palette (prism default theme, @author Lea Verou). */
+  --syntax-default-fg: black;
+  --syntax-comment: slategray;
+  --syntax-punctuation: #999;
+  --syntax-property: #905;
+  --syntax-deleted: #905;
+  --syntax-inserted: #690;
+  --syntax-tag: #905;
+  --syntax-constant: #905;
+  --syntax-number: #905;
+  --syntax-string: #690;
+  --syntax-attr-name: #690;
+  --syntax-builtin: #690;
+  --syntax-operator: #9a6e3a;
+  --syntax-variable: #e90;
+  --syntax-attr-value: #07a;
+  --syntax-keyword: #07a;
+  --syntax-function: #dd4a68;
+  --syntax-class-name: #dd4a68;
+  --syntax-regex: #e90;
+
+  code[class*='language-'],
+  pre[class*='language-'] {
+    color: var(--syntax-default-fg);
+    background: none;
+    text-shadow: 0 1px white;
+    font-family: var(--editor-font-family, Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace);
+    font-size: 1em;
+    text-align: left;
+    white-space: pre;
+    word-spacing: normal;
+    word-break: normal;
+    word-wrap: normal;
+    line-height: 1.5;
+
+    -moz-tab-size: 4;
+    -o-tab-size: 4;
+    tab-size: 4;
+
+    -webkit-hyphens: none;
+    -moz-hyphens: none;
+    -ms-hyphens: none;
+    hyphens: none;
+  }
+
+  pre[class*='language-']::-moz-selection,
+  pre[class*='language-'] ::-moz-selection,
+  code[class*='language-']::-moz-selection,
+  code[class*='language-'] ::-moz-selection {
+    text-shadow: none;
+    background: #b3d4fc;
+  }
+
+  pre[class*='language-']::selection,
+  pre[class*='language-'] ::selection,
+  code[class*='language-']::selection,
+  code[class*='language-'] ::selection {
+    text-shadow: none;
+    background: #b3d4fc;
+  }
+
+  @media print {
+    code[class*='language-'],
+    pre[class*='language-'] {
+      text-shadow: none;
+    }
+  }
+
+  /* Code blocks */
+  pre[class*='language-'] {
+    padding: 1em;
+    margin: 0.5em 0;
+    overflow: auto;
+  }
+
+  :not(pre) > code[class*='language-'],
+  pre[class*='language-'] {
+    background: #f5f2f0;
+  }
+
+  /* Inline code */
+  :not(pre) > code[class*='language-'] {
+    padding: 0.1em;
+    border-radius: 0.3em;
+    white-space: normal;
+  }
+
+  .token.comment,
+  .token.prolog,
+  .token.doctype,
+  .token.cdata {
+    color: var(--syntax-comment);
+  }
+
+  .token.punctuation {
+    color: var(--syntax-punctuation);
+  }
+
+  .token.namespace {
+    opacity: 0.7;
+  }
+
+  .token.property,
+  .token.symbol {
+    color: var(--syntax-property);
+  }
+
+  .token.deleted {
+    color: var(--syntax-deleted);
+  }
+
+  .token.tag {
+    color: var(--syntax-tag);
+  }
+
+  .token.constant {
+    color: var(--syntax-constant);
+  }
+
+  .token.boolean,
+  .token.number {
+    color: var(--syntax-number);
+  }
+
+  .token.selector,
+  .token.string,
+  .token.char {
+    color: var(--syntax-string);
+  }
+
+  .token.inserted {
+    color: var(--syntax-inserted);
+  }
+
+  .token.attr-name {
+    color: var(--syntax-attr-name);
+  }
+
+  .token.builtin {
+    color: var(--syntax-builtin);
+  }
+
+  .token.operator,
+  .token.entity,
+  .token.url,
+  .language-css .token.string,
+  .style .token.string {
+    color: var(--syntax-operator);
+  }
+
+  .token.atrule,
+  .token.attr-value {
+    color: var(--syntax-attr-value);
+  }
+
+  .token.keyword {
+    color: var(--syntax-keyword);
+  }
+
+  .token.function {
+    color: var(--syntax-function);
+  }
+
+  .token.class-name {
+    color: var(--syntax-class-name);
+  }
+
+  .token.regex,
+  .token.important {
+    color: var(--syntax-regex);
+  }
+
+  .token.variable {
+    color: var(--syntax-variable);
+  }
+
+  .token.important,
+  .token.bold {
+    font-weight: bold;
+  }
+  .token.italic {
+    font-style: italic;
+  }
+
+  .token.entity {
+    cursor: help;
+  }
+
+  /* The embedded CATCH viewer labels tokens with its own class names, which
+     Prism never emits; match them to the colours of their Prism counterparts. */
+  .token.reference {
+    color: #905;
+  }
+
+  .token.type,
+  .token.definition {
+    color: #dd4a68;
+  }
+
+  .token.macro {
+    color: #e90;
+  }
+}
+
+.theme-dark {
+  /* Default syntax palette (okaidia theme, @author ocodia). */
+  --syntax-default-fg: #f8f8f2;
+  --syntax-comment: #8292a2;
+  --syntax-punctuation: #f8f8f2;
+  --syntax-property: #f92672;
+  --syntax-deleted: #f92672;
+  --syntax-inserted: #a6e22e;
+  --syntax-tag: #f92672;
+  --syntax-constant: #f92672;
+  --syntax-number: #ae81ff;
+  --syntax-string: #a6e22e;
+  --syntax-attr-name: #a6e22e;
+  --syntax-builtin: #a6e22e;
+  --syntax-operator: #f8f8f2;
+  --syntax-variable: #f8f8f2;
+  --syntax-attr-value: #e6db74;
+  --syntax-keyword: #66d9ef;
+  --syntax-function: #e6db74;
+  --syntax-class-name: #e6db74;
+  --syntax-regex: #fd971f;
+
+  code[class*='language-'],
+  pre[class*='language-'] {
+    color: var(--syntax-default-fg);
+    background: none;
+    text-shadow: 0 1px rgba(0, 0, 0, 0.3);
+    font-family: var(--editor-font-family, Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace);
+    font-size: 1em;
+    text-align: left;
+    white-space: pre;
+    word-spacing: normal;
+    word-break: normal;
+    word-wrap: normal;
+    line-height: 1.5;
+
+    -moz-tab-size: 4;
+    -o-tab-size: 4;
+    tab-size: 4;
+
+    -webkit-hyphens: none;
+    -moz-hyphens: none;
+    -ms-hyphens: none;
+    hyphens: none;
+  }
+
+  /* Code blocks */
+  pre[class*='language-'] {
+    padding: 1em;
+    margin: 0.5em 0;
+    overflow: auto;
+    border-radius: 0.3em;
+  }
+
+  :not(pre) > code[class*='language-'],
+  pre[class*='language-'] {
+    background: #272822;
+  }
+
+  /* Inline code */
+  :not(pre) > code[class*='language-'] {
+    padding: 0.1em;
+    border-radius: 0.3em;
+    white-space: normal;
+  }
+
+  .token.comment,
+  .token.prolog,
+  .token.doctype,
+  .token.cdata {
+    color: var(--syntax-comment);
+  }
+
+  .token.punctuation {
+    color: var(--syntax-punctuation);
+  }
+
+  .token.namespace {
+    opacity: 0.7;
+  }
+
+  .token.property,
+  .token.symbol {
+    color: var(--syntax-property);
+  }
+
+  .token.deleted {
+    color: var(--syntax-deleted);
+  }
+
+  .token.tag {
+    color: var(--syntax-tag);
+  }
+
+  .token.constant {
+    color: var(--syntax-constant);
+  }
+
+  .token.boolean,
+  .token.number {
+    color: var(--syntax-number);
+  }
+
+  .token.selector,
+  .token.string,
+  .token.char {
+    color: var(--syntax-string);
+  }
+
+  .token.inserted {
+    color: var(--syntax-inserted);
+  }
+
+  .token.attr-name {
+    color: var(--syntax-attr-name);
+  }
+
+  .token.builtin {
+    color: var(--syntax-builtin);
+  }
+
+  .token.operator,
+  .token.entity,
+  .token.url,
+  .language-css .token.string,
+  .style .token.string {
+    color: var(--syntax-operator);
+  }
+
+  .token.atrule,
+  .token.attr-value {
+    color: var(--syntax-attr-value);
+  }
+
+  .token.keyword {
+    color: var(--syntax-keyword);
+  }
+
+  .token.function {
+    color: var(--syntax-function);
+  }
+
+  .token.class-name {
+    color: var(--syntax-class-name);
+  }
+
+  .token.regex,
+  .token.important {
+    color: var(--syntax-regex);
+  }
+
+  .token.variable {
+    color: var(--syntax-variable);
+  }
+
+  .token.important,
+  .token.bold {
+    font-weight: bold;
+  }
+  .token.italic {
+    font-style: italic;
+  }
+
+  .token.entity {
+    cursor: help;
+  }
+
+  /* The embedded CATCH viewer labels tokens with its own class names, which
+     Prism never emits; match them to the colours of their Prism counterparts. */
+  .token.reference {
+    color: #f92672;
+  }
+
+  .token.type,
+  .token.definition {
+    color: #e6db74;
+  }
+
+  .token.macro {
+    color: #fd971f;
+  }
+}
+
+/* Keep token spans inline: the `table` token else hits Tailwind's
+ * `.table { display: table }`, wrapping the Markdown pipe `|` onto its own line. */
+.theme-light .token,
+.theme-dark .token {
+  display: inline;
+}
+
+/* Selection and cursor overlays in the CATCH file viewer paint from these
+ * custom properties. They are declared in the CATCH application's global theme,
+ * which this bundle does not load, and an undefined custom property makes
+ * background-color compute to an invalid value: the overlay renders fully
+ * transparent, so a selection exists in the model and copies correctly while
+ * being impossible to see. Values match the CATCH light and dark palettes. */
+.theme-light {
+  --bg-selection: rgba(180, 213, 254, 0.4);
+  --bg-selection-overlay: rgba(180, 213, 254, 0.35);
+  --bg-cursor-line: rgba(254, 252, 232, 0.55);
+  --fg-cursor: #374151;
+}
+
+.theme-dark {
+  --bg-selection: rgba(60, 130, 200, 0.35);
+  --bg-selection-overlay: rgba(100, 160, 230, 0.3);
+  --bg-cursor-line: rgba(255, 240, 200, 0.06);
+  --fg-cursor: #aeafad;
+}
+
+/** @license
+ * Copyright (c) 2022 ReactTooltip Team Github
+ * SPDX-License-Identifier: MIT
+ */
+:root {
+  --rt-color-white: #fff;
+  --rt-color-dark: #222;
+  --rt-color-success: #8dc572;
+  --rt-color-error: #be6464;
+  --rt-color-warning: #f0ad4e;
+  --rt-color-info: #337ab7;
+  --rt-opacity: 0.9;
+  --rt-transition-show-delay: 0.15s;
+  --rt-transition-closing-delay: 0.15s;
+  --rt-arrow-size: 8px;
+}
+
+/** @license
+ * Copyright (c) 2022 ReactTooltip Team Github
+ * SPDX-License-Identifier: MIT
+ */
+:-stv-set-elsewhere {
+  --rt-arrow-size: initial;
+  --rt-color-dark: initial;
+  --rt-color-white: initial;
+  --rt-color-success: initial;
+  --rt-color-warning: initial;
+  --rt-color-error: initial;
+  --rt-color-info: initial;
+}
+
+@goog-export-classes .reactTooltipComponent;
+.reactTooltipComponenttooltip {
+  border-radius: 3px;
+  font-size: 90%;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+}
+.reactTooltipComponentcontent {
+  background: inherit;
+  border-radius: inherit;
+  padding: 8px 16px;
+}
+.reactTooltipComponentarrow {
+  width: var(--rt-arrow-size);
+  height: var(--rt-arrow-size);
+}
+[class*=react-tooltip__place-top] > .reactTooltipComponentarrow {
+  -webkit-transform: rotate(45deg);
+          transform: rotate(45deg);
+}
+[class*=react-tooltip__place-right] > .reactTooltipComponentarrow {
+  -webkit-transform: rotate(135deg);
+          transform: rotate(135deg);
+}
+[class*=react-tooltip__place-bottom] > .reactTooltipComponentarrow {
+  -webkit-transform: rotate(225deg);
+          transform: rotate(225deg);
+}
+[class*=react-tooltip__place-left] > .reactTooltipComponentarrow {
+  -webkit-transform: rotate(315deg);
+          transform: rotate(315deg);
+}
+.reactTooltipComponentdark {
+  background: var(--rt-color-dark);
+  color: var(--rt-color-white);
+}
+.reactTooltipComponentlight {
+  background-color: var(--rt-color-white);
+  color: var(--rt-color-dark);
+}
+.reactTooltipComponentsuccess {
+  background-color: var(--rt-color-success);
+  color: var(--rt-color-white);
+}
+.reactTooltipComponentwarning {
+  background-color: var(--rt-color-warning);
+  color: var(--rt-color-white);
+}
+.reactTooltipComponenterror {
+  background-color: var(--rt-color-error);
+  color: var(--rt-color-white);
+}
+.reactTooltipComponentinfo {
+  background-color: var(--rt-color-info);
+  color: var(--rt-color-white);
+}
+
+/** @license
+ * Copyright (c) 2022 ReactTooltip Team Github
+ * SPDX-License-Identifier: MIT
+ */
+:-stv-set-elsewhere {
+  --rt-opacity: initial;
+  --rt-transition-show-delay: initial;
+  --rt-transition-closing-delay: initial;
+}
+
+@goog-export-classes .reactTooltipCore;
+.reactTooltipCoretooltip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  opacity: 0;
+}
+.reactTooltipCorefixed {
+  position: fixed;
+}
+.reactTooltipCorearrow {
+  position: absolute;
+  background: inherit;
+  z-index: -1;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+.reactTooltipCorecontent {
+  position: relative;
+  z-index: 1;
+}
+.reactTooltipCorenoArrow {
+  display: none;
+}
+.reactTooltipCoreclickable {
+  pointer-events: auto;
+}
+.reactTooltipCoreshow {
+  opacity: var(--rt-opacity);
+  -webkit-transition: opacity var(--rt-transition-show-delay) ease-out;
+  transition: opacity var(--rt-transition-show-delay) ease-out;
+  will-change: opacity;
+}
+.reactTooltipCoreclosing {
+  opacity: 0;
+  -webkit-transition: opacity var(--rt-transition-closing-delay) ease-in;
+  transition: opacity var(--rt-transition-closing-delay) ease-in;
+  will-change: opacity;
+}
+
+/*# sourceMappingURL=styles.css.map */{"version":3,"sources":["../../../../../../../third_party/javascript/react_tooltip/src/tokens.scss","_styles_sass_binary.css","../../../../../../../third_party/javascript/react_tooltip/src/components/Tooltip/styles.module.scss","../../../../../../../webutil/sass/mss.scss","../../../../../../../third_party/javascript/react_tooltip/src/components/Tooltip/core-styles.module.scss"],"names":[],"mappings":"AAAA;;;EAAA;AAIA;EACE,sBAAA;EACA,qBAAA;EACA,2BAAA;EACA,yBAAA;EACA,2BAAA;EACA,wBAAA;EACA,iBAAA;EACA,iCAAA;EACA,oCAAA;EACA,oBAAA;ACCF;;ACfA;;;EAAA;AAMA;EACE,wBAAA;EACA,wBAAA;EACA,yBAAA;EACA,2BAAA;EACA,2BAAA;EACA,yBAAA;EACA,wBAAA;ADgBF;;AEDI,2CAAA;ADRF;EACE,kBAAA;EACA,cAAA;EACA,0BAAA;EAAA,uBAAA;EAAA,kBAAA;ADaJ;ACVE;EACE,mBAAA;EACA,sBAAA;EACA,iBAAA;ADYJ;ACTE;EACE,2BAAA;EACA,4BAAA;ADWJ;ACRE;EACE,gCAAA;UAAA,wBAAA;ADUJ;ACPE;EACE,iCAAA;UAAA,yBAAA;ADSJ;ACNE;EACE,iCAAA;UAAA,yBAAA;ADQJ;ACLE;EACE,iCAAA;UAAA,yBAAA;ADOJ;ACJE;EACE,gCAAA;EACA,4BAAA;ADMJ;ACHE;EACE,uCAAA;EACA,2BAAA;ADKJ;ACFE;EACE,yCAAA;EACA,4BAAA;ADIJ;ACDE;EACE,yCAAA;EACA,4BAAA;ADGJ;ACAE;EACE,uCAAA;EACA,4BAAA;ADEJ;ACCE;EACE,sCAAA;EACA,4BAAA;ADCJ;;AGjFA;;;EAAA;AAMA;EACE,qBAAA;EACA,mCAAA;EACA,sCAAA;AHkFF;;AE/DI,sCAAA;ACZF;EACE,kBAAA;EACA,MAAA;EACA,OAAA;EACA,oBAAA;EACA,UAAA;AH+EJ;AG5EE;EACE,eAAA;AH8EJ;AG3EE;EACE,kBAAA;EACA,mBAAA;EACA,WAAA;EACA,mCAAA;EACA,2BAAA;AH6EJ;AG1EE;EACE,kBAAA;EACA,UAAA;AH4EJ;AGzEE;EACE,aAAA;AH2EJ;AGxEE;EACE,oBAAA;AH0EJ;AGvEE;EACE,0BAAA;EACA,oEAAA;EAAA,4DAAA;EACA,oBAAA;AHyEJ;AGtEE;EACE,UAAA;EACA,sEAAA;EAAA,8DAAA;EACA,oBAAA;AHwEJ","file":"styles.css"}@scope (.pdf-sdk-root) {
+/**
+ * PDF SDK - CSS Custom Properties
+ * Scoped to :scope to avoid polluting host app globals.
+ *
+ * Host app customisation — override in your custom-pdf-theme.css:
+ *
+ * :scope {
+ *   --sdk-toolbar-bg: #your-colour;
+ *   --sdk-toolbar-border: #your-colour;
+ *   --sdk-toolbar-shadow: none;
+ *   --sdk-action-button-active-bg: #your-brand;
+ *   --sdk-action-button-active-border: #your-brand;
+ *   --sdk-action-button-active-color: #ffffff;
+ *   --sdk-font-family: "Your Font", sans-serif;
+ *   --sdk-nav-input-color: #your-colour;
+ *   --sdk-nav-button-bg: #your-colour;
+ *   --sdk-nav-button-border: #your-colour;
+ *   --sdk-nav-button-color: #your-colour;
+ *   --sdk-nav-button-hover-bg: #your-colour;
+ *   --sdk-nav-button-hover-color: #your-colour;
+ * }
+ */
+
+:scope {
+  /* ============================================
+     BASE COLOUR PALETTE (AGY Light Mode Defaults)
+     ============================================ */
+
+  --sdk-color-white: #ffffff;
+  --sdk-color-black: #101010;
+  --sdk-color-surface: #ffffff;
+  --sdk-color-surface-alt: #f2f2f2;
+  --sdk-color-canvas: #f0f0f0;
+  --sdk-color-border-base: rgba(0, 0, 0, 0.08);
+  --sdk-color-border-light: rgba(0, 0, 0, 0.05);
+  --sdk-color-border-dark: rgba(0, 0, 0, 0.14);
+  --sdk-color-border-hover: rgba(0, 0, 0, 0.22);
+  --sdk-color-text-base: #101010;
+  --sdk-color-text-muted: #6e6e6e;
+  --sdk-color-error: #dc2626;
+
+  /* ============================================
+     PRIMARY & SECONDARY COLOURS
+     ============================================ */
+
+  --sdk-primary: #007acc;
+  --sdk-primary-color: #007acc;
+  --sdk-primary-hover: #0062a3;
+  --sdk-primary-active: #004d80;
+  --sdk-primary-light: rgba(0, 122, 204, 0.1);
+
+  --sdk-secondary-color: #ececec;
+  --sdk-secondary-hover: #e2e2e2;
+  --sdk-secondary-active: #d6d6d6;
+
+  /* ============================================
+     BACKGROUNDS
+     ============================================ */
+
+  --sdk-background-base: var(--sdk-color-white);
+  --sdk-background-primary: var(--sdk-color-white);
+  --sdk-background-secondary: var(--sdk-color-surface-alt);
+  --sdk-background-tertiary: #ececec;
+  --sdk-background-viewport: var(--sdk-color-canvas);
+
+  /* ============================================
+     BORDERS
+     ============================================ */
+
+  --sdk-border-color: var(--sdk-color-border-base);
+  --sdk-border-color-light: var(--sdk-color-border-light);
+  --sdk-border-color-dark: var(--sdk-color-border-dark);
+  --sdk-border-color-hover: var(--sdk-color-border-hover);
+
+  /* ============================================
+     TEXT
+     ============================================ */
+
+  --sdk-text-primary: var(--sdk-color-text-base);
+  --sdk-text-secondary: var(--sdk-color-text-muted);
+  --sdk-text-muted: #8a8a8a;
+  --sdk-text-disabled: #b8b8b8;
+  --sdk-text-error: #dc2626;
+  --sdk-text-success: #16a34a;
+  --sdk-text-warning: #d97706;
+  --sdk-text-info: #007acc;
+  --sdk-text-select: rgba(0, 122, 204, 0.22);
+
+  /* ============================================
+     TOOLBAR
+     ============================================ */
+
+  --sdk-toolbar-bg: var(--sdk-color-surface);
+  --sdk-toolbar-border: var(--sdk-color-border-base);
+  --sdk-toolbar-text: var(--sdk-color-text-base);
+  --sdk-toolbar-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+
+  --sdk-toolbar-section-min-width: 160px;
+  --sdk-toolbar-btn-size: 24px;
+  --sdk-toolbar-page-input-width: 32px;
+  --sdk-toolbar-zoom-input-width: 44px;
+  --sdk-toolbar-separator-height: 16px;
+  --sdk-toolbar-icon-size-nav: 16px;
+
+  --sdk-toolbar-search-btn-size: 28px;
+  --sdk-toolbar-search-min-width: 110px;
+  --sdk-toolbar-search-expanded-width: 110px;
+  --sdk-toolbar-search-icon-size: 14px;
+  --sdk-toolbar-search-input-padding: 2px 0;
+  --sdk-toolbar-search-nav-padding: 2px;
+  --sdk-toolbar-search-nav-icon-size: 14px;
+
+  --sdk-toolbar-legacy-btn-size: 28px;
+
+  /* ============================================
+     SIDEBAR
+     ============================================ */
+
+  --sdk-sidebar-bg: var(--sdk-color-surface);
+  --sdk-sidebar-border: var(--sdk-border-color);
+  --sdk-sidebar-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+
+  /* ============================================
+     BASE BUTTONS
+     ============================================ */
+
+  --sdk-button-bg: transparent;
+  --sdk-button-border: transparent;
+  --sdk-button-text: var(--sdk-color-text-base);
+  --sdk-button-hover-bg: var(--sdk-secondary-color);
+  --sdk-button-disabled-opacity: 0.4;
+
+  /* ============================================
+     NAVIGATION & ZOOM BUTTONS
+     ============================================ */
+
+  --sdk-nav-button-border-width: 1px;
+  --sdk-nav-button-border-radius: var(--sdk-border-radius-md);
+  --sdk-nav-button-bg: transparent;
+  --sdk-nav-button-border: transparent;
+  --sdk-nav-button-color: var(--sdk-color-text-muted);
+  --sdk-nav-button-hover-bg: var(--sdk-secondary-color);
+  --sdk-nav-button-hover-color: var(--sdk-color-text-base);
+  --sdk-nav-button-active-bg: var(--sdk-secondary-hover);
+  --sdk-nav-input-bg: var(--sdk-color-surface-alt);
+  --sdk-nav-input-color: var(--sdk-color-text-base);
+
+  /* ============================================
+     ACTION / TOGGLE BUTTONS (AGY Ghost/Secondary Icon Buttons)
+     ============================================ */
+
+  --sdk-action-button-bg: transparent;
+  --sdk-action-button-border: transparent;
+  --sdk-action-button-color: var(--sdk-color-text-muted);
+  --sdk-action-button-hover-bg: var(--sdk-secondary-color);
+  --sdk-action-button-hover-color: var(--sdk-color-text-base);
+  --sdk-action-button-hover-border: transparent;
+  --sdk-action-button-active-bg: var(--sdk-secondary-hover);
+  --sdk-action-button-active-border: transparent;
+  --sdk-action-button-active-color: var(--sdk-color-text-base);
+
+  /* ============================================
+     SEARCH
+     ============================================ */
+
+  --sdk-search-bg: var(--sdk-color-surface-alt);
+  --sdk-search-border: var(--sdk-color-border-base);
+  --sdk-search-color: var(--sdk-color-text-base);
+  --sdk-search-placeholder: #8a8a8a;
+  --sdk-search-focus-bg: var(--sdk-color-white);
+  --sdk-search-focus-border: rgba(0, 122, 204, 0.5);
+  --sdk-search-focus-ring: rgba(0, 122, 204, 0.15);
+  --sdk-search-icon-color: #8a8a8a;
+
+  /* ============================================
+     INPUTS
+     ============================================ */
+
+  --sdk-input-bg: var(--sdk-color-surface-alt);
+  --sdk-input-border: var(--sdk-color-border-base);
+  --sdk-input-text: var(--sdk-color-text-base);
+  --sdk-input-placeholder: #8a8a8a;
+
+  /* ============================================
+     THUMBNAILS
+     ============================================ */
+
+  --sdk-thumbnail-bg: rgba(0, 0, 0, 0.03);
+  --sdk-thumbnail-border: transparent;
+  --sdk-thumbnail-border-hover: rgba(0, 122, 204, 0.6);
+  --sdk-thumbnail-border-active: var(--sdk-primary-color);
+  --sdk-thumbnail-bg-active: rgba(0, 122, 204, 0.08);
+  --sdk-thumbnail-image-bg: var(--sdk-background-primary);
+  --sdk-thumbnail-number-color: var(--sdk-color-text-muted);
+  --sdk-thumbnail-number-active-color: var(--sdk-primary-color);
+  --sdk-thumbnail-shadow-hover: 0 1px 4px rgba(0, 0, 0, 0.08);
+  --sdk-thumbnail-shadow-active: 0 1px 4px rgba(0, 122, 204, 0.15);
+
+  /* ============================================
+     SCROLLBAR
+     ============================================ */
+
+  --sdk-scrollbar-bg: var(--sdk-background-viewport);
+  --sdk-scrollbar-track-bg: rgba(0, 0, 0, 0.04);
+  --sdk-scrollbar-thumb-bg: rgba(0, 0, 0, 0.22);
+  --sdk-scrollbar-thumb-hover: rgba(0, 0, 0, 0.36);
+  --sdk-scrollbar-thumb-active: rgba(0, 0, 0, 0.48);
+  --sdk-scrollbar-button-bg: transparent;
+  --sdk-scrollbar-button-color: var(--sdk-color-text-muted);
+  --sdk-scrollbar-indicator-color: #f59e0b;
+  --sdk-scrollbar-indicator-hover-color: #d97706;
+  /* scrollbar popover */
+  --sdk-scrollbar-popover-min-width: 200px;
+  --sdk-scrollbar-popover-width: auto;
+  --sdk-scrollbar-popover-max-height-offset: 80px;
+  --sdk-scrollbar-popover-bg: var(--sdk-color-surface);
+  --sdk-scrollbar-popover-item-hover: var(--sdk-secondary-color);
+  --sdk-scrollbar-popover-title-color: var(--sdk-color-text-base);
+  --sdk-scrollbar-popover-subtitle-color: var(--sdk-color-text-muted);
+
+  --sdk-scrollbar-width: 48px;
+  --sdk-scrollbar-track-width: 28px;
+  --sdk-scrollbar-track-height: 90%;
+  --sdk-scrollbar-btn-height: 28px;
+  --sdk-scrollbar-btn-hover-bg: rgba(0, 0, 0, 0.05);
+  --sdk-scrollbar-btn-active-bg: rgba(0, 0, 0, 0.1);
+  --sdk-scrollbar-btn-icon-size: 16px;
+  --sdk-scrollbar-thumb-border-radius: 9999px;
+  --sdk-scrollbar-thumb-min-height: 30px;
+  --sdk-scrollbar-indicator-width: 16px;
+  --sdk-scrollbar-indicator-height: 4px;
+  --sdk-scrollbar-indicator-border-radius: 2px;
+  --sdk-scrollbar-indicator-offset: -2px;
+  --sdk-scrollbar-search-indicator-height: 4px;
+
+  /* ============================================
+     COMMENTS
+     ============================================ */
+
+  --sdk-comment-card-bg: var(--sdk-color-surface);
+  --sdk-comment-card-border: var(--sdk-border-color);
+  --sdk-comment-floating-border: var(--sdk-border-color);
+  --sdk-comment-avatar-bg: var(--sdk-secondary-color);
+  --sdk-comment-avatar-color: var(--sdk-color-text-base);
+  --sdk-comment-author-color: var(--sdk-color-text-base);
+  --sdk-comment-timestamp-color: var(--sdk-text-muted);
+  --sdk-comment-content-color: #404040;
+  --sdk-comment-badge-bg: var(--sdk-secondary-color);
+  --sdk-comment-badge-color: var(--sdk-color-text-base);
+  --sdk-comment-highlight-bg: rgba(245, 158, 11, 0.08);
+  --sdk-comment-highlight-border: var(--sdk-primary-color);
+
+  /* ============================================
+     SHADOWS
+     ============================================ */
+
+  --sdk-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --sdk-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --sdk-shadow-md: 0 4px 8px -2px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
+  --sdk-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+  --sdk-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.12), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+
+  /* ============================================
+     SPACING
+     ============================================ */
+
+  --sdk-spacing-xs: 4px;
+  --sdk-spacing-sm: 6px;
+  --sdk-spacing-md: 8px;
+  --sdk-spacing-lg: 12px;
+  --sdk-spacing-xl: 16px;
+  --sdk-spacing-2xl: 24px;
+  --sdk-spacing-3xl: 32px;
+
+  --sdk-toolbar-padding-x: 4px;
+  --sdk-toolbar-padding-y: 4px;
+  --sdk-toolbar-gap: 4px;
+  --sdk-toolbar-margin: 8px 12px;
+  --sdk-toolbar-border-radius: 8px;
+  --sdk-toolbar-min-height: 36px;
+
+  --sdk-sidebar-padding: 8px 6px;
+  --sdk-sidebar-margin: 0 8px 12px 12px;
+  --sdk-sidebar-width: 128px;
+  --sdk-sidebar-border-radius: 8px;
+  --sdk-thumbnail-gap: 8px;
+
+  --sdk-button-padding-x: 8px;
+  --sdk-button-padding-y: 4px;
+  --sdk-button-padding-sm-x: 6px;
+  --sdk-button-padding-sm-y: 2px;
+  --sdk-button-padding-lg-x: 12px;
+  --sdk-button-padding-lg-y: 6px;
+
+  --sdk-input-padding-x: 6px;
+  --sdk-input-padding-y: 2px;
+
+  /* ============================================
+     TYPOGRAPHY (AGY Font Stack & Scale)
+     ============================================ */
+
+  --sdk-font-family: var(
+    --font-sans,
+    var(
+      --vscode-font-family,
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      Roboto,
+      "Helvetica Neue",
+      Arial,
+      sans-serif
+    )
+  );
+  --sdk-font-family-mono: var(
+    --font-mono,
+    var(
+      --editor-font-family,
+      ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      Monaco,
+      Consolas,
+      "Liberation Mono",
+      "Courier New",
+      monospace
+    )
+  );
+
+  --sdk-font-size-xs: 11px;
+  --sdk-font-size-sm: 12px;
+  --sdk-font-size-md: 13px;
+  --sdk-font-size-lg: 14px;
+  --sdk-font-size-xl: 16px;
+  --sdk-font-size-2xl: 18px;
+
+  --sdk-font-weight-normal: 400;
+  --sdk-font-weight-medium: 500;
+  --sdk-font-weight-semibold: 600;
+  --sdk-font-weight-bold: 700;
+
+  --sdk-line-height-tight: 1.25;
+  --sdk-line-height-normal: 1.5;
+  --sdk-line-height-relaxed: 1.75;
+
+  /* ============================================
+     BORDERS & RADIUS
+     ============================================ */
+
+  --sdk-border-width: 1px;
+  --sdk-border-width-thick: 1.5px;
+
+  --sdk-border-radius-none: 0;
+  --sdk-border-radius-xs: 3px;
+  --sdk-border-radius-sm: 4px;
+  --sdk-border-radius-md: 6px;
+  --sdk-border-radius-lg: 8px;
+  --sdk-border-radius-xl: 10px;
+  --sdk-border-radius-full: 9999px;
+
+  /* ============================================
+     LAYOUT & SIZING
+     ============================================ */
+
+  --sdk-toolbar-height: 36px;
+  --sdk-thumbnail-width: 80px;
+  --sdk-thumbnail-height: 112px;
+
+  --sdk-z-index-base: 1;
+  --sdk-z-index-dropdown: 1000;
+  --sdk-z-index-sticky: 1020;
+  --sdk-z-index-fixed: 1030;
+  --sdk-z-index-modal-backdrop: 1040;
+  --sdk-z-index-modal: 1050;
+  --sdk-z-index-popover: 1060;
+  --sdk-z-index-tooltip: 1070;
+
+  /* ============================================
+     TRANSITIONS
+     ============================================ */
+
+  --sdk-transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --sdk-transition-normal: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --sdk-transition-slow: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  --sdk-toolbar-icon-size: 16px;
+  --sdk-toolbar-border-width: 1px;
+
+  --sdk-action-button-border-width: 1px;
+  --sdk-action-button-border-radius: 6px;
+
+  --sdk-scrollbar-border-color: transparent;
+  --sdk-scrollbar-border-width: 0px;
+  --sdk-scrollbar-border-radius: 9999px;
+
+  --sdk-comment-font-size: var(--sdk-font-size-sm);
+  --sdk-comment-font-family: var(--sdk-font-family);
+  --sdk-comment-border-width: 1px;
+  --sdk-comment-border-radius: var(--sdk-border-radius-lg);
+
+  --sdk-sidebar-border-width: 1px;
+
+  /* ============================================
+     COORDINATOR TOKENS
+     ============================================ */
+
+  --sdk-coordinator-breakpoint-hide-panels: 800;
+  --sdk-coordinator-breakpoint-hide-comments: 600;
+  --sdk-coordinator-viewport-min-width: 420;
+  --sdk-coordinator-scrollbar-width: 48;
+
+  /* ============================================
+     RESPONSIVE TOKENS VIA CONTAINER QUERIES
+     ============================================ */
+
+  @container pdf-viewer (min-width: 600px) {
+    .pdf-toolbar,
+    .pdf-sidebar,
+    .pdf-viewport,
+    .document-comments-floating {
+      --sdk-toolbar-padding-x: 4px;
+      --sdk-toolbar-gap: 4px;
+      --sdk-toolbar-margin: 8px 12px;
+      --sdk-sidebar-width: 110px;
+      --sdk-thumbnail-gap: 8px;
+      --sdk-scrollbar-width: 48px;
+      --sdk-scrollbar-track-width: 28px;
+      --sdk-coordinator-scrollbar-width: 48;
+    }
+  }
+
+  @container pdf-viewer (min-width: 800px) {
+    .pdf-toolbar,
+    .pdf-sidebar,
+    .pdf-viewport,
+    .document-comments-floating {
+      --sdk-toolbar-padding-x: 4px;
+      --sdk-toolbar-gap: 4px;
+      --sdk-toolbar-margin: 8px 12px;
+      --sdk-sidebar-width: 120px;
+      --sdk-sidebar-margin: 0px 8px 12px 12px;
+      --sdk-thumbnail-gap: 8px;
+      --sdk-scrollbar-width: 48px;
+      --sdk-scrollbar-track-width: 28px;
+      --sdk-coordinator-scrollbar-width: 48;
+    }
+  }
+
+  @container pdf-viewer (min-width: 1024px) {
+    .pdf-toolbar,
+    .pdf-sidebar,
+    .pdf-viewport,
+    .document-comments-floating {
+      --sdk-toolbar-padding-x: 4px;
+      --sdk-toolbar-gap: 6px;
+      --sdk-toolbar-margin: 8px 12px;
+      --sdk-sidebar-width: 128px;
+      --sdk-sidebar-margin: 0px 8px 12px 12px;
+      --sdk-thumbnail-gap: 10px;
+      --sdk-scrollbar-width: 52px;
+      --sdk-scrollbar-track-width: 30px;
+      --sdk-coordinator-scrollbar-width: 52;
+    }
+  }
+
+  @container pdf-viewer (min-width: 1280px) {
+    .pdf-toolbar,
+    .pdf-sidebar,
+    .pdf-viewport,
+    .document-comments-floating {
+      --sdk-toolbar-padding-x: 4px;
+      --sdk-toolbar-gap: 6px;
+      --sdk-toolbar-margin: 8px 12px;
+      --sdk-sidebar-width: 136px;
+      --sdk-sidebar-margin: 0px 8px 12px 12px;
+      --sdk-sidebar-padding: 8px 6px;
+      --sdk-thumbnail-gap: 10px;
+      --sdk-scrollbar-width: 56px;
+      --sdk-scrollbar-track-width: 32px;
+      --sdk-scrollbar-btn-height: 28px;
+      --sdk-scrollbar-btn-icon-size: 16px;
+      --sdk-coordinator-scrollbar-width: 56;
+    }
+  }
+
+  @container pdf-viewer (min-width: 1600px) {
+    .pdf-toolbar,
+    .pdf-sidebar,
+    .pdf-viewport,
+    .document-comments-floating {
+      --sdk-toolbar-padding-x: 4px;
+      --sdk-toolbar-gap: 6px;
+      --sdk-toolbar-margin: 8px 12px;
+      --sdk-sidebar-width: 148px;
+      --sdk-sidebar-margin: 0px 8px 12px 12px;
+      --sdk-thumbnail-gap: 12px;
+      --sdk-scrollbar-width: 60px;
+      --sdk-scrollbar-track-width: 34px;
+      --sdk-coordinator-scrollbar-width: 60;
+    }
+  }
+}
+/**
+ * PDF SDK - Dark Theme Variable Overrides
+ *
+ * Applied when data-theme="dark" is set on :scope.
+ * Components automatically pick up dark values via CSS variables.
+ */
+
+:scope[data-theme="dark"] {
+  /* ── Base Palette Overrides (AGY Dark Mode) ──
+     Override base palette variables so ALL
+     components referencing them update together.
+     ─────────────────────────────────────────── */
+
+  --sdk-color-white: #ffffff;
+  --sdk-color-black: #000000;
+  --sdk-color-surface: #191919;
+  --sdk-color-surface-alt: #151515;
+  --sdk-color-canvas: #101010;
+  --sdk-color-border-base: rgba(255, 255, 255, 0.08);
+  --sdk-color-border-light: rgba(255, 255, 255, 0.05);
+  --sdk-color-border-dark: rgba(255, 255, 255, 0.14);
+  --sdk-color-border-hover: rgba(255, 255, 255, 0.22);
+  --sdk-color-text-base: #cccccc;
+  --sdk-color-text-muted: #858585;
+  --sdk-color-error: #f87171;
+
+  /* ── Primary & Secondary ─────────────────── */
+
+  --sdk-primary: #007acc;
+  --sdk-primary-color: #007acc;
+  --sdk-primary-hover: #1a8ad4;
+  --sdk-primary-active: #0062a3;
+  --sdk-primary-light: rgba(0, 122, 204, 0.18);
+
+  --sdk-secondary-color: #272727;
+  --sdk-secondary-hover: #303030;
+  --sdk-secondary-active: #383838;
+
+  /* ── Backgrounds ─────────────────────────── */
+
+  --sdk-background-base: #151515;
+  --sdk-background-primary: #191919;
+  --sdk-background-secondary: #151515;
+  --sdk-background-tertiary: #272727;
+  --sdk-background-viewport: #101010;
+
+  /* ── Text ────────────────────────────────── */
+
+  --sdk-text-muted: #666666;
+  --sdk-text-disabled: #4d4d4d;
+  --sdk-text-error: #f87171;
+  --sdk-text-success: #4ade80;
+  --sdk-text-warning: #fbbf24;
+  --sdk-text-info: #38bdf8;
+  --sdk-text-select: rgba(0, 122, 204, 0.32);
+
+  /* ── Toolbar ─────────────────────────────── */
+
+  --sdk-toolbar-bg: #191919;
+  --sdk-toolbar-border: var(--sdk-color-border-base);
+  --sdk-toolbar-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+
+  /* ── Sidebar ─────────────────────────────── */
+
+  --sdk-sidebar-bg: #191919;
+  --sdk-sidebar-border: var(--sdk-color-border-base);
+  --sdk-sidebar-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+
+  /* ── Base Buttons ────────────────────────── */
+
+  --sdk-button-bg: transparent;
+  --sdk-button-border: transparent;
+  --sdk-button-text: var(--sdk-color-text-base);
+  --sdk-button-hover-bg: #272727;
+
+  /* ── Nav / Zoom Buttons ──────────────────── */
+
+  --sdk-nav-button-bg: transparent;
+  --sdk-nav-button-border: transparent;
+  --sdk-nav-button-color: var(--sdk-color-text-muted);
+  --sdk-nav-button-hover-bg: #272727;
+  --sdk-nav-button-hover-color: var(--sdk-color-text-base);
+  --sdk-nav-button-active-bg: #303030;
+  --sdk-nav-input-bg: #141414;
+  --sdk-nav-input-color: var(--sdk-color-text-base);
+
+  /* ── Action Buttons (AGY Ghost/Secondary) ── */
+
+  --sdk-action-button-bg: transparent;
+  --sdk-action-button-border: transparent;
+  --sdk-action-button-color: var(--sdk-color-text-muted);
+  --sdk-action-button-hover-bg: #272727;
+  --sdk-action-button-hover-color: var(--sdk-color-text-base);
+  --sdk-action-button-hover-border: transparent;
+  --sdk-action-button-active-bg: #272727;
+  --sdk-action-button-active-border: transparent;
+  --sdk-action-button-active-color: var(--sdk-color-text-base);
+
+  /* ── Search ──────────────────────────────── */
+
+  --sdk-search-bg: #141414;
+  --sdk-search-border: var(--sdk-color-border-base);
+  --sdk-search-color: var(--sdk-color-text-base);
+  --sdk-search-placeholder: #666666;
+  --sdk-search-focus-bg: #141414;
+  --sdk-search-focus-border: rgba(0, 122, 204, 0.6);
+  --sdk-search-focus-ring: rgba(0, 122, 204, 0.2);
+  --sdk-search-icon-color: #666666;
+
+  /* ── Inputs ──────────────────────────────── */
+
+  --sdk-input-bg: #141414;
+  --sdk-input-border: var(--sdk-color-border-base);
+  --sdk-input-text: var(--sdk-color-text-base);
+  --sdk-input-placeholder: #666666;
+
+  /* ── Thumbnails ──────────────────────────── */
+
+  --sdk-thumbnail-bg: rgba(255, 255, 255, 0.03);
+  --sdk-thumbnail-border: transparent;
+  --sdk-thumbnail-border-hover: rgba(0, 122, 204, 0.7);
+  --sdk-thumbnail-border-active: var(--sdk-primary-color);
+  --sdk-thumbnail-bg-active: rgba(0, 122, 204, 0.14);
+  --sdk-thumbnail-image-bg: #222222;
+  --sdk-thumbnail-number-color: var(--sdk-color-text-muted);
+  --sdk-thumbnail-number-active-color: #38bdf8;
+  --sdk-thumbnail-shadow-hover: 0 2px 6px rgba(0, 0, 0, 0.35);
+  --sdk-thumbnail-shadow-active: 0 2px 8px rgba(0, 122, 204, 0.35);
+
+  /* ── Scrollbar ───────────────────────────── */
+
+  --sdk-scrollbar-bg: var(--sdk-background-viewport);
+  --sdk-scrollbar-track-bg: rgba(255, 255, 255, 0.04);
+  --sdk-scrollbar-thumb-bg: rgba(255, 255, 255, 0.2);
+  --sdk-scrollbar-thumb-hover: rgba(255, 255, 255, 0.35);
+  --sdk-scrollbar-thumb-active: rgba(255, 255, 255, 0.48);
+  --sdk-scrollbar-button-bg: transparent;
+  --sdk-scrollbar-button-color: var(--sdk-color-text-muted);
+  --sdk-scrollbar-popover-bg: #191919;
+  --sdk-scrollbar-popover-item-hover: #272727;
+
+  /* ── Comments ────────────────────────────── */
+
+  --sdk-comment-card-bg: #191919;
+  --sdk-comment-card-border: var(--sdk-color-border-base);
+  --sdk-comment-floating-border: var(--sdk-color-border-base);
+  --sdk-comment-avatar-bg: #272727;
+  --sdk-comment-avatar-color: var(--sdk-color-text-base);
+  --sdk-comment-author-color: var(--sdk-color-text-base);
+  --sdk-comment-timestamp-color: #666666;
+  --sdk-comment-content-color: #a3a3a3;
+  --sdk-comment-badge-bg: #272727;
+  --sdk-comment-highlight-bg: rgba(245, 158, 11, 0.12);
+  --sdk-comment-highlight-border: var(--sdk-primary-color);
+
+  /* ── Shadows ─────────────────────────────── */
+
+  --sdk-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --sdk-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --sdk-shadow-md: 0 4px 10px rgba(0, 0, 0, 0.45);
+  --sdk-shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.55);
+  --sdk-shadow-xl: 0 12px 24px rgba(0, 0, 0, 0.65);
+
+  /* ── Scrollbar buttons dark hover/active ─── */
+
+  --sdk-scrollbar-btn-hover-bg: rgba(255, 255, 255, 0.06);
+  --sdk-scrollbar-btn-active-bg: rgba(255, 255, 255, 0.12);
+}
+/* src/styles/themes/default.css */
+
+/**
+ * PDF SDK - Default Light Theme
+ *
+ * Variables are defined in variables.css scoped to :scope.
+ * This file is reserved for any light-theme component overrides
+ * that go beyond variable values.
+ */
+/**
+ * Main Container Styles
+ */
+
+:scope {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.pdf-viewer-container {
+  container-type: inline-size;
+  container-name: pdf-viewer;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  font-family: var(--sdk-font-family);
+  color: var(--sdk-text-primary);
+  background: var(--sdk-background-viewport);
+  position: relative;
+  overflow: hidden;
+}
+
+.pdf-viewer-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-size: var(--sdk-font-size-xl);
+  font-family: var(--sdk-font-family);
+  color: var(--sdk-text-primary);
+  background: var(--sdk-background-primary);
+}
+
+.pdf-viewer-loading--overlay {
+  position: absolute;
+  top: var(--sdk-toolbar-height, 64px);
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 5;
+}
+
+.pdf-viewer-loading.error {
+  color: var(--sdk-text-error);
+}
+
+.pdf-smart-text-notice {
+  display: flex;
+  align-items: center;
+  gap: var(--sdk-spacing-sm);
+  padding: var(--sdk-spacing-xs) var(--sdk-spacing-sm);
+  border: var(--sdk-border-width) solid var(--sdk-toolbar-border);
+  border-radius: var(--sdk-border-radius-sm);
+  background: var(--sdk-background-primary);
+  color: var(--sdk-text-secondary);
+  font-size: var(--sdk-font-size-sm);
+  box-shadow: var(--sdk-shadow-sm);
+  pointer-events: auto;
+}
+
+.pdf-smart-text-notice span {
+  flex: 1;
+  min-width: 0;
+}
+
+.pdf-smart-text-notice button {
+  border: 0;
+  background: transparent;
+  color: var(--sdk-primary-color);
+  cursor: pointer;
+  font: inherit;
+  padding: 0;
+}
+
+canvas.hiddenCanvasElement {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.pdf-viewer-content {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+  background: var(--sdk-background-viewport);
+  position: relative;
+}
+
+.pdf-viewer-bottom-overlay {
+  position: absolute;
+  right: var(--sdk-spacing-md);
+  bottom: var(--sdk-spacing-md);
+  left: var(--sdk-spacing-md);
+  z-index: 15;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.pdf-viewer-bottom-overlay .pdf-smart-text-notice {
+  width: min(100%, 720px);
+}
+
+/* ── Overlay panel wrapper ───────────────────────────────
+   Wraps Sidebar or DocumentComments when the container is
+   below the breakpoint and the user has toggled the panel on.
+   ────────────────────────────────────────────────────── */
+
+.pdf-panel-overlay {
+  position: absolute;
+  top: 0;
+  bottom: 20px;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  /*
+   * Solid opaque background — covers the PDF completely.
+   * Without this the PDF shows through around sidebar margins.
+   */
+  background: var(--sdk-background-primary);
+  /*
+   * Never consume full width — leave enough PDF visible
+   * that the user can click outside to dismiss.
+   */
+  max-width: 80%;
+  overflow: hidden;
+}
+
+.pdf-panel-overlay--left {
+  left: 0;
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.2);
+  animation: sdk-slide-in-left 200ms ease forwards;
+  margin-left: 15px;
+}
+
+.pdf-panel-overlay--right {
+  right: 0;
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.2);
+  animation: sdk-slide-in-right 200ms ease forwards;
+}
+
+@keyframes sdk-slide-in-left {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes sdk-slide-in-right {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+/* src/styles/components/toolbar.css */
+
+/**
+ * Toolbar Component Styles
+ *
+ * Host app customisation — override in your custom-pdf-theme.css:
+ *
+ * :scope {
+ *
+ *   Toolbar background, border, shadow:
+ *   --sdk-toolbar-bg
+ *   --sdk-toolbar-border
+ *   --sdk-toolbar-shadow
+ *
+ *   Toggle button active colour (thumbnail + comments toggles):
+ *   --sdk-action-button-active-bg
+ *   --sdk-action-button-active-border
+ *   --sdk-action-button-active-color
+ *
+ *   Page number and zoom % input font:
+ *   --sdk-font-family
+ *   --sdk-nav-input-color
+ *
+ *   Navigation and zoom button colours:
+ *   --sdk-nav-button-bg
+ *   --sdk-nav-button-border
+ *   --sdk-nav-button-color
+ *   --sdk-nav-button-hover-bg
+ *   --sdk-nav-button-hover-color
+ * }
+ */
+
+/* ── Toolbar Container ───────────────────────────── */
+
+.pdf-toolbar {
+  padding: var(--sdk-toolbar-padding-y) var(--sdk-toolbar-padding-x);
+  margin: var(--sdk-toolbar-margin);
+  border-radius: var(--sdk-toolbar-border-radius);
+  border: var(--sdk-toolbar-border-width) solid var(--sdk-toolbar-border);
+  background: var(--sdk-toolbar-bg);
+  display: flex;
+  align-items: center;
+  /*
+   * flex-wrap: wrap — when the container is narrow (high browser zoom),
+   * toolbar items flow to a second row instead of overflowing.
+   * This is the single most important fix for the 200% zoom overflow.
+   */
+  flex-wrap: wrap;
+  gap: var(--sdk-toolbar-gap);
+  /*
+   * row-gap controls vertical spacing when items wrap to a second row.
+   * Uses the same token as column gap for visual consistency.
+   */
+  row-gap: var(--sdk-toolbar-gap);
+  min-height: var(--sdk-toolbar-min-height);
+  box-shadow: var(--sdk-toolbar-shadow);
+  /*
+   * width: calc(100% - 24px) + box-sizing: border-box ensures the toolbar
+   * sits symmetrically with 12px horizontal margins inside its parent.
+   */
+  width: calc(100% - 24px);
+  box-sizing: border-box;
+  /*
+   * overflow: visible allows wrapped rows to expand downward.
+   * The toolbar's parent (pdf-viewer-container) is flex-direction: column
+   * so the toolbar expanding downward pushes the content area up, which
+   * is correct behavior — the viewport shrinks to accommodate the toolbar.
+   */
+  overflow: visible;
+}
+
+/*
+ * Single-row mode — active when the dynamic overflow logic is running.
+ * Switches the toolbar to nowrap so items never wrap to a second row.
+ */
+.pdf-toolbar--nowrap {
+  flex-wrap: nowrap;
+  overflow: visible;
+}
+
+/*
+ * When overlay mode is active (container below breakpoint),
+ * remove toolbar border radius so it sits flush with the overlaid panel.
+ */
+.pdf-viewer-container--overlay-mode .pdf-toolbar {
+  border-radius: var(--sdk-toolbar-border-radius);
+}
+
+/* ── Toolbar Spacer ──────────────────────────────── */
+
+/*
+ * The spacer is a flex:1 element that pushes items to opposite ends of the
+ * toolbar. It is always rendered in normal (wrap) mode.
+ * In overflow (nowrap) mode the Toolbar component still renders the spacer
+ * so left-side items stay left and the ⋮ button sits at the far right via
+ * margin-left:auto on .toolbar-overflow-menu.
+ */
+.pdf-toolbar-spacer {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ── Shared control group ────────────────────────────────────────────────────── */
+
+.toolbar-controls,
+.zoom-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--sdk-spacing-xs);
+}
+
+/* ── Navigation Controls ─────────────────────────────────────────────────────── */
+
+.toolbar-navigation {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.toolbar-section-spacer {
+  flex: 1;
+}
+
+/* ── Navigation Buttons ──────────────────────────── */
+
+.nav-button {
+  padding: 0;
+  border: var(--sdk-nav-button-border-width) solid var(--sdk-nav-button-border);
+  border-radius: var(--sdk-nav-button-border-radius);
+  background: var(--sdk-nav-button-bg);
+  color: var(--sdk-nav-button-color);
+  cursor: pointer;
+  transition:
+    background-color var(--sdk-transition-fast),
+    color var(--sdk-transition-fast),
+    border-color var(--sdk-transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--sdk-toolbar-btn-size);
+  width: var(--sdk-toolbar-btn-size);
+  min-height: var(--sdk-toolbar-btn-size);
+  height: var(--sdk-toolbar-btn-size);
+}
+
+.nav-button-prev {
+  border-radius: var(--sdk-nav-button-border-radius);
+}
+
+.nav-button-next {
+  border-radius: var(--sdk-nav-button-border-radius);
+}
+
+.nav-button:hover:not(:disabled) {
+  background: var(--sdk-nav-button-hover-bg);
+  color: var(--sdk-nav-button-hover-color);
+}
+
+.nav-button:active:not(:disabled) {
+  background: var(--sdk-nav-button-active-bg);
+}
+
+.nav-button:disabled {
+  opacity: var(--sdk-button-disabled-opacity);
+  cursor: not-allowed;
+}
+
+.nav-button svg {
+  width: var(--sdk-toolbar-icon-size-nav);
+  height: var(--sdk-toolbar-icon-size-nav);
+  color: inherit;
+}
+
+/* ── Page Number Input ───────────────────────────── */
+
+.page-input-wrapper {
+  display: flex;
+  align-items: center;
+  width: var(--sdk-toolbar-page-input-width);
+  height: 24px;
+  background: var(--sdk-nav-input-bg);
+  border: var(--sdk-border-width) solid var(--sdk-border-color);
+  border-radius: var(--sdk-border-radius-sm);
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.page-input-field {
+  width: 100%;
+  height: 100%;
+  padding: 0 2px;
+  border: none;
+  background: transparent;
+  color: var(--sdk-nav-input-color);
+  font-size: var(--sdk-font-size-sm);
+  font-family: var(--sdk-font-family);
+  text-align: center;
+  font-weight: var(--sdk-font-weight-medium);
+  font-variant-numeric: tabular-nums;
+  outline: none;
+}
+
+.page-input-field:focus {
+  background: var(--sdk-search-focus-bg);
+}
+
+.page-input-wrapper:focus-within {
+  border-color: var(--sdk-search-focus-border);
+  box-shadow: 0 0 0 1px var(--sdk-search-focus-ring);
+}
+
+.page-input-field::-webkit-outer-spin-button,
+.page-input-field::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.page-input-field[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* ── Zoom Controls ───────────────────────────────── */
+
+.zoom-controls-group {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.zoom-button {
+  padding: 0;
+  border: var(--sdk-border-width) solid var(--sdk-nav-button-border);
+  border-radius: var(--sdk-border-radius-md);
+  background: var(--sdk-nav-button-bg);
+  color: var(--sdk-nav-button-color);
+  cursor: pointer;
+  transition:
+    background-color var(--sdk-transition-fast),
+    color var(--sdk-transition-fast),
+    border-color var(--sdk-transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--sdk-toolbar-btn-size);
+  width: var(--sdk-toolbar-btn-size);
+  min-height: var(--sdk-toolbar-btn-size);
+  height: var(--sdk-toolbar-btn-size);
+}
+
+.zoom-button-fit {
+  border-radius: var(--sdk-border-radius-md);
+}
+
+.zoom-button-out {
+  border-radius: var(--sdk-border-radius-md);
+}
+
+.zoom-button-in {
+  border-radius: var(--sdk-border-radius-md);
+}
+
+.zoom-button:hover:not(:disabled) {
+  background: var(--sdk-nav-button-hover-bg);
+  color: var(--sdk-nav-button-hover-color);
+}
+
+.zoom-button:active:not(:disabled) {
+  background: var(--sdk-nav-button-active-bg);
+}
+
+.zoom-button:disabled {
+  opacity: var(--sdk-button-disabled-opacity);
+  cursor: not-allowed;
+}
+
+.zoom-button svg {
+  width: var(--sdk-toolbar-icon-size-nav);
+  height: var(--sdk-toolbar-icon-size-nav);
+  color: inherit;
+}
+
+/* ── Zoom Input ──────────────────────────────────── */
+
+.zoom-input-wrapper {
+  display: flex;
+  align-items: center;
+  width: var(--sdk-toolbar-zoom-input-width);
+  height: 24px;
+  background: var(--sdk-nav-input-bg);
+  border: var(--sdk-border-width) solid var(--sdk-border-color);
+  border-radius: var(--sdk-border-radius-sm);
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.zoom-input-field {
+  width: 100%;
+  height: 100%;
+  padding: 0 4px;
+  border: none;
+  background: transparent;
+  color: var(--sdk-nav-input-color);
+  font-size: var(--sdk-font-size-sm);
+  font-family: var(--sdk-font-family);
+  text-align: center;
+  font-weight: var(--sdk-font-weight-medium);
+  font-variant-numeric: tabular-nums;
+  outline: none;
+}
+
+.zoom-input-field:focus {
+  background: var(--sdk-search-focus-bg);
+}
+
+.zoom-input-wrapper:focus-within {
+  border-color: var(--sdk-search-focus-border);
+  box-shadow: 0 0 0 1px var(--sdk-search-focus-ring);
+}
+
+/* ── Search Controls ─────────────────────────────── */
+
+.search-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--sdk-spacing-xs);
+}
+
+.search-controls > button {
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--sdk-text-secondary);
+  border-radius: var(--sdk-border-radius-md);
+  cursor: pointer;
+  transition:
+    background-color var(--sdk-transition-fast),
+    color var(--sdk-transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--sdk-toolbar-search-btn-size);
+  height: var(--sdk-toolbar-search-btn-size);
+  min-width: var(--sdk-toolbar-search-btn-size);
+  min-height: var(--sdk-toolbar-search-btn-size);
+}
+
+.search-controls > button:hover {
+  background: var(--sdk-action-button-hover-bg, var(--sdk-secondary-color));
+  color: var(--sdk-text-primary);
+}
+
+.search-controls > button svg {
+  width: var(--sdk-toolbar-icon-size-nav);
+  height: var(--sdk-toolbar-icon-size-nav);
+  color: inherit;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: var(--sdk-spacing-xs);
+  background: var(--sdk-search-bg);
+  height: var(--sdk-toolbar-btn-size);
+  padding: 0 var(--sdk-spacing-md);
+  border-radius: var(--sdk-border-radius-md);
+  border: var(--sdk-border-width) solid var(--sdk-search-border);
+  min-width: var(--sdk-toolbar-search-min-width);
+  box-sizing: border-box;
+  transition:
+    background-color var(--sdk-transition-fast),
+    border-color var(--sdk-transition-fast),
+    box-shadow var(--sdk-transition-fast);
+}
+
+.search-box:focus-within {
+  background: var(--sdk-search-focus-bg);
+  border-color: var(--sdk-search-focus-border);
+  box-shadow: 0 0 0 1px var(--sdk-search-focus-ring);
+}
+
+.search-box .search-icon {
+  width: var(--sdk-toolbar-search-icon-size);
+  height: var(--sdk-toolbar-search-icon-size);
+  color: var(--sdk-search-icon-color);
+  flex-shrink: 0;
+}
+
+.search-box input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  color: var(--sdk-search-color);
+  font-size: var(--sdk-font-size-sm);
+  font-family: var(--sdk-font-family);
+  padding: var(--sdk-toolbar-search-input-padding);
+  outline: none;
+}
+
+.search-box input::placeholder {
+  color: var(--sdk-search-placeholder);
+}
+
+.search-box .clear-search {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--sdk-search-placeholder);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sdk-border-radius-sm);
+  transition:
+    background-color var(--sdk-transition-fast),
+    color var(--sdk-transition-fast);
+}
+
+.search-box .clear-search:hover {
+  background: var(--sdk-secondary-color);
+  color: var(--sdk-text-primary);
+}
+
+.search-box .clear-search svg {
+  width: var(--sdk-toolbar-search-nav-icon-size);
+  height: var(--sdk-toolbar-search-nav-icon-size);
+}
+
+.search-box .search-match-count {
+  font-size: var(--sdk-font-size-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--sdk-text-secondary);
+  white-space: nowrap;
+  padding: 0 var(--sdk-spacing-xs);
+  user-select: none;
+}
+
+.search-box .search-nav-btn {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--sdk-search-placeholder);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sdk-border-radius-sm);
+  transition:
+    background-color var(--sdk-transition-fast),
+    color var(--sdk-transition-fast);
+}
+
+.search-box .search-nav-btn:hover:not(:disabled) {
+  background: var(--sdk-secondary-color);
+  color: var(--sdk-text-primary);
+}
+
+.search-box .search-nav-btn:disabled {
+  opacity: var(--sdk-button-disabled-opacity);
+  cursor: default;
+}
+
+.search-box .search-nav-btn svg {
+  width: var(--sdk-toolbar-search-nav-icon-size);
+  height: var(--sdk-toolbar-search-nav-icon-size);
+}
+
+/* ── Action Buttons ──────────────────────────────── */
+
+.action-button {
+  padding: 0;
+  width: var(--sdk-toolbar-legacy-btn-size);
+  height: var(--sdk-toolbar-legacy-btn-size);
+  min-width: var(--sdk-toolbar-legacy-btn-size);
+  min-height: var(--sdk-toolbar-legacy-btn-size);
+  border: var(--sdk-action-button-border-width) solid var(--sdk-action-button-border);
+  border-radius: var(--sdk-action-button-border-radius);
+  background: var(--sdk-action-button-bg);
+  color: var(--sdk-action-button-color);
+  cursor: pointer;
+  transition:
+    background-color var(--sdk-transition-fast),
+    color var(--sdk-transition-fast),
+    border-color var(--sdk-transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: none;
+}
+
+.action-button:hover:not(:disabled) {
+  background: var(--sdk-action-button-hover-bg, var(--sdk-secondary-color));
+  color: var(--sdk-action-button-hover-color, var(--sdk-text-primary));
+  border-color: var(--sdk-action-button-hover-border);
+}
+
+.action-button:active:not(:disabled) {
+  color: var(--sdk-action-button-active-color);
+  background-color: var(--sdk-action-button-active-bg);
+  border-color: var(--sdk-action-button-active-border);
+}
+
+.action-button svg {
+  width: var(--sdk-toolbar-icon-size);
+  height: var(--sdk-toolbar-icon-size);
+  color: inherit;
+}
+
+.action-button.active {
+  color: var(--sdk-action-button-active-color);
+  background-color: var(--sdk-action-button-active-bg);
+  border-color: var(--sdk-action-button-active-border);
+}
+
+/* ── Legacy Button Styles ────────────────────────── */
+
+.fullscreen-button,
+.download-button {
+  padding: 0;
+  width: var(--sdk-toolbar-legacy-btn-size);
+  height: var(--sdk-toolbar-legacy-btn-size);
+  min-width: var(--sdk-toolbar-legacy-btn-size);
+  min-height: var(--sdk-toolbar-legacy-btn-size);
+  border: var(--sdk-action-button-border-width) solid var(--sdk-action-button-border);
+  border-radius: var(--sdk-action-button-border-radius);
+  background: var(--sdk-action-button-bg);
+  color: var(--sdk-action-button-color);
+  cursor: pointer;
+  transition:
+    background-color var(--sdk-transition-fast),
+    color var(--sdk-transition-fast),
+    border-color var(--sdk-transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: none;
+}
+
+.fullscreen-button:hover,
+.download-button:hover {
+  background: var(--sdk-action-button-hover-bg, var(--sdk-secondary-color));
+  color: var(--sdk-action-button-hover-color, var(--sdk-text-primary));
+  border-color: var(--sdk-action-button-hover-border);
+}
+
+.fullscreen-button:active,
+.download-button:active {
+  background: var(--sdk-action-button-active-bg);
+}
+
+.fullscreen-button svg,
+.download-button svg {
+  width: var(--sdk-toolbar-icon-size);
+  height: var(--sdk-toolbar-icon-size);
+  color: inherit;
+}
+
+/* ── Other Toolbar Control Buttons ───────────────── */
+
+.toolbar-controls > button:not(.nav-button):not(.action-button) {
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--sdk-text-secondary);
+  border-radius: var(--sdk-border-radius-md);
+  cursor: pointer;
+  transition:
+    background-color var(--sdk-transition-fast),
+    color var(--sdk-transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--sdk-toolbar-search-btn-size);
+  height: var(--sdk-toolbar-search-btn-size);
+  min-width: var(--sdk-toolbar-search-btn-size);
+  min-height: var(--sdk-toolbar-search-btn-size);
+}
+
+.toolbar-controls > button:not(.nav-button):not(.action-button):hover {
+  background: var(--sdk-action-button-hover-bg, var(--sdk-secondary-color));
+  color: var(--sdk-text-primary);
+}
+
+.toolbar-controls > button:not(.nav-button):not(.action-button):active {
+  background: var(--sdk-action-button-active-bg);
+  color: var(--sdk-text-primary);
+}
+
+.toolbar-controls > button:not(.nav-button):not(.action-button) svg {
+  width: var(--sdk-toolbar-icon-size-nav);
+  height: var(--sdk-toolbar-icon-size-nav);
+  color: inherit;
+}
+
+/* ── Separators ──────────────────────────────────── */
+
+.toolbar-controls::after,
+.zoom-controls::after {
+  content: "";
+  width: var(--sdk-border-width);
+  height: var(--sdk-toolbar-separator-height);
+  background: var(--sdk-toolbar-border);
+  margin: 0 2px;
+}
+
+/*
+ * The last visible item before the ⋮ button should not show a trailing
+ * separator. In nowrap mode the overflow button is the true last child,
+ * so we suppress the separator on the item directly before it too.
+ */
+.pdf-toolbar > *:last-child .toolbar-controls::after,
+.pdf-toolbar > *:last-child .zoom-controls::after {
+  display: none;
+}
+
+.toolbar-navigation::after,
+.zoom-controls-group::after {
+  display: none;
+}
+
+/*
+ * Disabled action button — used for the comments button when below breakpoint.
+ */
+.action-button:disabled,
+.action-button.disabled {
+  opacity: var(--sdk-button-disabled-opacity);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.toolbar-custom-slot {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+/* ── Overflow menu ───────────────────────────────────────────────────────────── */
+
+/*
+ * margin-left:auto pushes the ⋮ button to the far right of the toolbar,
+ * complementing the spacer which pushes left-side items left.
+ * When the spacer is present it absorbs remaining space; when items start
+ * overflowing the spacer collapses and margin-left:auto takes over.
+ */
+.toolbar-overflow-menu {
+  position: relative;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.toolbar-overflow-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 9999;
+  min-width: 180px;
+  background: var(--sdk-toolbar-bg);
+  border: var(--sdk-toolbar-border-width) solid var(--sdk-toolbar-border);
+  border-radius: var(--sdk-border-radius-lg);
+  box-shadow: var(--sdk-shadow-md);
+  padding: 6px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--sdk-spacing-xs);
+  flex-wrap: wrap;
+  width: max-content;
+  max-width: min(100vw - 24px, 420px);
+}
+
+.toolbar-overflow-dropdown-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  gap: var(--sdk-spacing-sm);
+  cursor: pointer;
+  transition: background-color var(--sdk-transition-fast);
+  border-radius: var(--sdk-border-radius-md);
+  flex: 0 0 auto;
+}
+
+.toolbar-overflow-dropdown-item:hover {
+  background: transparent;
+}
+
+/* No trailing separators inside the dropdown */
+.toolbar-overflow-dropdown-item .toolbar-controls::after,
+.toolbar-overflow-dropdown-item .zoom-controls::after {
+  display: none;
+}
+/**
+ * Sidebar / Thumbnail Panel Styles
+ */
+
+/* ── Sidebar container ───────────────────────────────── */
+
+.pdf-sidebar-wrapper {
+  display: flex;
+  flex-shrink: 0;
+  align-self: stretch;
+  min-height: 0;
+}
+
+.pdf-sidebar {
+  width: clamp(80px, 13cqi, 160px);
+  min-width: 80px;
+  flex-shrink: 0;
+  /*
+   * align-self: stretch — makes the sidebar fill the full height of
+   * .pdf-sidebar-wrapper (its flex parent), subtracting any vertical
+   * margins. This gives the sidebar a definite height so the virtualizer
+   * scroll container can scroll within its host pane.
+   */
+  align-self: stretch;
+  margin: var(--sdk-sidebar-margin);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: var(--sdk-sidebar-padding, 8px 6px);
+  background: var(--sdk-sidebar-bg);
+  border-radius: var(--sdk-sidebar-border-radius);
+  box-shadow: var(--sdk-sidebar-shadow);
+  border: var(--sdk-sidebar-border-width) solid var(--sdk-sidebar-border);
+  box-sizing: border-box;
+  /*
+   * contain: paint is intentionally removed.
+   * It was clipping the scrollable overflow area, preventing the
+   * virtualizer from scrolling the thumbnail list.
+   */
+  min-height: 0;
+  max-height: 100%;
+  position: relative; /* Established positioning context */
+}
+
+/* ── Overlay mode — sidebar inside .pdf-panel-overlay ───── */
+
+.pdf-panel-overlay--left .pdf-sidebar {
+  /*
+   * Fixed pixel width in overlay — cqi units are relative to the
+   * shrunken container width which makes thumbnails tiny in overlay.
+   */
+  width: 152px;
+  min-width: 152px;
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+  max-height: 100%;
+  margin: 0;
+  border-radius: 0 var(--sdk-sidebar-border-radius) var(--sdk-sidebar-border-radius) 0;
+  box-shadow: none;
+  border: none;
+  border-right: var(--sdk-sidebar-border-width) solid var(--sdk-sidebar-border);
+  align-self: auto;
+}
+
+/* ── Thumbnail in overlay — fixed width to match sidebar ─── */
+
+.pdf-panel-overlay--left .thumbnail {
+  width: 112px;
+}
+
+/* ── Scrollbar inside sidebar ────────────────────────── */
+
+.pdf-sidebar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.pdf-sidebar::-webkit-scrollbar-track {
+  background: transparent;
+  margin-top: var(--sdk-sidebar-border-radius);
+  margin-bottom: var(--sdk-sidebar-border-radius);
+}
+
+.pdf-sidebar::-webkit-scrollbar-thumb {
+  background: var(--sdk-border-color-dark);
+  border-radius: var(--sdk-border-radius-full);
+}
+
+.pdf-sidebar::-webkit-scrollbar-thumb:hover {
+  background: var(--sdk-border-color-hover);
+}
+
+/* ── Thumbnail list ──────────────────────────────────── */
+
+.thumbnails {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(4px, 0.8cqi, 10px);
+  align-items: center;
+  flex: 1;
+}
+
+/* ── Thumbnail row (virtualizer row) ─────────────────── */
+
+.thumbnail-row {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding-bottom: var(--sdk-spacing-md);
+  box-sizing: border-box;
+}
+
+/* ── Thumbnail item ──────────────────────────────────── */
+
+.thumbnail {
+  width: clamp(56px, 10cqi, 124px);
+  background: var(--sdk-thumbnail-bg);
+  border: var(--sdk-border-width) solid var(--sdk-thumbnail-border);
+  border-radius: var(--sdk-border-radius-md);
+  padding: 6px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition:
+    background-color var(--sdk-transition-fast),
+    border-color var(--sdk-transition-fast),
+    box-shadow var(--sdk-transition-fast);
+  position: relative;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+.thumbnail:hover {
+  border-color: var(--sdk-thumbnail-border-hover);
+  box-shadow: var(--sdk-thumbnail-shadow-hover);
+}
+
+.thumbnail.active {
+  border-color: var(--sdk-thumbnail-border-active);
+  background: var(--sdk-thumbnail-bg-active);
+  box-shadow: var(--sdk-thumbnail-shadow-active);
+}
+
+/* ── Thumbnail image wrapper ─────────────────────────── */
+
+.thumbnail-image-wrapper {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--sdk-thumbnail-image-bg);
+  border-radius: var(--sdk-border-radius-xs);
+  margin-bottom: var(--sdk-spacing-xs);
+  position: relative;
+}
+
+.thumbnail-image-wrapper.thumbnail-error {
+  background: var(--sdk-background-secondary);
+}
+
+/* ── Thumbnail canvas ────────────────────────────────── */
+
+.thumbnail-canvas {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* ── Loading state ───────────────────────────────────── */
+
+.thumbnail-loading {
+  position: absolute;
+  inset: 0;
+  background: var(--sdk-background-secondary);
+  opacity: 0.6;
+}
+
+/* ── Error message ───────────────────────────────────── */
+
+.thumbnail-error-message {
+  font-size: var(--sdk-font-size-sm);
+  color: var(--sdk-text-error);
+  font-family: var(--sdk-font-family);
+  text-align: center;
+}
+
+/* ── Page number label ───────────────────────────────── */
+
+.thumbnail-number {
+  font-size: 10px;
+  color: var(--sdk-thumbnail-number-color);
+  font-weight: var(--sdk-font-weight-medium);
+  font-family: var(--sdk-font-family);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  line-height: 1.2;
+  flex-shrink: 0;
+}
+
+@container pdf-viewer (min-width: 900px) {
+  .thumbnail-number {
+    font-size: var(--sdk-font-size-xs);
+  }
+}
+
+.thumbnail.active .thumbnail-number {
+  color: var(--sdk-thumbnail-number-active-color);
+  font-weight: var(--sdk-font-weight-semibold);
+}
+/**
+ * Viewport / PDF Canvas Area Styles
+ */
+
+.pdf-viewport {
+  /*
+   * flex: 1 — takes ALL remaining horizontal space after sidebar,
+   * comments, and scrollbar have taken their widths.
+   *
+   * min-width: 0 — CRITICAL flex rule. Without this, a flex child
+   * refuses to shrink below its natural content width, causing the
+   * PDF canvas to overflow its container.
+   */
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+  background: var(--sdk-background-viewport);
+  position: relative;
+  cursor: crosshair;
+  /*
+   * Remove fixed padding — padding is now controlled by the inner
+   * content div in Viewport.tsx so it doesn't affect scroll dimensions.
+   */
+  padding: 0;
+  scroll-behavior: auto;
+  will-change: scroll-position;
+  transform: translateZ(0);
+  /* Hide native scrollbars — replaced by CustomScrollbar (vertical) and CustomHorizontalScrollbar (horizontal) */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.pdf-viewport::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+/* Loading & Error */
+.pdf-viewport .loading,
+.pdf-viewport .error {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: var(--sdk-spacing-xl);
+  text-align: center;
+  font-size: var(--sdk-font-size-lg);
+  font-family: var(--sdk-font-family);
+  color: var(--sdk-text-primary);
+  background: var(--sdk-background-primary);
+  border-radius: var(--sdk-border-radius-md);
+  box-shadow: var(--sdk-shadow-lg);
+}
+
+.pdf-viewport .error {
+  color: var(--sdk-text-error);
+  border: var(--sdk-border-width) solid var(--sdk-text-error);
+}
+
+/* Page Container */
+.page-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: crosshair;
+}
+
+.page-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: var(--sdk-z-index-base);
+  background: var(--sdk-background-primary);
+  padding: var(--sdk-spacing-sm) var(--sdk-spacing-lg);
+  border-radius: var(--sdk-border-radius-sm);
+  font-size: var(--sdk-font-size-md);
+  font-family: var(--sdk-font-family);
+  color: var(--sdk-text-secondary);
+  box-shadow: var(--sdk-shadow-md);
+}
+
+.page-loading-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: var(--sdk-z-index-base);
+  background: rgba(255, 255, 255, 0.8);
+  padding: var(--sdk-spacing-sm) var(--sdk-spacing-lg);
+  border-radius: var(--sdk-border-radius-sm);
+  font-size: var(--sdk-font-size-md);
+  font-family: var(--sdk-font-family);
+  color: var(--sdk-text-secondary);
+}
+
+.page-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  background: var(--sdk-background-primary);
+}
+
+.page-error-message {
+  padding: var(--sdk-spacing-lg);
+  color: var(--sdk-text-error);
+  font-size: var(--sdk-font-size-md);
+  font-family: var(--sdk-font-family);
+  text-align: center;
+}
+
+.pdf-canvas {
+  background: var(--sdk-background-primary);
+  box-shadow: var(--sdk-shadow-md);
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border-radius: var(--sdk-border-radius-sm);
+  /* Stack both buffers on top of each other inside the page-container */
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.pdf-canvas--active {
+  z-index: 1;
+  visibility: visible;
+}
+
+.pdf-canvas--inactive {
+  z-index: 0;
+  visibility: hidden;
+}
+
+/* ============================================
+   TEXT LAYER (pdf.js)
+   ============================================ */
+
+.textLayer {
+  position: absolute;
+  text-align: initial;
+  inset: 0;
+  overflow: hidden;
+  opacity: 1;
+  line-height: 1;
+  text-size-adjust: none;
+  forced-color-adjust: none;
+  transform-origin: 0 0;
+  caret-color: CanvasText;
+  user-select: none;
+  pointer-events: none;
+}
+
+.textLayer :is(span, br) {
+  color: transparent;
+  position: absolute;
+  white-space: pre;
+  cursor: text;
+  pointer-events: auto;
+  user-select: text;
+  transform-origin: 0% 0%;
+}
+
+.textLayer > :not(.markedContent),
+.textLayer .markedContent span:not(.markedContent) {
+  z-index: 3;
+}
+
+.textLayer span.markedContent {
+  top: 0;
+  height: 0;
+}
+
+.textLayer ::selection {
+  background: transparent;
+  color: transparent;
+}
+.textLayer span::selection {
+  background: var(--sdk-text-select);
+}
+
+.textLayer .endOfContent {
+  display: block;
+  position: absolute;
+  inset: 100% 0 0;
+  z-index: 0;
+  cursor: default;
+  user-select: none;
+}
+
+/* In your PDF viewer styles */
+.annotationLayer {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.annotation-item {
+  pointer-events: auto;
+  transition: background-color 0.15s ease;
+  border: none;
+  background: none;
+}
+
+.annotation-link:hover {
+  background-color: rgba(0, 100, 255, 0.1);
+}
+
+.annotation-highlight {
+  /* mix-blend-mode: multiply; */
+}
+
+.annotation-text:hover {
+  background-color: rgba(255, 255, 0, 0.6);
+}
+
+.annotation-widget:hover {
+  outline: 2px solid rgba(0, 100, 255, 0.4);
+}
+
+.bounding-box-rect {
+  position: absolute;
+  border: 2px solid var(--sdk-primary-color);
+  border-radius: var(--sdk-border-radius-xs);
+  background: rgba(0, 0, 0, 0.04);
+  box-sizing: border-box;
+  pointer-events: auto;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  appearance: none;
+}
+
+.bounding-box-rect--draft {
+  border-style: dashed;
+}
+/* ── Scrollbar Container ─────────────────────────── */
+
+.custom-scrollbar {
+  width: 12px;
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px 0;
+  background: var(--sdk-scrollbar-bg, transparent);
+  border-left: 1px solid var(--sdk-border-color, rgba(255, 255, 255, 0.08));
+  flex-shrink: 0;
+  box-sizing: border-box;
+  align-self: stretch;
+}
+
+/* ── Scrollbar Track ─────────────────────────────── */
+
+.custom-scrollbar-track {
+  width: 6px;
+  height: 100%;
+  background: var(--sdk-scrollbar-track-bg, transparent);
+  position: relative;
+  overflow: hidden;
+  border: none;
+  border-radius: 9999px;
+}
+
+/* ── Scrollbar Buttons ───────────────────────────── */
+
+.custom-scrollbar-button-inside {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: var(--sdk-scrollbar-btn-height);
+  border: none;
+  background: var(--sdk-scrollbar-button-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color var(--sdk-transition-normal);
+  z-index: 3;
+  color: var(--sdk-scrollbar-button-color);
+}
+
+.custom-scrollbar-button-inside.top {
+  top: 0;
+}
+
+.custom-scrollbar-button-inside.bottom {
+  bottom: 0;
+}
+
+.custom-scrollbar-button-inside:hover {
+  background: var(--sdk-scrollbar-btn-hover-bg);
+}
+
+.custom-scrollbar-button-inside:active {
+  background: var(--sdk-scrollbar-btn-active-bg);
+}
+
+.custom-scrollbar-button-inside svg {
+  width: var(--sdk-scrollbar-btn-icon-size);
+  height: var(--sdk-scrollbar-btn-icon-size);
+  fill: var(--sdk-scrollbar-button-color);
+}
+
+/* ── Scrollbar Thumb ─────────────────────────────── */
+
+.custom-scrollbar-thumb {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  background: var(--sdk-scrollbar-thumb-bg);
+  border-radius: var(--sdk-scrollbar-thumb-border-radius);
+  cursor: grab;
+  transition: background-color var(--sdk-transition-normal);
+  z-index: 1;
+}
+
+.custom-scrollbar-thumb:hover {
+  background: var(--sdk-scrollbar-thumb-hover);
+}
+
+.custom-scrollbar-thumb:active {
+  cursor: grabbing;
+  background: var(--sdk-scrollbar-thumb-active);
+}
+
+.custom-scrollbar-indicator {
+  position: absolute;
+  width: 100%;
+  height: var(--sdk-scrollbar-search-indicator-height);
+  background-color: var(--sdk-scrollbar-indicator-color);
+  background-clip: content-box;
+  border-radius: var(--sdk-border-width);
+  cursor: pointer;
+  z-index: 2;
+  transition: background-color 0.15s ease;
+  border: none;
+  box-sizing: border-box;
+  padding: 0.75px 0;
+  margin: 0;
+  font: inherit;
+}
+
+.custom-scrollbar-indicator:hover {
+  background-color: var(--sdk-scrollbar-indicator-hover-color);
+}
+
+/* CSS classes for merged annotations marker popover */
+.scrollbar-markers-popover {
+  background-color: var(--sdk-scrollbar-popover-bg);
+  position: absolute;
+  right: 100%;
+  border: 1px solid var(--sdk-border-color);
+  box-shadow: var(--sdk-shadow-md);
+  z-index: var(--sdk-z-index-popover);
+  min-width: var(--sdk-scrollbar-popover-min-width);
+  width: var(--sdk-scrollbar-popover-width);
+  border-radius: var(--sdk-border-radius-lg);
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100% - var(--sdk-scrollbar-popover-max-height-offset));
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.scrollbar-markers-popover-entry {
+  display: block;
+  width: 100%;
+}
+
+.scrollbar-markers-popover-entry > * {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.scrollbar-markers-popover-item {
+  cursor: pointer;
+  padding: 8px 10px;
+  border-left-style: solid;
+  transition: background-color var(--sdk-transition-fast);
+}
+
+.scrollbar-markers-popover-item:hover {
+  background-color: var(--sdk-scrollbar-popover-item-hover);
+}
+
+.scrollbar-markers-popover-title {
+  font-weight: var(--sdk-font-weight-medium);
+  font-size: var(--sdk-font-size-sm);
+  color: var(--sdk-scrollbar-popover-title-color);
+}
+
+.scrollbar-markers-popover-subtitle {
+  font-size: var(--sdk-font-size-xs);
+  color: var(--sdk-scrollbar-popover-subtitle-color);
+}
+/**
+ * Document Comments Panel Styles
+ *
+ * Width uses clamp() matching JS coordinator formula:
+ *   calcPanelWidth(containerWidth, { percentage:22, min:150, max:300 })
+ *   clamp(150px, 22cqi, 300px) produces same result.
+ *
+ * Fonts scale fluidly with container width via clamp().
+ * Content wraps naturally at narrower widths.
+ * No elements hidden — avatar and timestamp always visible.
+ */
+
+/* ── Panel container ─────────────────────────────────── */
+
+.document-comments-floating {
+  width: clamp(150px, 22cqi, 300px);
+  min-width: 150px;
+  flex-shrink: 0;
+  height: 100%;
+  position: relative;
+  pointer-events: auto;
+  overflow: hidden;
+  padding: var(--sdk-spacing-xs) 2px;
+  background: var(--sdk-background-viewport);
+  border-left: 1px solid var(--sdk-border-color);
+  cursor: default;
+  align-self: stretch;
+  box-sizing: border-box;
+}
+
+/* ── Floating comment card ───────────────────────────── */
+
+.floating-comment-card {
+  position: absolute;
+  left: clamp(6px, 1cqi, 10px);
+  right: clamp(6px, 1cqi, 10px);
+  padding: clamp(8px, 1.2cqi, 12px);
+  background: var(--sdk-comment-card-bg);
+  border: var(--sdk-comment-border-width) solid var(--sdk-comment-floating-border);
+  border-radius: var(--sdk-comment-border-radius);
+  box-shadow: var(--sdk-shadow-xs);
+  pointer-events: auto;
+  transition:
+    top 0.2s ease-out,
+    border-color var(--sdk-transition-normal),
+    box-shadow var(--sdk-transition-normal);
+  z-index: 1;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.floating-comment-card:hover {
+  border-color: var(--sdk-border-color-dark);
+  box-shadow: var(--sdk-shadow-sm);
+}
+
+.floating-comment-card.comment-active {
+  border-color: var(--sdk-comment-highlight-border);
+  box-shadow: 0 0 0 1px var(--sdk-comment-highlight-border), var(--sdk-shadow-sm);
+  z-index: 10;
+}
+
+/* ── Comment header ──────────────────────────────────── */
+
+.comment-header {
+  display: flex;
+  align-items: center;
+  gap: clamp(6px, 1cqi, 8px);
+  margin-bottom: 6px;
+}
+
+@container pdf-viewer (min-width: 1200px) {
+  .comment-header {
+    gap: var(--sdk-spacing-md);
+    margin-bottom: var(--sdk-spacing-sm);
+  }
+}
+
+/* ── Avatar ──────────────────────────────────────────── */
+
+.comment-avatar {
+  width: clamp(20px, 2.5cqi, 24px);
+  height: clamp(20px, 2.5cqi, 24px);
+  border-radius: var(--sdk-border-radius-full);
+  background: var(--sdk-comment-avatar-bg);
+  color: var(--sdk-comment-avatar-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: var(--sdk-font-weight-medium);
+  font-family: var(--sdk-font-family);
+  flex-shrink: 0;
+  text-transform: uppercase;
+}
+
+/* ── Author info ─────────────────────────────────────── */
+
+.comment-author-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.comment-author-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sdk-spacing-xs);
+  margin-bottom: 1px;
+}
+
+.comment-author {
+  font-size: var(--sdk-font-size-sm);
+  font-weight: var(--sdk-font-weight-medium);
+  color: var(--sdk-comment-author-color);
+  font-family: var(--sdk-font-family);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Timestamp ───────────────────────────────────────── */
+
+.comment-timestamp {
+  font-size: var(--sdk-font-size-xs);
+  color: var(--sdk-comment-timestamp-color);
+  font-family: var(--sdk-font-family);
+}
+
+/* ── Comment body — wraps naturally ──────────────────── */
+
+.comment-content {
+  margin: 0;
+  font-size: var(--sdk-font-size-sm);
+  color: var(--sdk-comment-content-color);
+  line-height: var(--sdk-line-height-normal);
+  font-family: var(--sdk-comment-font-family);
+  word-wrap: break-word;
+}
+
+/* ── Inline comment card (non-floating) ──────────────── */
+
+.comment-card {
+  margin-bottom: var(--sdk-spacing-md);
+  padding: var(--sdk-spacing-lg);
+  background: var(--sdk-comment-card-bg);
+  border: var(--sdk-border-width) solid var(--sdk-comment-card-border);
+  border-radius: var(--sdk-border-radius-lg);
+}
+
+.comment-card.highlighted {
+  background: var(--sdk-comment-highlight-bg);
+  border: var(--sdk-border-width) solid var(--sdk-comment-highlight-border);
+  box-shadow: 0 0 0 1px var(--sdk-comment-highlight-border);
+}
+
+/* ── Empty state ─────────────────────────────────────── */
+
+.no-comments {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sdk-spacing-xl);
+  text-align: center;
+}
+
+.no-comments p {
+  margin: 0;
+  font-size: var(--sdk-font-size-sm);
+  color: var(--sdk-text-muted);
+  font-family: var(--sdk-font-family);
+}
+
+.search-highlight-layer {
+  /* The layer sits on top of the text layer so highlight divs are visible,
+     but pointer-events are disabled so text selection still works. */
+  z-index: 2;
+}
+
+.search-highlight {
+  background-color: rgba(255, 235, 59, 0.4); /* Material Yellow 400 @ 40% */
+  border-radius: 1px;
+  mix-blend-mode: multiply; /* blend into the page so text stays readable */
+  transition: background-color 0.15s ease;
+}
+
+.search-highlight--active {
+  background-color: rgba(255, 152, 0, 0.55); /* Material Orange 500 @ 55% */
+  box-shadow: 0 0 2px 1px rgba(255, 152, 0, 0.35);
+}
+
+/* The :scope prefix is load-bearing for the google3 bundle: the
+   pdf_react_ui_scoped_css genrule wraps this file in @scope (:scope)
+   and rewrites :scope to :scope. A bare [data-theme="dark"] ancestor
+   would be implicitly prefixed as `:scope [data-theme="dark"]`, which never
+   matches because data-theme is set on the scoping root itself. */
+:scope[data-theme="dark"] .search-highlight {
+  background-color: rgba(255, 235, 59, 0.3);
+  mix-blend-mode: screen;
+}
+
+:scope[data-theme="dark"] .search-highlight--active {
+  background-color: rgba(255, 152, 0, 0.5);
+  box-shadow: 0 0 2px 1px rgba(255, 152, 0, 0.3);
+}
+/**
+ * PDF SDK - Utility Classes
+ * 
+ * Reusable utility classes for common styling patterns.
+ * These can be used by SDK consumers to build custom UI around the viewer.
+ */
+
+/* ============================================
+   LAYOUT UTILITIES
+   ============================================ */
+
+.sdk-container {
+  width: 100%;
+  max-width: 100%;
+}
+
+.sdk-flex {
+  display: flex;
+}
+
+.sdk-flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.sdk-flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sdk-flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sdk-flex-start {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.sdk-flex-end {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.sdk-flex-wrap {
+  flex-wrap: wrap;
+}
+
+.sdk-flex-1 {
+  flex: 1;
+}
+
+/* ============================================
+   SPACING UTILITIES
+   ============================================ */
+
+/* Padding */
+.sdk-p-xs {
+  padding: var(--sdk-spacing-xs);
+}
+.sdk-p-sm {
+  padding: var(--sdk-spacing-sm);
+}
+.sdk-p-md {
+  padding: var(--sdk-spacing-md);
+}
+.sdk-p-lg {
+  padding: var(--sdk-spacing-lg);
+}
+.sdk-p-xl {
+  padding: var(--sdk-spacing-xl);
+}
+
+.sdk-px-xs {
+  padding-left: var(--sdk-spacing-xs);
+  padding-right: var(--sdk-spacing-xs);
+}
+.sdk-px-sm {
+  padding-left: var(--sdk-spacing-sm);
+  padding-right: var(--sdk-spacing-sm);
+}
+.sdk-px-md {
+  padding-left: var(--sdk-spacing-md);
+  padding-right: var(--sdk-spacing-md);
+}
+.sdk-px-lg {
+  padding-left: var(--sdk-spacing-lg);
+  padding-right: var(--sdk-spacing-lg);
+}
+.sdk-px-xl {
+  padding-left: var(--sdk-spacing-xl);
+  padding-right: var(--sdk-spacing-xl);
+}
+
+.sdk-py-xs {
+  padding-top: var(--sdk-spacing-xs);
+  padding-bottom: var(--sdk-spacing-xs);
+}
+.sdk-py-sm {
+  padding-top: var(--sdk-spacing-sm);
+  padding-bottom: var(--sdk-spacing-sm);
+}
+.sdk-py-md {
+  padding-top: var(--sdk-spacing-md);
+  padding-bottom: var(--sdk-spacing-md);
+}
+.sdk-py-lg {
+  padding-top: var(--sdk-spacing-lg);
+  padding-bottom: var(--sdk-spacing-lg);
+}
+.sdk-py-xl {
+  padding-top: var(--sdk-spacing-xl);
+  padding-bottom: var(--sdk-spacing-xl);
+}
+
+/* Margin */
+.sdk-m-xs {
+  margin: var(--sdk-spacing-xs);
+}
+.sdk-m-sm {
+  margin: var(--sdk-spacing-sm);
+}
+.sdk-m-md {
+  margin: var(--sdk-spacing-md);
+}
+.sdk-m-lg {
+  margin: var(--sdk-spacing-lg);
+}
+.sdk-m-xl {
+  margin: var(--sdk-spacing-xl);
+}
+
+.sdk-mx-xs {
+  margin-left: var(--sdk-spacing-xs);
+  margin-right: var(--sdk-spacing-xs);
+}
+.sdk-mx-sm {
+  margin-left: var(--sdk-spacing-sm);
+  margin-right: var(--sdk-spacing-sm);
+}
+.sdk-mx-md {
+  margin-left: var(--sdk-spacing-md);
+  margin-right: var(--sdk-spacing-md);
+}
+.sdk-mx-lg {
+  margin-left: var(--sdk-spacing-lg);
+  margin-right: var(--sdk-spacing-lg);
+}
+.sdk-mx-xl {
+  margin-left: var(--sdk-spacing-xl);
+  margin-right: var(--sdk-spacing-xl);
+}
+
+.sdk-my-xs {
+  margin-top: var(--sdk-spacing-xs);
+  margin-bottom: var(--sdk-spacing-xs);
+}
+.sdk-my-sm {
+  margin-top: var(--sdk-spacing-sm);
+  margin-bottom: var(--sdk-spacing-sm);
+}
+.sdk-my-md {
+  margin-top: var(--sdk-spacing-md);
+  margin-bottom: var(--sdk-spacing-md);
+}
+.sdk-my-lg {
+  margin-top: var(--sdk-spacing-lg);
+  margin-bottom: var(--sdk-spacing-lg);
+}
+.sdk-my-xl {
+  margin-top: var(--sdk-spacing-xl);
+  margin-bottom: var(--sdk-spacing-xl);
+}
+
+/* Gap */
+.sdk-gap-xs {
+  gap: var(--sdk-spacing-xs);
+}
+.sdk-gap-sm {
+  gap: var(--sdk-spacing-sm);
+}
+.sdk-gap-md {
+  gap: var(--sdk-spacing-md);
+}
+.sdk-gap-lg {
+  gap: var(--sdk-spacing-lg);
+}
+.sdk-gap-xl {
+  gap: var(--sdk-spacing-xl);
+}
+
+/* ============================================
+   BORDER UTILITIES
+   ============================================ */
+
+.sdk-border {
+  border: var(--sdk-border-width) solid var(--sdk-border-color);
+}
+.sdk-border-top {
+  border-top: var(--sdk-border-width) solid var(--sdk-border-color);
+}
+.sdk-border-bottom {
+  border-bottom: var(--sdk-border-width) solid var(--sdk-border-color);
+}
+.sdk-border-left {
+  border-left: var(--sdk-border-width) solid var(--sdk-border-color);
+}
+.sdk-border-right {
+  border-right: var(--sdk-border-width) solid var(--sdk-border-color);
+}
+
+.sdk-rounded-none {
+  border-radius: var(--sdk-border-radius-none);
+}
+.sdk-rounded-sm {
+  border-radius: var(--sdk-border-radius-sm);
+}
+.sdk-rounded-md {
+  border-radius: var(--sdk-border-radius-md);
+}
+.sdk-rounded-lg {
+  border-radius: var(--sdk-border-radius-lg);
+}
+.sdk-rounded-xl {
+  border-radius: var(--sdk-border-radius-xl);
+}
+.sdk-rounded-full {
+  border-radius: var(--sdk-border-radius-full);
+}
+
+/* ============================================
+   SHADOW UTILITIES
+   ============================================ */
+
+.sdk-shadow-xs {
+  box-shadow: var(--sdk-shadow-xs);
+}
+.sdk-shadow-sm {
+  box-shadow: var(--sdk-shadow-sm);
+}
+.sdk-shadow-md {
+  box-shadow: var(--sdk-shadow-md);
+}
+.sdk-shadow-lg {
+  box-shadow: var(--sdk-shadow-lg);
+}
+.sdk-shadow-xl {
+  box-shadow: var(--sdk-shadow-xl);
+}
+.sdk-shadow-none {
+  box-shadow: none;
+}
+
+/* ============================================
+   TEXT UTILITIES
+   ============================================ */
+
+.sdk-text-primary {
+  color: var(--sdk-text-primary);
+}
+.sdk-text-secondary {
+  color: var(--sdk-text-secondary);
+}
+.sdk-text-muted {
+  color: var(--sdk-text-muted);
+}
+.sdk-text-error {
+  color: var(--sdk-text-error);
+}
+.sdk-text-success {
+  color: var(--sdk-text-success);
+}
+.sdk-text-warning {
+  color: var(--sdk-text-warning);
+}
+.sdk-text-info {
+  color: var(--sdk-text-info);
+}
+
+.sdk-text-xs {
+  font-size: var(--sdk-font-size-xs);
+}
+.sdk-text-sm {
+  font-size: var(--sdk-font-size-sm);
+}
+.sdk-text-md {
+  font-size: var(--sdk-font-size-md);
+}
+.sdk-text-lg {
+  font-size: var(--sdk-font-size-lg);
+}
+.sdk-text-xl {
+  font-size: var(--sdk-font-size-xl);
+}
+
+.sdk-font-normal {
+  font-weight: var(--sdk-font-weight-normal);
+}
+.sdk-font-medium {
+  font-weight: var(--sdk-font-weight-medium);
+}
+.sdk-font-semibold {
+  font-weight: var(--sdk-font-weight-semibold);
+}
+.sdk-font-bold {
+  font-weight: var(--sdk-font-weight-bold);
+}
+
+/* ============================================
+   BUTTON UTILITIES
+   ============================================ */
+
+.sdk-btn {
+  padding: var(--sdk-button-padding-y) var(--sdk-button-padding-x);
+  border: var(--sdk-border-width) solid var(--sdk-button-border);
+  background: var(--sdk-button-bg);
+  color: var(--sdk-button-text);
+  border-radius: var(--sdk-border-radius-sm);
+  font-size: var(--sdk-font-size-md);
+  font-family: var(--sdk-font-family);
+  font-weight: var(--sdk-font-weight-medium);
+  cursor: pointer;
+  transition: all var(--sdk-transition-normal);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sdk-spacing-xs);
+}
+
+.sdk-btn:hover:not(:disabled) {
+  background: var(--sdk-button-hover-bg);
+}
+
+.sdk-btn:disabled {
+  opacity: var(--sdk-button-disabled-opacity);
+  cursor: not-allowed;
+}
+
+.sdk-btn-primary {
+  background: var(--sdk-primary-color);
+  color: white;
+  border-color: var(--sdk-primary-color);
+}
+
+.sdk-btn-primary:hover:not(:disabled) {
+  background: var(--sdk-primary-hover);
+  border-color: var(--sdk-primary-hover);
+}
+
+.sdk-btn-secondary {
+  background: var(--sdk-secondary-color);
+  color: white;
+  border-color: var(--sdk-secondary-color);
+}
+
+.sdk-btn-secondary:hover:not(:disabled) {
+  background: var(--sdk-secondary-hover);
+  border-color: var(--sdk-secondary-hover);
+}
+
+.sdk-btn-ghost {
+  background: transparent;
+  border-color: transparent;
+}
+
+.sdk-btn-ghost:hover:not(:disabled) {
+  background: var(--sdk-background-secondary);
+}
+
+.sdk-btn-sm {
+  padding: var(--sdk-button-padding-sm-y) var(--sdk-button-padding-sm-x);
+  font-size: var(--sdk-font-size-sm);
+}
+
+.sdk-btn-lg {
+  padding: var(--sdk-button-padding-lg-y) var(--sdk-button-padding-lg-x);
+  font-size: var(--sdk-font-size-lg);
+}
+
+/* ============================================
+   BACKGROUND UTILITIES
+   ============================================ */
+
+.sdk-bg-primary {
+  background: var(--sdk-background-primary);
+}
+.sdk-bg-secondary {
+  background: var(--sdk-background-secondary);
+}
+.sdk-bg-tertiary {
+  background: var(--sdk-background-tertiary);
+}
+}
