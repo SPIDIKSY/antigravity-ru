@@ -1557,7 +1557,37 @@
   "Untitled": "Без названия",
   "Draft": "Черновик",
   "Merged": "Влит",
-  "Closed": "Закрыт"
+  "Closed": "Закрыт",
+
+  // Расход и лимиты
+  "Usage": "Расход",
+  "Weekly limit": "Недельный лимит",
+  "Daily limit": "Дневной лимит",
+  "% left": "% осталось",
+  "See Activity": "История расхода",
+  "Get More AI Credits": "Получить кредиты AI",
+
+  // Окна и управление интерфейсом
+  "Minimize": "Свернуть",
+  "Maximize": "Развернуть",
+  "This Computer": "Этот компьютер",
+  "Edit Conversation Title": "Изменить название диалога",
+
+  // Статусы задач и шагов
+  "Working": "Работаю",
+  "Worked": "Работал",
+  "Compacting": "Сжатие контекста",
+  "Waiting for your approval": "Ждёт вашего подтверждения",
+  "Running command": "Выполняется команда",
+  "Exploring": "Изучаю",
+  "Rejected": "Отклонено",
+  "Canceled": "Отменено",
+  "Interrupted": "Прервано",
+  "Ran": "Выполнено",
+
+  // Автоматизации (в родительном падеже для шаблонов «Пока нет …», «Нет … по запросу»)
+  "automations": "автоматизаций",
+  "scheduled tasks": "запланированных задач"
 };
 
   function formatTime(str) {
@@ -1602,6 +1632,12 @@
     "edited files": "изменены файлы",
     "edited artifact": "изменён артефакт",
     "edited artifacts": "изменены артефакты"
+  };
+
+  const MONTHS_GENITIVE = {
+    January: "января", February: "февраля", March: "марта", April: "апреля",
+    May: "мая", June: "июня", July: "июля", August: "августа",
+    September: "сентября", October: "октября", November: "ноября", December: "декабря"
   };
 
   const RULES = [
@@ -1820,6 +1856,42 @@
       regex: /^Navigation timeout of (\d+)ms exceeded$/i,
       replace: function (m) {
         return "Превышено время ожидания перехода (" + m[1] + " мс)";
+      }
+    },
+    // Приветствие в диалоге: «Hi Alex, what can we get done today?»
+    {
+      regex: /^Hi (.+), what can we get done today\?$/i,
+      replace: function (m) { return "Привет, " + m[1] + "! Чем займёмся сегодня?"; }
+    },
+    // Длительность лимита: «5h limit», «1d limit», «30m limit»
+    {
+      regex: /^(\d+)([smhd]) limit$/i,
+      replace: function (m) {
+        const units = { s: "с", m: "мин", h: "ч", d: "д" };
+        return "Лимит за " + m[1] + " " + (units[m[2].toLowerCase()] || m[2]);
+      }
+    },
+    // Редактирование файла: «Editing main.js»
+    {
+      regex: /^Editing (.+)$/i,
+      replace: function (m) { return "Редактирование " + m[1]; }
+    },
+    // Свёрнутое описание шага агента: «Ran check deployed assets»
+    {
+      regex: /^Ran (.+)$/i,
+      replace: function (m) { return "Выполнено: " + m[1]; }
+    },
+    // Код завершения команды: «· Exited with code 1»
+    {
+      regex: /^[·\u00b7]?\s*Exited with code (-?\d+)$/i,
+      replace: function (m) { return "· Код выхода " + m[1]; }
+    },
+    // Уведомление об изменении тарифа сторонних моделей (Claude)
+    {
+      regex: /^(.+) is now available on paid Pro and Ultra plans\. Third-party model access will no longer be available on your current plan starting on ([A-Z][a-z]+) (\d{1,2}), (\d{4})\.$/i,
+      replace: function (m) {
+        const month = MONTHS_GENITIVE[m[2]] || m[2];
+        return m[1] + " теперь доступна на платных тарифах Pro и Ultra. Доступ к сторонним моделям на вашем текущем тарифе будет прекращён с " + m[3] + " " + month + " " + m[4] + " г.";
       }
     }
   ];
