@@ -1220,7 +1220,166 @@
   "Links": "Ссылки",
   "Modified Files": "Изменённые файлы",
   // Подсказка к квоте Argon приходит с сервера, текст взят со скриншота
-  "For paid Pro plans, Argon quota is separate. Higher Argon quota (included as part of the larger Gemini quota bucket) is available on Ultra plans.": "На платных тарифах Pro квота Argon отдельная. Увеличенная квота Argon (в составе общей квоты Gemini) доступна на тарифах Ultra."
+  "For paid Pro plans, Argon quota is separate. Higher Argon quota (included as part of the larger Gemini quota bucket) is available on Ultra plans.": "На платных тарифах Pro квота Argon отдельная. Увеличенная квота Argon (в составе общей квоты Gemini) доступна на тарифах Ultra.",
+
+  // --- Antigravity 2.29.0 New UI Strings ---
+  // Боковые вопросы (Side questions)
+  "Ask a side question without interrupting the main conversation": "Задать боковой вопрос, не прерывая основной диалог",
+  "Stop side question": "Остановить боковой вопрос",
+  "Stop Side Question": "Остановить боковой вопрос",
+  "Failed to start side question": "Не удалось запустить боковой вопрос",
+  "Failed to send side question": "Не удалось отправить боковой вопрос",
+  "Promote to conversation": "Превратить в диалог",
+  "Promote to Conversation": "Превратить в диалог",
+  "Cannot promote while side question is running": "Нельзя превратить в диалог, пока выполняется боковой вопрос",
+  "Cannot promote during Battle Mode — end the battle first": "Нельзя превратить в диалог в режиме битвы — сначала завершите битву",
+  "Cannot promote during Battle Mode \u2014 end the battle first": "Нельзя превратить в диалог в режиме битвы — сначала завершите битву",
+  "Side Question": "Боковой вопрос",
+  "Battle Mode": "Режим битвы",
+
+  // Вкладки и панели
+  "Close Tabs to the Left": "Закрыть вкладки слева",
+  "Toggle Side Panel": "Показать/скрыть боковую панель",
+  "Toggle Terminal Panel": "Показать/скрыть панель терминала",
+  "Terminal Panel": "Панель терминала",
+  "The aux pane is not supported here": "Боковая панель здесь не поддерживается",
+  "UI Extension (SidePanel)": "Расширение интерфейса (боковая панель)",
+
+  // Темы оформления
+  "Legacy Dark": "Legacy Тёмная",
+  "Legacy Light": "Legacy Светлая",
+
+  // Автоматизации и расписание
+  "Add schedule": "Добавить расписание",
+  "Add trigger": "Добавить триггер",
+  "Change schedule": "Изменить расписание",
+  "Edit schedule and model": "Изменить расписание и модель",
+  "Custom schedule": "Своё расписание",
+  "Schedule type": "Тип расписания",
+  "All runs": "Все запуски",
+  "No runs yet": "Запусков пока нет",
+  "Loading runs…": "Загрузка запусков…",
+  "Last run": "Последний запуск",
+  "Next run": "Следующий запуск",
+  "No upcoming run.": "Нет запланированных запусков.",
+  "Paused.": "На паузе.",
+  "Paused. Resume it to schedule the next run.": "На паузе. Возобновите для планирования следующего запуска.",
+  "How often": "Как часто",
+  "Repeat every": "Повторять каждые",
+  "Repeat unit": "Единица повтора",
+  "Number of hours": "Количество часов",
+  "Every day": "Каждый день",
+  "Every hour": "Каждый час",
+  "Every week": "Каждую неделю",
+  "Every weekday": "Каждый будний день",
+  "Day of the month": "День месяца",
+  "Day of the week": "День недели",
+  "When it runs": "Когда запускается",
+  "When should it run?": "Когда запускать?",
+  "When something happens": "Когда что-то происходит",
+  "Where it runs": "Где запускается",
+  "Where should it run?": "Где запускать?",
+  "Runs a command": "Выполняет команду",
+  "Runs as": "Запускается как",
+  "Runs remotely": "Выполняется удалённо",
+  "Remote only": "Только удалённо",
+  "On a schedule": "По расписанию",
+  "Creates a local automation that runs on this computer": "Создаёт локальную автоматизацию на этом компьютере",
+  "Connect an account so the agent can run automations.": "Подключите аккаунт, чтобы агент мог запускать автоматизации.",
+  "Run a prompt on a schedule, like a morning summary of yesterday's changes. Runs show up here.": "Запуск промпта по расписанию (например, утренняя сводка изменений за вчера). Запуски отображаются здесь.",
+  "What should it do?": "Что должна делать?",
+  "What should the agent do on each run?": "Что агент должен делать при каждом запуске?",
+  "For example: Morning bug summary": "Например: Утренняя сводка багов",
+  "For example: every morning, summarize new bugs assigned to me and anything that changed overnight.": "Например: каждое утро делать сводку новых багов, назначенных на меня, и ночных изменений.",
+  "No instructions.": "Нет инструкций.",
+  "Remove trigger": "Удалить триггер",
+  "Search triggers…": "Поиск триггеров…",
+  "Started during": "Начато во время",
+  "Started from": "Запущено из",
+
+  // Встроенный браузер (WebContentsView)
+  "Address bar suggestions": "Подсказки адресной строки",
+  "Search or enter a URL": "Поиск или ввод адреса",
+  "Search tabs, files and more": "Поиск вкладок, файлов и др.",
+  "Remove from history": "Удалить из истории",
+  "Remove from history (Shift+Delete)": "Удалить из истории (Shift+Delete)",
+  "Certificate is not valid": "Сертификат недействителен",
+  "This site cannot provide a secure connection.": "Этот сайт не может обеспечить безопасное соединение.",
+  "This site uses an unsupported TLS protocol or cipher suite.": "Этот сайт использует неподдерживаемый протокол TLS или набор шифров.",
+  "Your connection to this site is not fully secure": "Подключение к этому сайту не полностью защищено",
+  "Browser is currently being operated by this conversation in another Hub window": "Браузер сейчас управляется этим диалогом в другом окне Hub",
+  "Browser steps": "Шаги браузера",
+  "Using browser": "Используется браузер",
+  "Using browser · Thinking…": "Используется браузер · Размышление…",
+  "You're viewing a blank page": "Отображается пустая страница",
+  "You're viewing a local or shared file": "Отображается локальный или общий файл",
+  "CitC workspace paths cannot be used as a browser download directory": "Пути рабочего пространства CitC нельзя использовать как папку загрузок браузера",
+
+  // Голосовой режим (Voice mode)
+  "Voice mode": "Голосовой режим",
+  "Voice mode in progress": "Идёт голосовой режим",
+  "Voice transcript": "Расшифровка голоса",
+  "Live transcript": "Живая расшифровка",
+  "Listening. Ask anything.": "Слушаю. Спрашивайте что угодно.",
+  "End Voice mode": "Завершить голосовой режим",
+  "Microphone open timed out": "Время ожидания микрофона истекло",
+
+  // Опросники и карточки
+  "Collapse questionnaire": "Свернуть опросник",
+  "Collapse Questionnaire": "Свернуть опросник",
+  "Expand questionnaire": "Развернуть опросник",
+  "Expand Questionnaire": "Развернуть опросник",
+  "Next card": "Следующая карточка",
+  "Previous card": "Предыдущая карточка",
+
+  // Превью и медиа
+  "Open Mermaid diagram preview": "Открыть предпросмотр диаграммы Mermaid",
+  "Open image preview": "Открыть предпросмотр изображения",
+  "Open video preview": "Открыть предпросмотр видео",
+  "Failed to open media in a new tab:": "Не удалось открыть медиафайл в новой вкладке:",
+  "Image exceeds the 20 MB maximum size": "Размер изображения превышает максимум 20 МБ",
+
+  // Очередь сообщений
+  "Couldn't edit queued message": "Не удалось изменить сообщение в очереди",
+  "Removing the message from the queue…": "Удаление сообщения из очереди…",
+  "It was already sent or couldn't be removed from the queue.": "Оно уже отправлено или его не удалось удалить из очереди.",
+
+  // Разное и статус
+  "Add filter": "Добавить фильтр",
+  "Search filters…": "Поиск фильтров…",
+  "Always on": "Всегда включено",
+  "Announcements and tips": "Анонсы и подсказки",
+  "Authentication required": "Требуется авторизация",
+  "Change model": "Сменить модель",
+  "Choose…": "Выбрать…",
+  "Click to load": "Нажмите для загрузки",
+  "Connect GitHub: Run gh auth login in a terminal": "Подключить GitHub: выполните gh auth login в терминале",
+  "Conversation Unarchived": "Диалог разархивирован",
+  "Conversation limit reached": "Достигнут лимит диалогов",
+  "Daily conversation limit reached": "Достигнут дневной лимит диалогов",
+  "Daily environment time used": "Использовано дневное время окружения",
+  "Could not apply the selected permissions.": "Не удалось применить выбранные права.",
+  "Could not start.": "Не удалось запустить.",
+  "Create a project first.": "Сначала создайте проект.",
+  "Document head unavailable": "Заголовок документа недоступен",
+  "Hide earlier steps": "Скрыть предыдущие шаги",
+  "Show 1 earlier step": "Показать 1 предыдущий шаг",
+  "Marketplace notice": "Уведомление Маркетплейса",
+  "One or more, comma-separated": "Один или несколько через запятую",
+  "Only for": "Только для",
+  "Pull Requests": "Pull Requests",
+  "Rate limited": "Превышен лимит запросов",
+  "Remote agents are busy": "Удалённые агенты заняты",
+  "Repository access required": "Требуется доступ к репозиторию",
+  "Repository not accessible": "Репозиторий недоступен",
+  "Request failed": "Запрос не удался",
+  "Scrollable table": "Прокручиваемая таблица",
+  "Shift+Delete": "Shift+Delete",
+  "Thinking…": "Размышление…",
+  "Token rejected": "Токен отклонён",
+  "Too many environments running": "Запущено слишком много окружений",
+  "Untrusted sidecar": "Недоверенный sidecar",
+  "What can we get done today?": "Чем займёмся сегодня?"
 };
 
   function formatTime(str) {
@@ -1468,6 +1627,14 @@
       replace: function (m) {
         const UNITS = { m: "мин", h: "ч", d: "д", w: "нед", mo: "мес", y: "г" };
         return m[1] + " " + UNITS[m[2]];
+      }
+    },
+    // Скрытие/показ предыдущих шагов браузера: «Show 1 earlier step», «Show 3 earlier steps».
+    {
+      regex: /^Show (\d+) earlier steps?$/i,
+      replace: function (m) {
+        const n = parseInt(m[1], 10);
+        return "Показать " + (n === 1 ? "1 предыдущий шаг" : n + " " + plural(n, "предыдущий шаг", "предыдущих шага", "предыдущих шагов"));
       }
     }
   ];

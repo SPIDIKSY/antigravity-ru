@@ -5,9 +5,9 @@
 **Полный перевод десктопного приложения Antigravity 2 (Windows) на русский язык**  
 Интерфейс, все разделы настроек, профили безопасности, системные меню и панель изменений — в одну команду.
 
-[![Antigravity Version](https://img.shields.io/badge/Antigravity-2.28.0-6366f1?style=for-the-badge&logo=google&logoColor=white)](https://github.com/SPIDIKSY/antigravity-ru)
+[![Antigravity Version](https://img.shields.io/badge/Antigravity-2.29.0-6366f1?style=for-the-badge&logo=google&logoColor=white)](https://github.com/SPIDIKSY/antigravity-ru)
 [![Platform](https://img.shields.io/badge/Платформа-Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/SPIDIKSY/antigravity-ru)
-[![Translated](https://img.shields.io/badge/Перевод-1150%2B%20строк-10b981?style=for-the-badge)](https://github.com/SPIDIKSY/antigravity-ru)
+[![Translated](https://img.shields.io/badge/Перевод-1280%2B%20строк-10b981?style=for-the-badge)](https://github.com/SPIDIKSY/antigravity-ru)
 [![License](https://img.shields.io/badge/Лицензия-MIT-f59e0b?style=for-the-badge)](https://github.com/SPIDIKSY/antigravity-ru/blob/main/LICENSE)
 
 [![Telegram Chat](https://img.shields.io/badge/Наш%20Telegram--чат-Сообщить%20об%20ошибке%20%2F%20Обсуждение-26A5E4?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/spididyanty)
@@ -24,9 +24,16 @@
 
 ---
 
-## Что нового (под Antigravity 2.28.0)
+## Что нового (под Antigravity 2.29.0)
 
-- Русификатор собран под **Antigravity 2.28.0**.
+- Русификатор собран под **Antigravity 2.29.0**.
+- **Боковые вопросы (Side questions):** параллельные вопросы агенту без прерывания главного чата, остановка и превращение в отдельный диалог («Превратить в диалог»).
+- **Разделение панелей и новое меню вкладок:** независимые боковая панель («Side Panel») и нижняя панель терминала («Terminal Panel»); пункт «Закрыть вкладки слева», закрепление и открепление вкладок.
+- **Автоматизации и планировщик:** создание задач по расписанию, выбор периодичности (каждый день, час, неделя, будни), просмотр истории и статусов запусков.
+- **Встроенный браузер нового поколения (WebContentsView):** подсказки адресной строки, предупреждения безопасности SSL-сертификатов, шаги браузера и очистка истории.
+- **Голосовой режим и опросники:** интерфейс голосового диалога («Слушаю. Спрашивайте что угодно.»), сворачивание/разворачивание опросников.
+- **Темы оформления:** поддержка тем «Legacy Dark» и «Legacy Light» наряду с новой темой по умолчанию.
+- Сохранена полная совместимость сборщика со старой версией 2.28.0.
 - Переведены меню ⋮ диалога (закрепить, архивировать, разделить окно, копировать), панель обзора и её разделы, вкладка плана агента и её меню.
 - Вопросы агента: «Задаёт 1 вопрос», «3 вопроса», «5 вопросов» — с правильными окончаниями; «Работал 3 мин», «Ожидание ответа пользователя».
 - Выбор модели: уровни «Низкий / Средний / Высокий», лимиты, «Сброс через 1 д 21 ч», подсказки к квотам.
@@ -34,7 +41,7 @@
 - **Цветные упоминания** в поле ввода: файлы — синие, диалоги — фиолетовые, правила — жёлтые, команды — зелёные, браузер — голубой. В тех же цветах пункты меню «Добавить контекст».
 
 > [!IMPORTANT]
-> Файлы русификатора собраны под **Antigravity 2.28.0**. Если у вас другая версия — сначала обновите Antigravity до 2.28.0, потом ставьте русификатор.
+> Файлы русификатора собраны под **Antigravity 2.29.0**. Если у вас другая версия — сначала обновите Antigravity до 2.29.0, потом ставьте русификатор.
 > Установщик сам проверяет версию и при несовпадении ничего не меняет. Поставить всё равно, на свой риск:
 > `& ([scriptblock]::Create((irm https://raw.githubusercontent.com/SPIDIKSY/antigravity-ru/main/install.ps1))) -Force`
 

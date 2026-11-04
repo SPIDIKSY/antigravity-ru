@@ -18,7 +18,7 @@ param(
 )
 
 # Версия Antigravity, под которую собраны файлы в resources\. app.asar от другой версии может сломать приложение.
-$SupportedVersion = "2.28.0"
+$SupportedVersion = "2.29.0"
 
 $Host.UI.RawUI.WindowTitle = "Antigravity 2.0 - Русификатор"
 
