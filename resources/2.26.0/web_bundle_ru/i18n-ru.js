@@ -1587,7 +1587,11 @@
 
   // Автоматизации (в родительном падеже для шаблонов «Пока нет …», «Нет … по запросу»)
   "automations": "автоматизаций",
-  "scheduled tasks": "запланированных задач"
+  "scheduled tasks": "запланированных задач",
+  "Add automation": "Добавить автоматизацию",
+  "Add scheduled task": "Добавить запланированную задачу",
+  "Refresh all credentials": "Обновить все учётные данные",
+  "Sidecar feature is not available.": "Функция sidecar недоступна."
 };
 
   function formatTime(str) {
@@ -1892,6 +1896,22 @@
       replace: function (m) {
         const month = MONTHS_GENITIVE[m[2]] || m[2];
         return m[1] + " теперь доступна на платных тарифах Pro и Ultra. Доступ к сторонним моделям на вашем текущем тарифе будет прекращён с " + m[3] + " " + month + " " + m[4] + " г.";
+      }
+    },
+    // Пустой поиск по боковым панелям (автоматизации, запланированные задачи): «No automations matching your search»
+    {
+      regex: /^No (automations|scheduled tasks) matching your search$/i,
+      replace: function (m) {
+        const item = m[1].toLowerCase() === "automations" ? "автоматизаций" : "запланированных задач";
+        return "Нет " + item + " по запросу";
+      }
+    },
+    // Нет настроенных боковых панелей: «No automations configured.»
+    {
+      regex: /^No (automations|scheduled tasks) configured\.$/i,
+      replace: function (m) {
+        const item = m[1].toLowerCase() === "automations" ? "автоматизаций" : "запланированных задач";
+        return "Нет настроенных " + item + ".";
       }
     }
   ];
