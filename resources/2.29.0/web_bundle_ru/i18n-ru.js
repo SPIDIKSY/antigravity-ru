@@ -1656,7 +1656,11 @@
   "The change was pushed to Gerrit.": "Изменение отправлено в Gerrit.",
   "Open the change": "Открыть изменение",
   "The remote shared a link for this push.": "Удалённый сервер предоставил ссылку для этой отправки.",
-  "Open link": "Открыть ссылку"
+  "Open link": "Открыть ссылку",
+
+  // Выделение текста и всплывающие действия
+  "Quote": "Цитировать",
+  "Comment": "Комментировать"
 };
 
   function formatTime(str) {
@@ -2042,6 +2046,20 @@
       replace: function (m) {
         const prefix = DICT[m[1]] || m[1];
         return prefix + ". Этот коммит уже отправлен; для дополнения потребуется push с флагом force.";
+      }
+    },
+    // Кнопка комментирования с горячей клавишей: «Comment (Ctrl+/)»
+    {
+      regex: /^Comment \((.+)\)$/,
+      replace: function (m) {
+        return "Комментировать (" + m[1] + ")";
+      }
+    },
+    // Кнопка цитирования с горячей клавишей: «Quote (Ctrl+L)»
+    {
+      regex: /^Quote \((.+)\)$/,
+      replace: function (m) {
+        return "Цитировать (" + m[1] + ")";
       }
     }
   ];
