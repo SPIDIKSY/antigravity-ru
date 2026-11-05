@@ -1591,7 +1591,38 @@
   "Add automation": "Добавить автоматизацию",
   "Add scheduled task": "Добавить запланированную задачу",
   "Refresh all credentials": "Обновить все учётные данные",
-  "Sidecar feature is not available.": "Функция sidecar недоступна."
+  "Sidecar feature is not available.": "Функция sidecar недоступна.",
+
+  // Строка поиска (Find bar)
+  "Find": "Найти",
+  "No Results": "Нет результатов",
+  "No results": "Нет результатов",
+  "Match Case (Aa)": "Учитывать регистр (Aa)",
+  "Match Case": "Учитывать регистр",
+  "Match case": "Учитывать регистр",
+  "Match Whole Word (ab)": "Слово целиком (ab)",
+  "Match Whole Word": "Слово целиком",
+  "Match whole word": "Слово целиком",
+  "Use Regular Expression (.*)": "Использовать регулярные выражения (.*)",
+  "Use Regular Expression": "Использовать регулярные выражения",
+  "Use regular expression": "Использовать регулярные выражения",
+  "Previous Match (Shift+Enter)": "Предыдущее совпадение (Shift+Enter)",
+  "Next Match (Enter)": "Следующее совпадение (Enter)",
+  "Previous match": "Предыдущее совпадение",
+  "Next match": "Следующее совпадение",
+
+  // Меню и управление diff
+  "View Split Diff": "Раздельный вид diff",
+  "View Stacked Diff": "Единый вид diff",
+  "Hide Whitespace Changes": "Скрыть изменения пробелов",
+  "Show Whitespace Changes": "Показать изменения пробелов",
+  "Collapse Diffs": "Свернуть diff",
+  "Expand Diffs": "Развернуть diff",
+  "Viewing Diff": "Просмотр diff",
+  "View File": "Просмотреть файл",
+
+  // Контроль версий (Git)
+  "Changes": "Изменения"
 };
 
   function formatTime(str) {
@@ -1773,7 +1804,7 @@
       replace: function (m) { return "Запущено агентов: " + m[1]; }
     },
     {
-      regex: /^(\d+)\s+of\s+(\d+)$/i,
+      regex: /^(\d+)\s+of\s+(\d+\+?)$/i,
       replace: function (m) { return m[1] + " из " + m[2]; }
     },
     {
