@@ -1660,7 +1660,8 @@
 
   // Выделение текста и всплывающие действия
   "Quote": "Цитировать",
-  "Comment": "Комментировать"
+  "Comment": "Комментировать",
+  "Include unstaged changes": "Включить неиндексированные изменения"
 };
 
   function formatTime(str) {
@@ -2061,6 +2062,13 @@
       replace: function (m) {
         return "Цитировать (" + m[1] + ")";
       }
+    },
+    // Статистика diff в модалке коммита: «244 lines added, 0 lines removed»
+    {
+      regex: /^(\d+) lines? added, (\d+) lines? removed$/i,
+      replace: function (m) {
+        return "Добавлено строк: " + m[1] + ", удалено строк: " + m[2];
+      }
     }
   ];
 
@@ -2138,6 +2146,33 @@
       if (node.hasAttribute('aria-label')) {
         const trans = translateString(node.getAttribute('aria-label'));
         if (trans) node.setAttribute('aria-label', trans);
+      }
+
+      // Модальное окно коммита: 6 текстовых узлов ["Commit ", c, " file", " ", "change(s)", " to"]
+      if (node.tagName === 'SPAN' && node.childNodes && node.childNodes.length === 6) {
+        const c0 = node.childNodes[0], c1 = node.childNodes[1], c2 = node.childNodes[2],
+              c3 = node.childNodes[3], c4 = node.childNodes[4], c5 = node.childNodes[5];
+        if (
+          c0.nodeType === Node.TEXT_NODE &&
+          c2.nodeType === Node.TEXT_NODE &&
+          c4.nodeType === Node.TEXT_NODE &&
+          c5.nodeType === Node.TEXT_NODE &&
+          (c2.nodeValue === ' file' || (c2.nodeValue === ' ' && c5.nodeValue === ' в'))
+        ) {
+          const n = parseInt(c1.nodeValue, 10) || 0;
+          const form =
+            n % 10 === 1 && n % 100 !== 11
+              ? 'изменённый файл'
+              : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)
+              ? 'изменённых файла'
+              : 'изменённых файлов';
+          if (c0.nodeValue !== 'Зафиксировать ') c0.nodeValue = 'Зафиксировать ';
+          if (c2.nodeValue !== ' ') c2.nodeValue = ' ';
+          if (c3.nodeValue !== '') c3.nodeValue = '';
+          if (c4.nodeValue !== form) c4.nodeValue = form;
+          if (c5.nodeValue !== ' в') c5.nodeValue = ' в';
+          return;
+        }
       }
 
       for (let child = node.firstChild; child; child = child.nextSibling) {
