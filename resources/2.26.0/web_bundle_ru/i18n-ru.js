@@ -1622,7 +1622,41 @@
   "View File": "Просмотреть файл",
 
   // Контроль версий (Git)
-  "Changes": "Изменения"
+  "Changes": "Изменения",
+  "Commit": "Зафиксировать",
+  "Amend": "Дополнить коммит",
+  "Push": "Отправить",
+  "Discard": "Отменить",
+  "Commit staged changes": "Зафиксировать индексированные изменения",
+  "Stage and commit all changes": "Индексировать и зафиксировать все изменения",
+  "Amend staged changes into the current commit": "Дополнить текущий коммит индексированными изменениями",
+  "Stage and amend all changes into the current commit": "Индексировать и дополнить текущий коммит всеми изменениями",
+  "Describe your changes, or leave empty to auto-generate": "Опишите изменения или оставьте пустым для автогенерации",
+  "Generating commit message...": "Генерация описания коммита...",
+  "Failed to Generate Commit Message": "Не удалось сгенерировать описание коммита",
+  "Committing...": "Фиксация изменений...",
+  "Commit succeeded": "Коммит успешно создан",
+  "Failed to Commit": "Не удалось зафиксировать",
+  "Amending...": "Дополнение коммита...",
+  "Amend succeeded": "Коммит успешно дополнен",
+  "Failed to Amend": "Не удалось дополнить коммит",
+  "Pushing...": "Отправка...",
+  "Push succeeded": "Успешно отправлено",
+  "Failed to Push": "Не удалось отправить",
+  "No changes to amend": "Нет изменений для дополнения",
+  "No commit to amend": "Нет коммита для дополнения",
+  "No remote configured": "Удалённый репозиторий не настроен",
+  "No commits to push": "Нет коммитов для отправки",
+  "Resolve conflicts first": "Сначала разрешите конфликты",
+  "Created a new branch on GitHub.": "Создана новая ветка на GitHub.",
+  "Open a pull request": "Открыть pull request",
+  "The branch was pushed to GitLab.": "Ветка отправлена в GitLab.",
+  "Open a merge request": "Открыть merge request",
+  "Created a new branch on Origin.": "Создана новая ветка в Origin.",
+  "The change was pushed to Gerrit.": "Изменение отправлено в Gerrit.",
+  "Open the change": "Открыть изменение",
+  "The remote shared a link for this push.": "Удалённый сервер предоставил ссылку для этой отправки.",
+  "Open link": "Открыть ссылку"
 };
 
   function formatTime(str) {
@@ -1943,6 +1977,71 @@
       replace: function (m) {
         const item = m[1].toLowerCase() === "automations" ? "автоматизаций" : "запланированных задач";
         return "Нет настроенных " + item + ".";
+      }
+    },
+    // Дифф изменений с веткой: «All changes since origin/main»
+    {
+      regex: /^All changes since (.+)$/i,
+      replace: function (m) {
+        if (DICT[m[0]]) return DICT[m[0]];
+        return "Все изменения с " + m[1];
+      }
+    },
+    // Публикация ветки в origin: «Publish feature to origin»
+    {
+      regex: /^Publish (.+) to origin$/i,
+      replace: function (m) {
+        return "Опубликовать " + m[1] + " в origin";
+      }
+    },
+    // Ветка опубликована в origin: «Published feature to origin.»
+    {
+      regex: /^Published (.+) to origin\.$/i,
+      replace: function (m) {
+        return "Опубликовано " + m[1] + " в origin.";
+      }
+    },
+    // Отправка коммитов: «Push 2 commits to origin/main»
+    {
+      regex: /^Push (\d+) commits? to (.+)$/i,
+      replace: function (m) {
+        return "Отправить " + m[1] + " коммит(ов) в " + m[2];
+      }
+    },
+    // Коммиты отправлены: «Pushed 2 commits to origin/main.»
+    {
+      regex: /^Pushed (\d+) commits? to (.+)\.$/i,
+      replace: function (m) {
+        return "Отправлено " + m[1] + " коммит(ов) в " + m[2] + ".";
+      }
+    },
+    // Отправлено в ветку: «Pushed to origin/main.»
+    {
+      regex: /^Pushed to (.+)\.$/i,
+      replace: function (m) {
+        return "Отправлено в " + m[1] + ".";
+      }
+    },
+    // Коммит создан в ветке: «Committed to main.»
+    {
+      regex: /^Committed to (.+)\.$/i,
+      replace: function (m) {
+        return "Зафиксировано в " + m[1] + ".";
+      }
+    },
+    // Коммит дополнен: «Amended commit on main.»
+    {
+      regex: /^Amended commit on (.+)\.$/i,
+      replace: function (m) {
+        return "Коммит дополнен в " + m[1] + ".";
+      }
+    },
+    // Предупреждение о force push при дополнении уже отправленного коммита
+    {
+      regex: /^(.+)\. This commit is already pushed; amending will require a force push\.$/i,
+      replace: function (m) {
+        const prefix = DICT[m[1]] || m[1];
+        return prefix + ". Этот коммит уже отправлен; для дополнения потребуется push с флагом force.";
       }
     }
   ];
