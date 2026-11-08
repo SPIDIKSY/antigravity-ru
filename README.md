@@ -121,13 +121,13 @@ git clone https://github.com/SPIDIKSY/antigravity-ru.git
 cd antigravity-ru
 
 # Обычная установка
-powershell -ExecutionPolicy Bypass -File install.ps1 -Install
+powershell -ExecutionPolicy Bypass -Command "& ([scriptblock]::Create((Get-Content install.ps1 -Raw -Encoding UTF8))) -Install"
 
 # Установка без принудительного закрытия запущенных окон Antigravity
-powershell -ExecutionPolicy Bypass -File install.ps1 -Install -NoKill
+powershell -ExecutionPolicy Bypass -Command "& ([scriptblock]::Create((Get-Content install.ps1 -Raw -Encoding UTF8))) -Install -NoKill"
 
 # Удаление русификации
-powershell -ExecutionPolicy Bypass -File install.ps1 -Uninstall
+powershell -ExecutionPolicy Bypass -Command "& ([scriptblock]::Create((Get-Content install.ps1 -Raw -Encoding UTF8))) -Uninstall"
 ```
 </details>
 

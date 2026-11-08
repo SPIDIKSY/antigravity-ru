@@ -1,10 +1,12 @@
-﻿<#
+<#
 .SYNOPSIS
     Antigravity 2.0 — Установщик русской локализации (Open Source)
 .DESCRIPTION
     Устанавливает или удаляет русификацию десктопного приложения Antigravity 2.0.
-    Поддерживает запуск одной строкой через консоль:
-    irm https://raw.githubusercontent.com/SPIDIKSY/antigravity-ru/main/install.ps1 | iex
+    Команда установки одной строкой есть в README репозитория.
+.NOTES
+    Файл сохранять без метки кодировки BOM: с ней установка одной строкой из README
+    перестаёт работать в Windows PowerShell 5.1.
 .LINK
     https://github.com/SPIDIKSY/antigravity-ru
 #>
@@ -14,7 +16,7 @@ param(
     [switch]$Uninstall,
     [switch]$NoKill,
     [switch]$Force,
-    [string]$AppDir = "$env:LOCALAPPDATA\Programs\antigravity"
+    [string]$AppDir = ""
 )
 
 # Поддерживаемые версии Antigravity, для которых подготовлены файлы в resources\<версия>\.
@@ -28,12 +30,53 @@ Write-Host "     Репозиторий: https://github.com/SPIDIKSY/antigravity
 Write-Host "==========================================================" -ForegroundColor Cyan
 Write-Host ""
 
-# 1. Проверка установки Antigravity
-if (-not (Test-Path "$AppDir\Antigravity.exe")) {
-    Write-Host "[!] Antigravity не найден в стандартном каталоге: $AppDir" -ForegroundColor Yellow
-    $AppDir = Read-Host "Введите полный путь к каталогу с Antigravity.exe"
-    if (-not (Test-Path "$AppDir\Antigravity.exe")) {
-        Write-Host "[-] Ошибка: Antigravity.exe не найден по указанному пути. Прерывание." -ForegroundColor Red
+$StandardAppDir = "$env:LOCALAPPDATA\Programs\antigravity"
+
+# Приводит введённый путь к папке: его часто вставляют в кавычках и вместе с именем файла.
+function Get-AppFolder([string]$Path) {
+    return $Path.Trim(' ', '"', "'") -replace '[\\/]+Antigravity\.exe$', ''
+}
+
+function Test-AppFolder([string]$Dir) {
+    return $Dir -and (Test-Path -LiteralPath "$Dir\Antigravity.exe" -PathType Leaf -ErrorAction SilentlyContinue)
+}
+
+# Места поиска, начиная с самого вероятного. Скрипт могут запустить от другой учётной записи,
+# и тогда $env:LOCALAPPDATA указывает не на профиль того, у кого установлен Antigravity.
+function Get-AppFolderCandidates {
+    $StandardAppDir
+
+    Get-Process -Name "Antigravity" -ErrorAction SilentlyContinue |
+        Where-Object { $_.Path } |
+        ForEach-Object { Split-Path -Parent $_.Path }
+
+    # Установщик оставляет InstallLocation пустым, путь к программе есть только в DisplayIcon.
+    $uninstallKeys = @(
+        "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*",
+        "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*",
+        "HKLM:\Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*"
+    )
+    Get-ItemProperty -Path $uninstallKeys -ErrorAction SilentlyContinue | ForEach-Object {
+        if ($_.DisplayIcon -match '^"?(.+?)[\\/]Antigravity\.exe') { $Matches[1] }
+    }
+
+    Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\*" -ErrorAction SilentlyContinue |
+        ForEach-Object { "$($_.ProfileImagePath)\AppData\Local\Programs\antigravity" }
+}
+
+# 1. Поиск Antigravity: сначала папка из -AppDir, потом остальные места.
+$RequestedDir = Get-AppFolder $AppDir
+$AppDir = @($RequestedDir) + @(Get-AppFolderCandidates) | Where-Object { Test-AppFolder $_ } | Select-Object -First 1
+
+if ($RequestedDir -and $AppDir -ne $RequestedDir) {
+    Write-Host "[!] Antigravity.exe не найден в папке: $RequestedDir" -ForegroundColor Yellow
+}
+if (-not $AppDir) {
+    Write-Host "[!] Не удалось найти Antigravity автоматически." -ForegroundColor Yellow
+    Write-Host "    Укажите папку, в которой лежит Antigravity.exe. Например: $StandardAppDir" -ForegroundColor Gray
+    $AppDir = Get-AppFolder (Read-Host "Введите путь к папке с Antigravity.exe")
+    if (-not (Test-AppFolder $AppDir)) {
+        Write-Host "[-] Ошибка: Antigravity.exe не найден в папке: $AppDir. Прерывание." -ForegroundColor Red
         return
     }
 }
