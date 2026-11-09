@@ -1140,6 +1140,7 @@
   "Google Cloud guidance for coding agents: first-project onboarding, authentication and credential selection, and safety-critical validation for gcloud CLI commands. Includes the Google Developer Knowledge MCP server for grounded, up-to-date Google Cloud documentation.": "Руководство по Google Cloud для агентов: первый проект, аутентификация и выбор учётных данных, проверка опасных команд gcloud CLI. Включает MCP-сервер Google Developer Knowledge с актуальной документацией Google Cloud.",
   "Keep your coding agent up to date with the latest web best practices.": "Держит агента в курсе актуальных практик веб-разработки.",
   "Official plugin for Dart and Flutter that installs Flutter/Dart Skills, Rules, Custom Agents, and Dart MCP server for building natively compiled, visually stunning applications for mobile, web, desktop, and embedded devices from a single codebase": "Официальный плагин Dart и Flutter: устанавливает навыки, правила и агентов Flutter/Dart и MCP-сервер Dart для нативных приложений под мобильные, веб, десктоп и встраиваемые устройства из одной кодовой базы",
+  "Connect to your managed Looker MCP server to explore data, run saved Looks, build dashboards, and validate LookML.": "Подключение к управляемому MCP-серверу Looker: исследование данных, запуск сохранённых отчётов Look, создание дашбордов и проверка LookML.",
 
   // --- 2.26.0: меню проекта, добавление контекста, слэш-команды, режимы разрешений ---
   "Copy Project Name": "Скопировать название проекта",

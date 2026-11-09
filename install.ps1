@@ -20,7 +20,7 @@ param(
 )
 
 # Поддерживаемые версии Antigravity, для которых подготовлены файлы в resources\<версия>\.
-$SupportedVersions = @("2.25.0", "2.26.0", "2.28.0", "2.29.0")
+$SupportedVersions = @("2.25.0", "2.26.0", "2.28.0", "2.29.0", "2.29.1")
 
 $Host.UI.RawUI.WindowTitle = "Antigravity 2.0 - Русификатор"
 
