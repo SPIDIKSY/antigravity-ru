@@ -1662,7 +1662,33 @@
   // Выделение текста и всплывающие действия
   "Quote": "Цитировать",
   "Comment": "Комментировать",
-  "Include unstaged changes": "Включить неиндексированные изменения"
+  "Include unstaged changes": "Включить неиндексированные изменения",
+
+  // Ошибки шагов агента и сервера
+  "Error": "Ошибка",
+  "Error:": "Ошибка:",
+  "Error ID": "ID ошибки",
+  "Error ID:": "ID ошибки:",
+  "Full Error": "Полный текст ошибки",
+  "There was a network issue connecting to the server, please try again.": "Произошла ошибка сети при подключении к серверу, повторите попытку.",
+  "Unknown: There was a network issue connecting to the server, please try again.": "Неизвестная ошибка: произошла ошибка сети при подключении к серверу, повторите попытку.",
+  "Error Unknown: There was a network issue connecting to the server, please try again.": "Ошибка: произошла ошибка сети при подключении к серверу, повторите попытку.",
+  "The agent has encountered an internal error.": "Агент столкнулся с внутренней ошибкой.",
+  "Invalid tool call": "Недопустимый вызов инструмента",
+  "Error while editing": "Ошибка при изменении",
+  "Error editing file": "Ошибка изменения файла",
+  "Error while viewing": "Ошибка при просмотре",
+  "Error viewing file": "Ошибка просмотра файла",
+  "Error while editing notebook": "Ошибка при изменении блокнота",
+  "Error editing notebook": "Ошибка изменения блокнота",
+  "Error while reading notebook": "Ошибка при чтении блокнота",
+  "Error reading notebook": "Ошибка чтения блокнота",
+  "Error while running command": "Ошибка при выполнении команды",
+  "Error while semantic searching": "Ошибка семантического поиска",
+  "Error while analyzing directory": "Ошибка при анализе каталога",
+  "Error while searching the web": "Ошибка поиска в интернете",
+  "Error while running MCP tool": "Ошибка выполнения инструмента MCP",
+  "Error during tool execution": "Ошибка при выполнении инструмента"
 };
 
   function formatTime(str) {
@@ -1713,6 +1739,25 @@
     January: "января", February: "февраля", March: "марта", April: "апреля",
     May: "мая", June: "июня", July: "июля", August: "августа",
     September: "сентября", October: "октября", November: "ноября", December: "декабря"
+  };
+
+  const ERROR_STATUS_PREFIXES = {
+    "Canceled": "Отменено",
+    "Unknown": "Неизвестная ошибка",
+    "Invalid argument": "Недопустимый аргумент",
+    "Deadline exceeded": "Превышено время ожидания",
+    "Not found": "Не найдено",
+    "Already exists": "Уже существует",
+    "Permission denied": "Доступ запрещён",
+    "Resource exhausted": "Ресурсы исчерпаны",
+    "Failed precondition": "Условие не выполнено",
+    "Aborted": "Прервано",
+    "Out of range": "Вне диапазона",
+    "Unimplemented": "Не реализовано",
+    "Internal": "Внутренняя ошибка",
+    "Unavailable": "Недоступно",
+    "Data loss": "Потеря данных",
+    "Unauthenticated": "Требуется авторизация"
   };
 
   const RULES = [
@@ -2069,6 +2114,43 @@
       regex: /^(\d+) lines? added, (\d+) lines? removed$/i,
       replace: function (m) {
         return "Добавлено строк: " + m[1] + ", удалено строк: " + m[2];
+      }
+    },
+    // Сжатие контекста с длительностью: «Compacting · 1m 33s», «Compacting · 45s»
+    {
+      regex: /^Compacting\s*[·\u00b7]\s*(\d.*)$/i,
+      replace: function (m) {
+        return "Сжатие контекста · " + shortDuration(m[1]);
+      }
+    },
+    // Время размышлений агента: «Thinking for 2s», «Thinking for 1m 5s»
+    {
+      regex: /^Thinking for (\d.*)$/i,
+      replace: function (m) {
+        return "Размышление " + shortDuration(m[1]);
+      }
+    },
+    // ID ошибки: «Error ID: 894806b5-...» или «(Error ID: ...)»
+    {
+      regex: /^(?:Error ID:\s*|ID\s+ошибки:\s*)([a-f0-9-]+)$/i,
+      replace: function (m) {
+        return "ID ошибки: " + m[1];
+      }
+    },
+    {
+      regex: /^\(Error ID:\s*([a-f0-9-]+)\)$/i,
+      replace: function (m) {
+        return "(ID ошибки: " + m[1] + ")";
+      }
+    },
+    // Ошибки gRPC и сервера с префиксом статуса: «Unknown: ...», «Error Unknown: ...»
+    {
+      regex: /^(?:Error\s+)?(Canceled|Unknown|Invalid argument|Deadline exceeded|Not found|Already exists|Permission denied|Resource exhausted|Failed precondition|Aborted|Out of range|Unimplemented|Internal|Unavailable|Data loss|Unauthenticated):\s*(.*)$/i,
+      replace: function (m) {
+        const kind = ERROR_STATUS_PREFIXES[m[1]] || m[1];
+        const rest = m[2].trim();
+        const translatedRest = (typeof DICT !== 'undefined' && DICT[rest]) ? DICT[rest] : rest;
+        return kind + ": " + translatedRest;
       }
     }
   ];
