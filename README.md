@@ -5,9 +5,9 @@
 **Полный перевод десктопного приложения Antigravity 2 (Windows) на русский язык**  
 Интерфейс, все разделы настроек, профили безопасности, системные меню и панель изменений — в одну команду.
 
-[![Antigravity Version](https://img.shields.io/badge/Antigravity-2.29.1-6366f1?style=for-the-badge&logo=google&logoColor=white)](https://github.com/SPIDIKSY/antigravity-ru)
+[![Antigravity Version](https://img.shields.io/badge/Antigravity-2.31.0-6366f1?style=for-the-badge&logo=google&logoColor=white)](https://github.com/SPIDIKSY/antigravity-ru)
 [![Platform](https://img.shields.io/badge/Платформа-Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/SPIDIKSY/antigravity-ru)
-[![Translated](https://img.shields.io/badge/Перевод-1500%2B%20строк-10b981?style=for-the-badge)](https://github.com/SPIDIKSY/antigravity-ru)
+[![Translated](https://img.shields.io/badge/Перевод-1600%2B%20строк-10b981?style=for-the-badge)](https://github.com/SPIDIKSY/antigravity-ru)
 [![License](https://img.shields.io/badge/Лицензия-MIT-f59e0b?style=for-the-badge)](https://github.com/SPIDIKSY/antigravity-ru/blob/main/LICENSE)
 
 [![Telegram Chat](https://img.shields.io/badge/Наш%20Telegram--чат-Сообщить%20об%20ошибке%20%2F%20Обсуждение-26A5E4?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/spididyanty)
@@ -25,9 +25,9 @@
 ---
 
 > [!IMPORTANT]
-> **Поддерживаемые версии Antigravity:** `2.29.1`, `2.29.0`, `2.28.0`, `2.26.0`, `2.25.0`.
+> **Поддерживаемые версии Antigravity:** `2.31.0`, `2.29.1`, `2.29.0`, `2.28.0`, `2.26.0`, `2.25.0`.
 > Установщик автоматически определяет версию установленного Antigravity и выбирает подходящий набор файлов. В старых наборах доступен перевод возможностей того времени (например, цветные упоминания — начиная с 2.28.0).
-> Если у вас другая версия — рекомендуется обновить Antigravity. Поставить набор 2.29.1 принудительно (на свой риск):
+> Если у вас другая версия — рекомендуется обновить Antigravity. Поставить набор 2.31.0 принудительно (на свой риск):
 > `& ([scriptblock]::Create((irm https://raw.githubusercontent.com/SPIDIKSY/antigravity-ru/main/install.ps1))) -Force`
 
 ---

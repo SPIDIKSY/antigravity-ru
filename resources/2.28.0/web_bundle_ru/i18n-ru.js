@@ -178,9 +178,7 @@
   "Preview unavailable": "Предпросмотр недоступен",
   // Auth
   "Sign out": "Выйти из аккаунта",
-  "Sign Out": "Выйти из аккаунта",
   "Sign in": "Войти в аккаунт",
-  "Sign In": "Войти в аккаунт",
   "Setup required": "Требуется настройка",
   "Having trouble signing in?": "Проблемы со входом?",
   // Task management
@@ -220,7 +218,6 @@
   "Auto (detected)": "Авто (определяется)",
   "Chief of Staff": "Главный ассистент",
   "Notification": "Уведомление",
-  "Notifications": "Уведомления",
   "No notifications": "Нет уведомлений",
   // Status / errors
   "Request timed out": "Истекло время ожидания запроса",
@@ -232,8 +229,6 @@
   "Built In": "Встроенный",
   "Maximum number of attachments reached": "Достигнут максимум вложений",
   // VCS
-  "Staged Changes": "Индексированные изменения",
-  "Branch Changes": "Изменения ветки",
   // Google
   "Google Drive": "Google Диск",
 
@@ -263,12 +258,7 @@
   "Confirm undo": "Подтверждение отмены",
   "This undo action will not make any code changes.": "Это действие отмены не внесёт изменений в код.",
   "Confirming this undo action will make the following changes:": "Подтверждение этого действия отмены внесёт следующие изменения:",
-  "Undo": "Отменить",
-  "Confirm": "Подтвердить",
   "Accent": "Цвет акцента",
-  "Preset": "Предустановка",
-  "Default Light": "Стандартная Светлая",
-  "Default Dark": "Стандартная Тёмная",
   "Atom One Light": "Atom One Светлая",
   "Atom One Dark": "Atom One Тёмная",
   "Model": "Модель",
@@ -283,27 +273,13 @@
   "Create a Plugin with the Agent": "Создать плагин с помощью агента",
   "Create plugin": "Создать плагин",
   "Add MCP Server": "Добавить сервер MCP",
-  "Search MCP servers by name": "Поиск серверов MCP по имени",
-  "Search for MCP servers to add to your configuration": "Поиск серверов MCP для добавления в конфигурацию",
   "Delete MCP Server": "Удалить сервер MCP",
   "Fix with Agent": "Исправить с агентом",
-  "Plugins": "Плагины",
   "See more in Plugins": "Подробнее в Плагинах",
   "See less in Plugins": "Скрыть в Плагинах",
   "Plugin update required": "Требуется обновление плагина",
   "Unnamed MCP Server": "Безымянный сервер MCP",
   "Managed by plugin": "Управляется плагином",
-  "Agent Edits": "Правки агента",
-  "Custom Agents": "Пользовательские агенты",
-  "MCP Servers": "Серверы MCP",
-  "Agent Auto-Fix Lints": "Автоисправление ошибок линтера агентом",
-  "Agent Non-Workspace File Access": "Доступ агента к файлам вне рабочей области",
-  "Agent Host Address": "Адрес хоста агента",
-  "Enable Sounds for Agent": "Звуковые эффекты для агента",
-  "Enable Notifications for Agent": "Уведомления для агента",
-  "Open Agent on Reload": "Открывать агента при перезагрузке",
-  "Verbose Agent Chat": "Подробный чат агента",
-  "Enable Browser Tools": "Включить инструменты браузера",
   "Update Available": "Доступно обновление",
   "Downloading Update": "Загрузка обновления",
   "Install Update": "Установить обновление",
@@ -1688,7 +1664,121 @@
   "Error while analyzing directory": "Ошибка при анализе каталога",
   "Error while searching the web": "Ошибка поиска в интернете",
   "Error while running MCP tool": "Ошибка выполнения инструмента MCP",
-  "Error during tool execution": "Ошибка при выполнении инструмента"
+  "Error during tool execution": "Ошибка при выполнении инструмента",
+
+  // --- Antigravity 2.31.0 New UI Strings ---
+  // Координаторы (Coordinators)
+  "Coordinator": "Координатор",
+  "Coordinators": "Координаторы",
+  "New coordinator": "Новый координатор",
+  "New Coordinator": "Новый координатор",
+  "Create Coordinator": "Создать координатора",
+  "Coordinator name": "Имя координатора",
+  "Coordinator goal": "Цель координатора",
+  "Coordinator settings": "Настройки координатора",
+  "No coordinators": "Нет координаторов",
+  "What should this coordinator accomplish?": "Что должен выполнять этот координатор?",
+  "Couldn't create the coordinator. Try again.": "Не удалось создать координатора. Попробуйте снова.",
+
+  // Боковые вопросы (Side questions)
+  "Delete Side Question": "Удалить боковой вопрос",
+  "Are you sure you want to delete this side question? This action cannot be undone.": "Вы уверены, что хотите удалить этот боковой вопрос? Это действие нельзя отменить.",
+  "Failed to delete side question": "Не удалось удалить боковой вопрос",
+  "Cannot promote a subagent's side question": "Нельзя превратить в диалог боковой вопрос субагента",
+  "New Side Question": "Новый боковой вопрос",
+  "Side Questions": "Боковые вопросы",
+  "Send a message in the main conversation first to start a side question": "Сначала отправьте сообщение в основном диалоге, чтобы начать боковой вопрос",
+
+  // Загрузки браузера и данные сайтов
+  "Browser downloads": "Загрузки браузера",
+  "Allow the browser agent to download a file?": "Разрешить агенту-браузеру скачать файл?",
+  "Yes, allow this download": "Да, разрешить эту загрузку",
+  "Download files": "Скачивание файлов",
+  "Download from": "Скачать с",
+  "Cookies and site data": "Файлы cookie и данные сайтов",
+  "Clear cookies and site data": "Очистить файлы cookie и данные сайтов",
+  "Clearing cookies and site data for": "Очистка файлов cookie и данных сайтов для",
+  "Site data cleared for": "Данные сайта очищены для",
+  "Could not clear site data for": "Не удалось очистить данные сайта для",
+  "Back to safety": "Вернуться в безопасность",
+  "Attackers might be trying to steal your information from": "Злоумышленники могут пытаться похитить ваши данные с",
+  "Your connection is not private": "Подключение не защищено",
+
+  // Микрофон и голос
+  "Allow microphone access to start Voice": "Разрешите доступ к микрофону, чтобы включить голос",
+  "Microphone blocked": "Микрофон заблокирован",
+  "Microphone blocked in browser site settings.": "Микрофон заблокирован в настройках сайта в браузере.",
+  "Microphone blocked in system settings.": "Микрофон заблокирован в настройках системы.",
+  "Microphone blocked. Allow in": "Микрофон заблокирован. Разрешите в",
+  "Microphone didn't respond.": "Микрофон не ответил.",
+  "Microphone is in use or unavailable.": "Микрофон занят или недоступен.",
+  "No microphone found. Connect one.": "Микрофон не найден. Подключите его.",
+  "Your sign-in needs an update. Sign in again to use Voice.": "Требуется обновить вход. Войдите снова, чтобы использовать голос.",
+  "Agent said": "Агент сказал",
+  "You said": "Вы сказали",
+
+  // Приветствия и онбординг
+  "Hey there, what should we build today?": "Привет! Что будем создавать сегодня?",
+  "Good to see you. What's next?": "Рад вас видеть. Что делаем дальше?",
+  "Welcome back. Where should we pick up?": "С возвращением. С чего продолжим?",
+  "Welcome to": "Добро пожаловать в",
+  "A few things to know, and a couple settings to review.": "Несколько моментов, о которых стоит знать, и пара настроек для проверки.",
+  "Let's tailor the experience for you. What best describes your work?": "Давайте настроим всё под вас. Что лучше всего описывает вашу работу?",
+  "Built to help, not hurt": "Создано помогать, а не мешать",
+  "You are in control": "Вы контролируете процесс",
+  "Optimized for you": "Оптимизировано для вас",
+  "Stay up to date.": "Будьте в курсе обновлений.",
+  "Sign up for newsletters, tips and tricks, and other notifications about": "Подпишитесь на новости, советы и другие уведомления о",
+
+  // Авторизация кодом
+  "Authorization code": "Код авторизации",
+  "Paste authorization code": "Вставить код авторизации",
+  "Paste a code instead": "Вставить код вместо этого",
+  "Submit code": "Отправить код",
+  "Trouble signing in? Enter authorization code": "Проблемы со входом? Введите код авторизации",
+  "Switched to authorization code sign-in": "Переключено на вход по коду авторизации",
+  "Authorization code was rejected. Paste a fresh code and try again.": "Код авторизации отклонён. Вставьте актуальный код и попробуйте снова.",
+  "Authorization code sign-in is unavailable in this version.": "Вход по коду авторизации недоступен в этой версии.",
+  "Sign in in your browser, then paste the authorization code shown on the callback page.": "Войдите в браузере, а затем вставьте код авторизации со страницы подтверждения.",
+  "Copied sign-in link to clipboard": "Ссылка для входа скопирована в буфер обмена",
+  "Finish signing in in your browser.": "Завершите вход в браузере.",
+  "Sign-in didn't finish. Try again.": "Вход не был завершён. Попробуйте снова.",
+  "Account connection was not completed.": "Подключение аккаунта не завершено.",
+  "You are logged in using environment credentials and cannot sign out from the application.": "Вы вошли с учётными данными окружения и не можете выйти из приложения.",
+
+  // Интерфейс, фильтры и навигация
+  "Chat Layout": "Макет чата",
+  "Interface Layout": "Макет интерфейса",
+  "Filter files": "Фильтровать файлы",
+  "Filter files...": "Фильтровать файлы...",
+  "Filter rows": "Фильтровать строки",
+  "Filter rows...": "Фильтровать строки...",
+  "Clear file filter": "Очистить фильтр файлов",
+  "Clear row filter": "Очистить фильтр строк",
+  "Find References": "Найти ссылки",
+  "Close references": "Закрыть ссылки",
+  "Open in tab": "Открыть во вкладке",
+  "Open in full conversation": "Открыть в полном диалоге",
+  "Keep Open": "Оставить открытым",
+  "Choose icon and color": "Выбрать значок и цвет",
+  "Dismiss suggestion": "Отклонить подсказку",
+  "Missing a repository? Configure on GitHub": "Не хватает репозитория? Настройте на GitHub",
+  "Network error. Check your connection and try again.": "Ошибка сети. Проверьте подключение и повторите попытку.",
+  "Something went wrong.": "Что-то пошло не так.",
+  "Waiting for your answer": "Ожидание вашего ответа",
+  "Needs your approval": "Требуется ваше подтверждение",
+  "Open Appearance": "Открыть «Внешний вид»",
+  "Privacy Settings": "Настройки конфиденциальности",
+  "System Settings": "Системные настройки",
+  "Link Settings": "Настройки ссылок",
+  "Project location": "Расположение проекта",
+  "Inspect element to comment": "Выберите элемент для комментария",
+  "Inspecting documentation, config, or issues...": "Проверка документации, настроек или задач...",
+  "Google One Referral": "Реферальная программа Google One",
+  "Invite a Friend": "Пригласить друга",
+  "Invite now": "Пригласить",
+  "Share your referral link with friends": "Поделитесь реферальной ссылкой с друзьями",
+  "Gemini Flash Next": "Gemini Flash Next"
 };
 
   function formatTime(str) {
@@ -2151,6 +2241,13 @@
         const rest = m[2].trim();
         const translatedRest = (typeof DICT !== 'undefined' && DICT[rest]) ? DICT[rest] : rest;
         return kind + ": " + translatedRest;
+      }
+    },
+    // Версия в верхнем меню: «Version 2.31.0»
+    {
+      regex: /^Version\s+(\d.*)$/i,
+      replace: function (m) {
+        return "Версия " + m[1];
       }
     }
   ];
