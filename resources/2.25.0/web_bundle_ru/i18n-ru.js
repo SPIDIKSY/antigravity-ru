@@ -1932,7 +1932,9 @@
   "Build on Zoho CRM v8: REST API, Deluge functions, ClientScript, widgets, COQL and connections, with live CRM data through your Zoho MCP server.": "Разработка на Zoho CRM v8: REST API, функции Deluge, ClientScript, виджеты, COQL и подключения с живыми данными через сервер MCP Zoho.",
   "Zoho Desk plugin for Antigravity. Review, prioritize, and update Zoho Desk tickets directly from Antigravity through Zoho Desk MCP and includes a Ticket Prioritization Agent for triage and priority updates.": "Плагин Zoho Desk для Antigravity: просмотр, приоритизация и обновление тикетов через Zoho Desk MCP и встроенный агент сортировки обращений.",
   "Connect Zoho Projects to Antigravity to turn tasks and issues into working code. Access project context, investigate bugs, and update work items as you develop.": "Подключите Zoho Projects к Antigravity, чтобы превращать задачи и баги в готовый код с доступом к контексту проекта и обновлением статусов.",
-  "Run Zoho Books from Antigravity: invoicing, bills, banking, journals, projects, items, taxes, customization and automation.": "Работа с Zoho Books из Antigravity: счета, оплаты, банк, журналы, проекты, товары, налоги, настройки и автоматизация."
+  "Run Zoho Books from Antigravity: invoicing, bills, banking, journals, projects, items, taxes, customization and automation.": "Работа с Zoho Books из Antigravity: счета, оплаты, банк, журналы, проекты, товары, налоги, настройки и автоматизация.",
+  "Open in Side Panel": "Открыть на боковой панели",
+  "View Debug": "Просмотр отладки"
 };
 
   function formatTime(str) {
@@ -2772,6 +2774,21 @@
       }
     };
   })();
+
+  // Перевод пунктов нативных контекстных меню Electron (ПКМ по проектам, чатам и др.).
+  window.__ruTranslateMenu = function translateMenu(items) {
+    if (!Array.isArray(items)) return items;
+    for (const item of items) {
+      if (item && typeof item.label === 'string') {
+        const tr = translateString(item.label);
+        if (tr) item.label = tr;
+      }
+      if (item && Array.isArray(item.submenu)) {
+        translateMenu(item.submenu);
+      }
+    }
+    return items;
+  };
 
   console.log('[i18n-ru] Russian localization fully active with ' + Object.keys(DICT).length + ' strings');
 })();
