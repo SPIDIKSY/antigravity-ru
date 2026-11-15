@@ -2560,22 +2560,27 @@
     return false;
   }
 
+  const seenTextNodes = new WeakMap();
+
   function translateString(text) {
     if (typeof text !== 'string') return null;
     const trimmed = text.trim();
     if (!trimmed) return null;
 
-    const startSpace = text.match(/^\s*/)[0];
-    const endSpace = text.match(/\s*$/)[0];
-
-    for (let i = 0; i < RULES.length; i++) {
-      const match = trimmed.match(RULES[i].regex);
-      if (match) {
-        return startSpace + RULES[i].replace(match) + endSpace;
+    if (/[A-Za-z]/.test(trimmed)) {
+      for (let i = 0; i < RULES.length; i++) {
+        const match = trimmed.match(RULES[i].regex);
+        if (match) {
+          const startSpace = text.match(/^\s*/)[0];
+          const endSpace = text.match(/\s*$/)[0];
+          return startSpace + RULES[i].replace(match) + endSpace;
+        }
       }
     }
 
     if (DICT[trimmed]) {
+      const startSpace = text.match(/^\s*/)[0];
+      const endSpace = text.match(/\s*$/)[0];
       return startSpace + DICT[trimmed] + endSpace;
     }
 
@@ -2585,10 +2590,18 @@
   function translateNode(node) {
     if (!node) return;
     if (node.nodeType === Node.TEXT_NODE) {
-      if (isIgnored(node)) return;
-      const translated = translateString(node.nodeValue);
-      if (translated && translated !== node.nodeValue) {
+      const cur = node.nodeValue;
+      if (!cur || seenTextNodes.get(node) === cur) return;
+      if (isIgnored(node)) {
+        seenTextNodes.set(node, cur);
+        return;
+      }
+      const translated = translateString(cur);
+      if (translated && translated !== cur) {
         node.nodeValue = translated;
+        seenTextNodes.set(node, translated);
+      } else {
+        seenTextNodes.set(node, cur);
       }
     } else if (node.nodeType === Node.ELEMENT_NODE) {
       // INPUT и TEXTAREA в IGNORE_TAGS, чтобы не трогать набранный текст. Но их подсказки
@@ -2712,7 +2725,7 @@
 
     setInterval(() => {
       translateNode(document.body);
-    }, 200);
+    }, 2000);
 
     translateNode(document.body || document.documentElement);
   }
