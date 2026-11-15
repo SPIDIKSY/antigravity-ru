@@ -1950,7 +1950,12 @@
   "Swarm": "Рой агентов",
   "No swarm in this conversation": "В этом диалоге нет роя агентов",
   "Swarms started in this conversation appear here automatically, with their board, members and @mention graph. Start one with": "Запущенные в этом диалоге рои агентов появляются здесь автоматически со своей доской, участниками и графом @упоминаний. Запустите рой командой",
-  "Watching for a swarm": "Ожидание роя агентов"
+  "Watching for a swarm": "Ожидание роя агентов",
+  "Message subagent, @ to mention, / for actions": "Сообщение субагенту, @ для контекста, / для команд",
+  "Repo": "Репозиторий",
+  "Environment": "Окружение",
+  "Project Name": "Название проекта",
+  "Archive Conversation": "Архивировать диалог"
 };
 
   function formatTime(str) {
