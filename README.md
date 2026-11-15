@@ -191,4 +191,10 @@ powershell -ExecutionPolicy Bypass -Command "& ([scriptblock]::Create((Get-Conte
 
 [**Перейти к поддержке на daLink**](https://dalink.to/spidiksy)
 
+<br>
+
+<a href="https://dalink.to/spidiksy">
+  <img src="screenshots/donate-qr.png" alt="QR-код для поддержки проекта на daLink" width="220">
+</a>
+
 </div>
