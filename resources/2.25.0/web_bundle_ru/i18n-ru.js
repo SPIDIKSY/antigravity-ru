@@ -2732,22 +2732,44 @@
     startObserver();
   }
 
-  // Закрепление проектов (папок) вверху боковой панели — хранится локально в localStorage.
+  // Закрепление проектов (папок) вверху боковой панели — хранится в файле userData/ru-pinned-projects.json (и localStorage как fallback).
   (function initPinnedProjects() {
     const STORAGE_KEY = 'antigravity_ru_pinned_projects';
     const listeners = new Set();
+    let cachedList = null;
 
     function readList() {
+      if (cachedList !== null) return cachedList;
+      try {
+        if (window.electronNative && typeof window.electronNative.getPinnedProjects === 'function') {
+          const fromFile = window.electronNative.getPinnedProjects();
+          if (Array.isArray(fromFile) && fromFile.length > 0) {
+            cachedList = fromFile.filter((x) => typeof x === 'string');
+            return cachedList;
+          }
+        }
+      } catch {}
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
         const parsed = raw ? JSON.parse(raw) : [];
-        return Array.isArray(parsed) ? parsed.filter((x) => typeof x === 'string') : [];
+        cachedList = Array.isArray(parsed) ? parsed.filter((x) => typeof x === 'string') : [];
+        if (cachedList.length > 0 && window.electronNative && typeof window.electronNative.setPinnedProjects === 'function') {
+          window.electronNative.setPinnedProjects(cachedList).catch(() => {});
+        }
+        return cachedList;
       } catch {
-        return [];
+        cachedList = [];
+        return cachedList;
       }
     }
 
     function writeList(list) {
+      cachedList = list;
+      try {
+        if (window.electronNative && typeof window.electronNative.setPinnedProjects === 'function') {
+          window.electronNative.setPinnedProjects(list).catch(() => {});
+        }
+      } catch {}
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
       } catch {}
@@ -2762,11 +2784,27 @@
       },
       toggle(id) {
         if (!id) return;
-        const list = readList();
+        const list = readList().slice();
         const idx = list.indexOf(id);
         if (idx === -1) list.push(id);
         else list.splice(idx, 1);
         writeList(list);
+      },
+      reorderFromList(orderedIds) {
+        if (!Array.isArray(orderedIds)) return;
+        const list = readList();
+        if (list.length <= 1) return;
+        const pinnedSet = new Set(list);
+        const next = [];
+        for (const id of orderedIds) {
+          if (pinnedSet.has(id) && !next.includes(id)) next.push(id);
+        }
+        for (const id of list) {
+          if (!next.includes(id)) next.push(id);
+        }
+        if (next.length === list.length && next.some((id, i) => id !== list[i])) {
+          writeList(next);
+        }
       },
       sort(ids) {
         if (!Array.isArray(ids) || ids.length <= 1) return ids;
