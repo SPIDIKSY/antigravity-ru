@@ -1934,7 +1934,23 @@
   "Connect Zoho Projects to Antigravity to turn tasks and issues into working code. Access project context, investigate bugs, and update work items as you develop.": "Подключите Zoho Projects к Antigravity, чтобы превращать задачи и баги в готовый код с доступом к контексту проекта и обновлением статусов.",
   "Run Zoho Books from Antigravity: invoicing, bills, banking, journals, projects, items, taxes, customization and automation.": "Работа с Zoho Books из Antigravity: счета, оплаты, банк, журналы, проекты, товары, налоги, настройки и автоматизация.",
   "Open in Side Panel": "Открыть на боковой панели",
-  "View Debug": "Просмотр отладки"
+  "View Debug": "Просмотр отладки",
+
+  // --- Настройки (Общие) и Swarm ---
+  "Knowledge Work": "Работа со знаниями",
+  "Simplified interface for research, writing, and everyday tasks.": "Упрощённый интерфейс для исследований, текстов и повседневных задач.",
+  "Software Engineering": "Разработка ПО",
+  "Full interface for coding, developer tools, and managing agents.": "Полный интерфейс для программирования, инструментов разработки и управления агентами.",
+  "Remote": "Удалённо",
+  "Controls permissions for remote conversations.": "Управляет разрешениями для удалённых диалогов.",
+  "Voice": "Голос",
+  "Change": "Изменить",
+  "Microphone": "Микрофон",
+  "System default": "По умолчанию (система)",
+  "Swarm": "Рой агентов",
+  "No swarm in this conversation": "В этом диалоге нет роя агентов",
+  "Swarms started in this conversation appear here automatically, with their board, members and @mention graph. Start one with": "Запущенные в этом диалоге рои агентов появляются здесь автоматически со своей доской, участниками и графом @упоминаний. Запустите рой командой",
+  "Watching for a swarm": "Ожидание роя агентов"
 };
 
   function formatTime(str) {
@@ -2505,6 +2521,14 @@
       replace: function (m) {
         const n = parseInt(m[1], 10);
         return n + " " + plural(n, "закреплённый диалог", "закреплённых диалога", "закреплённых диалогов");
+      }
+    },
+    // Относительное время «2m ago», «5h ago», «3d ago»
+    {
+      regex: /^(\d+)(s|m|h|d)\s+ago$/i,
+      replace: function (m) {
+        const units = { s: "с", m: "мин", h: "ч", d: "д" };
+        return m[1] + " " + (units[m[2].toLowerCase()] || m[2]) + " назад";
       }
     }
   ];
