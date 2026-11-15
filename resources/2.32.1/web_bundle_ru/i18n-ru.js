@@ -2497,6 +2497,13 @@
       replace: function (m) {
         return "Сервер MCP «" + m[1] + "» добавлен, но не запустился: " + m[2];
       }
+    },
+    {
+      regex: /^(\d+) pinned conversations?$/,
+      replace: function (m) {
+        const n = parseInt(m[1], 10);
+        return n + " " + plural(n, "закреплённый диалог", "закреплённых диалога", "закреплённых диалогов");
+      }
     }
   ];
 
@@ -2740,6 +2747,23 @@
         if (pinned.length === 0) return ids;
         pinned.sort((a, b) => list.indexOf(a) - list.indexOf(b));
         return [...pinned, ...rest];
+      },
+      orderGroups(groups) {
+        if (!Array.isArray(groups)) return { pinned: [], unpinned: [] };
+        const list = readList();
+        if (list.length === 0) return { pinned: [], unpinned: groups };
+        const pinnedSet = new Set(list);
+        const pinned = [];
+        const unpinned = [];
+        for (const g of groups) {
+          if (g && g.id && g.id !== 'standalone' && g.id !== 'all' && g.id !== 'outside-of-project' && pinnedSet.has(g.id)) {
+            pinned.push(g);
+          } else {
+            unpinned.push(g);
+          }
+        }
+        pinned.sort((a, b) => list.indexOf(a.id) - list.indexOf(b.id));
+        return { pinned, unpinned };
       },
       subscribe(fn) {
         if (typeof fn !== 'function') return () => {};
