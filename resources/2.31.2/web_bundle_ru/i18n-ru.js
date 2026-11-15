@@ -2723,10 +2723,6 @@
       attributeFilter: ['placeholder', 'title', 'aria-label', 'data-tooltip', 'data-title', 'data-tip']
     });
 
-    setInterval(() => {
-      translateNode(document.body);
-    }, 2000);
-
     translateNode(document.body || document.documentElement);
   }
 
