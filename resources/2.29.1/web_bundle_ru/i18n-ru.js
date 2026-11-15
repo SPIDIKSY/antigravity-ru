@@ -1778,7 +1778,161 @@
   "Invite a Friend": "Пригласить друга",
   "Invite now": "Пригласить",
   "Share your referral link with friends": "Поделитесь реферальной ссылкой с друзьями",
-  "Gemini Flash Next": "Gemini Flash Next"
+  "Gemini Flash Next": "Gemini Flash Next",
+
+  // --- Antigravity 2.32.1 New UI Strings & Settings ---
+  "Delete All Remote Agents Data?": "Удалить все данные удалённых агентов?",
+  "Delete All Remote Agents Data": "Удалить все данные удалённых агентов",
+  "Delete All Data": "Удалить все данные",
+  "This permanently deletes all of your Remote Agents conversations, projects, scheduled tasks, connected plugins and settings, and stops any running remote agents. It can't be undone. Data in the desktop app and your Google account are not affected, and you can keep using Remote Agents afterwards.": "Это навсегда удалит все ваши диалоги, проекты, запланированные задачи, подключённые плагины и настройки удалённых агентов, а также остановит всех запущенных удалённых агентов. Действие нельзя отменить. Данные в приложении и вашем аккаунте Google не будут затронуты, и вы сможете продолжить пользоваться удалёнными агентами.",
+  "Permanently delete your remote conversations, projects, scheduled tasks, connected plugins and settings. Data in the desktop app and your Google account are not affected.": "Навсегда удалить ваши удалённые диалоги, проекты, запланированные задачи, подключённые плагины и настройки. Данные в приложении и вашем аккаунте Google не будут затронуты.",
+  "Receive product updates, tips, and promotions from Google Antigravity via email.": "Получать новости о продукте, советы и акции от Google Antigravity по электронной почте.",
+  "New Conversation in Project": "Новый диалог в проекте",
+  "Layout": "Макет",
+  "Resources": "Ресурсы",
+  "Saved": "Сохранено",
+  "A bash script run in your cloud environment after cloning repositories (or configure interactively in chat with /env-setup).": "Bash-скрипт, выполняемый в облачном окружении после клонирования репозиториев (или настройте интерактивно в чате через /env-setup).",
+  "Environment Setup Script": "Скрипт настройки окружения",
+  "A host can't contain spaces.": "Имя хоста не может содержать пробелы.",
+  "A password or secure field is on screen.": "На экране отображается поле пароля или защищённого ввода.",
+  "Are you sure you want to delete this hook card?": "Удалить эту карточку хука?",
+  "Back to all agents": "Ко всем агентам",
+  "Blocked: file type not allowed": "Заблокировано: недопустимый тип файла",
+  "Clone did not return a valid folder path.": "Клонирование не вернуло корректный путь к папке.",
+  "Connect to SSH Host": "Подключиться к SSH-хосту",
+  "Open SSH Host": "Открыть SSH-хост",
+  "Couldn't load your SSH hosts": "Не удалось загрузить ваши SSH-хосты",
+  "Couldn't load your SSH hosts. You can still type one.": "Не удалось загрузить SSH-хосты. Вы можете ввести адрес вручную.",
+  "No hosts in ~/.ssh/config yet": "В ~/.ssh/config пока нет хостов",
+  "No matching hosts": "Подходящие хосты не найдены",
+  "Hidden hosts": "Скрытые хосты",
+  "Hide from this list": "Скрыть из списка",
+  "Show in the list again": "Снова показывать в списке",
+  "Remove from Recent": "Удалить из недавних",
+  "SSH Config": "Конфигурация SSH",
+  "SSH Host": "SSH-хост",
+  "SSH host": "SSH-хост",
+  "Conversation link": "Ссылка на диалог",
+  "Couldn't search files": "Не удалось выполнить поиск файлов",
+  "Discard comment draft": "Удалить черновик комментария",
+  "Resume comment draft": "Восстановить черновик комментария",
+  "Resume 1 comment draft": "Восстановить 1 черновик комментария",
+  "Enable macOS Permissions": "Включить разрешения macOS",
+  "Relaunch the app once to activate Screen Recording.": "Перезапустите приложение, чтобы активировать запись экрана.",
+  "Relaunches the app": "Перезапускает приложение",
+  "Enable this plugin to manage its accounts.": "Включите этот плагин, чтобы управлять его аккаунтами.",
+  "Enter always submits. This adds a second shortcut.": "Enter всегда отправляет сообщение. Это добавляет второе сочетание клавиш.",
+  "Submit Prompt (Alternate to Enter)": "Отправить запрос (вместо Enter)",
+  "Failed to download plugins:": "Не удалось скачать плагины:",
+  "Failed to unarchive local project": "Не удалось разархивировать локальный проект",
+  "File exceeds 512 KB table preview limit.": "Файл превышает лимит 512 КБ для предпросмотра таблицы.",
+  "Table exceeds 100 columns.": "В таблице больше 100 столбцов.",
+  "Filter agents": "Фильтровать агентов",
+  "Filter resources...": "Фильтровать ресурсы...",
+  "Focus this tile": "Сфокусироваться на этой плитке",
+  "GitHub rejected `GH_TOKEN`. Update or unset it, then restart the app.": "GitHub отклонил `GH_TOKEN`. Обновите или удалите переменную и перезапустите приложение.",
+  "GitHub: not signed in": "GitHub: вход не выполнен",
+  "Hidden by policy": "Скрыто политикой",
+  "Hidden by the preview policy.": "Скрыто политикой предпросмотра.",
+  "This app is not allowed in previews.": "Это приложение запрещено для предпросмотра.",
+  "This page is not allowed in previews.": "Эта страница запрещена для предпросмотра.",
+  "The window title matches a privacy rule.": "Заголовок окна соответствует правилу конфиденциальности.",
+  "Jump to Next Prompt": "К следующему запросу",
+  "Jump to Previous Prompt": "К предыдущему запросу",
+  "Learn more about": "Подробнее о",
+  "MCP error": "Ошибка MCP",
+  "MCP server error": "Ошибка сервера MCP",
+  "View MCP servers": "Просмотреть серверы MCP",
+  "No changes to amend": "Нет изменений для добавления в коммит",
+  "No commits to push": "Нет коммитов для отправки",
+  "Not on a branch": "Не в ветке",
+  "Open on another device": "Открыть на другом устройстве",
+  "Open on phone": "Открыть на телефоне",
+  "Pick up this remote conversation on your phone or in any browser. Scan the QR code or open the link below.": "Продолжите этот удалённый диалог на телефоне или в любом браузере. Отсканируйте QR-код или откройте ссылку ниже.",
+  "Pin / Unpin Conversation": "Закрепить / открепить диалог",
+  "Resume this agent where it paused": "Продолжить работу агента с места остановки",
+  "Run the app against a Linux environment. Connecting relaunches the app into the selected WSL distro.": "Запустить приложение в среде Linux. Подключение перезапустит его в выбранном дистрибутиве WSL.",
+  "Windows Subsystem for Linux": "Подсистема Windows для Linux",
+  "Show Details": "Показать подробности",
+  "Stop all agents": "Остановить всех агентов",
+  "Stop this agent": "Остановить агента",
+  "Switch To": "Переключиться на",
+  "The Hub sent an unexpected response.": "Концентратор вернул неожиданный ответ.",
+  "This project was created for": "Этот проект создан для",
+  "Toggle Word Wrap": "Переключить перенос строк",
+  "Use Default": "Использовать по умолчанию",
+
+  // --- Маркетплейс и описания плагинов ---
+  "Featured": "Рекомендуемое",
+  "Add": "Добавить",
+  "Details": "Подробнее",
+  "Connect to Google Workspace, including Docs, Sheets, Slides, Drive, Calendar, and Gmail.": "Подключение к Google Workspace: Документы, Таблицы, Презентации, Диск, Календарь и Gmail.",
+  "Search, read, draft, and send emails in Gmail.": "Поиск, чтение, создание черновиков и отправка писем в Gmail.",
+  "Build applications and shell workflows with the Gemini Interactions API, Decisions API, Live API, and Gemini API CLI, including text, image, video, and speech generation, managed agents, and real-time multimodal streaming.": "Создание приложений и скриптов с Gemini Interactions API, Decisions API, Live API и Gemini API CLI: генерация текста, изображений, видео и речи, управляемые агенты и потоковая работа в реальном времени.",
+  "Develop ideas with context and review documents with fresh eyes.": "Развивайте идеи с учётом контекста и проверяйте документы свежим взглядом.",
+  "Accept payments and grow your business. Stripe's official MCP server enables AI agents to manage customers, products, prices, payment links, invoices, subscriptions, and refunds, as well as search Stripe documentation.": "Приём платежей и развитие бизнеса. Официальный сервер MCP Stripe позволяет ИИ-агентам управлять клиентами, товарами, ценами, ссылками на оплату, счетами, подписками и возвратами, а также искать в документации Stripe.",
+  "Query Arize AX projects, traces, datasets, and experiments from Antigravity, with skills for tracing, evals, and prompt optimization.": "Запросы к проектам, трассировкам, наборам данных и экспериментам Arize AX из Antigravity, а также навыки для трассировки, оценок и оптимизации промптов.",
+  "Teamwork Graph CLI is Atlassian's agent-first interface to your entire work context: Jira issues, Confluence pages, Bitbucket PRs, along with your connected third-party data sources. Purpose-built for coding agents like Antigravity (terminal or desktop), and powered by Atlassian's context graph. Try: \"draft a Jira issue from this PR and link it to the epic.\" Run /twg-setup after install to connect Atlassian Teamwork Graph CLI to Antigravity.": "Teamwork Graph CLI — интерфейс Atlassian для агентов ко всему рабочему контексту: задачам Jira, страницам Confluence, пул-реквестам Bitbucket и подключённым сторонним источникам. Создан специально для агентов разработки вроде Antigravity. После установки выполните /twg-setup для подключения.",
+  "Add Auth0 authentication to any app: login, MFA, SSO, Organizations, RBAC, custom domains, and branding. Debug auth errors and migrate from other providers.": "Добавьте аутентификацию Auth0 в любое приложение: вход, MFA, SSO, организации, RBAC, свои домены и брендинг. Отладка ошибок входа и миграция с других провайдеров.",
+  "Build and deploy Base44 full-stack apps: CLI project management, JavaScript/TypeScript SDK development, and production troubleshooting skills.": "Создание и публикация full-stack приложений Base44: управление проектами через CLI, разработка на JavaScript/TypeScript SDK и диагностика сбоев в продакшене.",
+  "Investigate incidents, check who's on call, and query logs, metrics, traces, errors and RUM in Better Stack. Build dashboards and manage uptime monitors.": "Разбор инцидентов, проверка дежурных и запросы логов, метрик, трассировок, ошибок и RUM в Better Stack. Создание дашбордов и управление мониторами доступности.",
+  "Give your agent a real browser: navigate, click, type, screenshot, and extract data from any site, locally or on Browserbase cloud browsers.": "Дайте агенту настоящий браузер: переходы, клики, ввод текста, скриншоты и сбор данных с любых сайтов — локально или в облаке Browserbase.",
+  "Create, edit, review, resize, and brand-check Canva designs with the Canva MCP server.": "Создание, редактирование, проверка и изменение размера дизайнов Canva с помощью сервера MCP Canva.",
+  "Build, deploy and manage apps on Cloudflare Workers, storage and AI, with platform skills and the Cloudflare API through one MCP server.": "Создание, публикация и управление приложениями в Cloudflare Workers, хранилищах и ИИ через навыки платформы и Cloudflare API в одном сервере MCP.",
+  "AI-powered code review, review-comment autofix, and repository configuration, powered by CodeRabbit.": "ИИ-ревью кода, автоисправление замечаний и настройка репозитория на базе CodeRabbit.",
+  "Up-to-date documentation lookup. Pull version-specific documentation and code examples directly from source repositories into your coding agent's context.": "Поиск актуальной документации. Загружает документацию под конкретные версии и примеры кода прямо из исходных репозиториев в контекст агента.",
+  "Use the official CrowdStrike-hosted MCP server to work across Falcon: detections, cases, threat intel, SIEM, hosts, vulnerabilities, cloud, and more.": "Официальный облачный сервер MCP CrowdStrike для работы с Falcon: инциденты, расследования, аналитика угроз, SIEM, хосты, уязвимости, облако и другое.",
+  "Databricks skills for the CLI, Apps, Lakebase, Model Serving, Lakeflow Jobs, Spark Declarative Pipelines, Declarative Automation Bundles (DABs), and classic-to-serverless migration.": "Навыки Databricks для CLI, Apps, Lakebase, Model Serving, Lakeflow Jobs, Spark Declarative Pipelines, DABs и миграции на serverless.",
+  "Use Datadog directly in Antigravity through a preconfigured Datadog MCP server. Query logs, metrics, traces, dashboards, and more through natural conversation. This plugin is in preview.": "Работа с Datadog прямо из Antigravity через преднастроенный сервер MCP Datadog: логи, метрики, трассировки и дашборды на естественном языке. Плагин в предварительной версии.",
+  "Connect Antigravity to Dropbox to search, inspect, summarize, share, collect uploads, organize folders, and clean up files with confirmation for write actions.": "Подключите Antigravity к Dropbox для поиска, просмотра, сводок, обмена ссылками, сбора файлов и наведения порядка в папках с подтверждением изменений.",
+  "Investigate production issues with real Dynatrace data: problems and root causes, logs, metrics, traces, and vulnerabilities, via skills and the MCP server.": "Расследование проблем в продакшене по реальным данным Dynatrace: причины сбоев, логи, метрики, трассировки и уязвимости через навыки и сервер MCP.",
+  "Packaged workflows for SCA remediation, AI SAST triage, CI/CD posture, malware response, findings review, Endor Labs setup, and more.": "Готовые сценарии для устранения уязвимостей SCA, разбора AI SAST, проверки CI/CD, реагирования на вредоносный код и настройки Endor Labs.",
+  "Turn Figma designs into production code, map components with Code Connect, and create or edit Figma files in Antigravity.": "Превращайте макеты Figma в готовый код, связывайте компоненты через Code Connect и создавайте или правьте файлы Figma в Antigravity.",
+  "Query Grafana Cloud metrics, logs, traces and profiles, manage dashboards, alerts and incidents, and ask Grafana Assistant through the hosted MCP server.": "Запросы метрик, логов, трассировок и профилей Grafana Cloud, управление дашбордами, алертами и инцидентами, а также помощь Grafana Assistant через облачный сервер MCP.",
+  "The AI notepad for meetings. Connect to your meeting history and use your conversation context to get things done.": "ИИ-блокнот для встреч. Подключите историю созвонов и используйте контекст обсуждений для выполнения задач.",
+  "Build and debug pipelines, manage deployments, investigate security findings, and operate Harness with connected tools and reusable workflow skills.": "Создание и отладка пайплайнов, управление релизами, разбор проблем безопасности и работа с Harness через подключённые инструменты и готовые навыки.",
+  "Respond to and investigate incidents, manage on-call schedules and escalations, and write runbooks and skills. Bundles the official incident.io MCP server.": "Реагирование и расследование инцидентов, управление графиками дежурств и эскалациями, написание инструкций. Включает официальный сервер MCP incident.io.",
+  "Search Intercom conversations, contacts, and companies, spot support trends, and install the Intercom Messenger with secure identity verification.": "Поиск переписок, контактов и компаний в Intercom, анализ трендов поддержки и установка Intercom Messenger с безопасной проверкой подлинности.",
+  "Connect your agent to invideo's AI-native video editor. It trims, grades and mixes on a real timeline while you watch every change land.": "Подключите агента к ИИ-видеоредактору invideo: он обрезает, корректирует цвет и сводит звук на реальной шкале времени прямо на ваших глазах.",
+  "Search the web and read any page as clean markdown with Keenable, a search engine built for AI agents. Keyless: no signup or API key needed.": "Поиск в интернете и чтение страниц в чистом Markdown через Keenable — поисковик для ИИ-агентов. Без регистрации и API-ключей.",
+  "Ask a question of the live web and get a table back. Keenable SELECT runs many searches, reads the pages and extracts the fields you need in one call. Sign in with a Keenable account.": "Задайте вопрос по живому вебу и получите готовую таблицу. Keenable SELECT выполняет серию поисков и извлекает нужные поля за один запрос. Требуется вход в аккаунт Keenable.",
+  "Create, run and debug Leapwork Play tests and runlists, build agents, and hand work to Play's AI workflows, right from Antigravity.": "Создание, запуск и отладка тестов и списков прогона Leapwork Play, сборка агентов и передача задач в ИИ-процессы Play прямо из Antigravity.",
+  "Real salaries and company levels from Levels.fyi: check if an offer is fair, compare offers, find jobs with pay shown and add your own salary.": "Реальные зарплаты и грейды компаний с Levels.fyi: оценка справедливости оффера, сравнение предложений, поиск вакансий с вилками и добавление своей зарплаты.",
+  "The product development system for teams and agents. Manage issues, projects, and documents across your Linear workspace from Antigravity.": "Система разработки продуктов для команд и агентов. Управляйте задачами, проектами и документами в Linear прямо из Antigravity.",
+  "Give your AI agent 600,000+ real app screens, and the skills to use them. Includes the Mobbin MCP and a skill that redesigns your screen from patterns real apps ship, in your own design system, with the references behind every change.": "Более 600 000 реальных экранов приложений для вашего агента и навыки работы с ними: Mobbin MCP и редизайн экранов по готовым паттернам в вашей дизайн-системе.",
+  "Plan and track work in monday.com from Antigravity: create, update and assign items, write docs, and build forms that turn requests into items.": "Планирование и учёт задач в monday.com из Antigravity: создание и назначение элементов, работа с документами и формами.",
+  "Official Antigravity plugin for MongoDB Atlas (hosted MCP Server + Skills). Connect to the MongoDB-hosted Atlas MCP server, explore data, manage collections, optimize queries, generate reliable code, implement best practices, develop advanced features, and more.": "Официальный плагин Antigravity для MongoDB Atlas (облачный сервер MCP и навыки): подключение к Atlas, просмотр данных, управление коллекциями и оптимизация запросов.",
+  "Agent skills for Neo4j graph database — write Cypher queries, design graph models, use drivers, run imports, build GraphRAG pipelines, run GDS algorithms, and manage Aura instances.": "Навыки для графовой БД Neo4j: запросы Cypher, проектирование графовых моделей, драйверы, импорт, пайплайны GraphRAG, алгоритмы GDS и управление инстансами Aura.",
+  "Build and deploy on Netlify: functions, edge functions, blobs, database, identity, forms, image CDN, caching, and AI Gateway, plus the Netlify MCP server.": "Разработка и публикация на Netlify: функции, edge-функции, хранилище, БД, аутентификация, формы, CDN изображений, кэширование, AI Gateway и сервер MCP Netlify.",
+  "Connect Antigravity to your Notion workspace with the Notion MCP server, plus skills for research, documentation, meeting prep, specs, trackers, and project updates.": "Подключите Antigravity к Notion через сервер MCP и навыки для исследований, документации, подготовки встреч, спецификаций, трекеров и отчётов.",
+  "Create and send proposals, quotes, and contracts for e-signature. Track signing progress and identify documents that need follow-up.": "Создание и отправка коммерческих предложений, смет и договоров на электронную подпись. Отслеживание статуса подписания.",
+  "Search the live web and fetch page content with Parallel's hosted MCP server. Free access with no Parallel account, API key, or Parallel CLI required.": "Поиск в интернете и загрузка содержимого страниц через облачный сервер MCP Parallel. Бесплатно, без аккаунта, API-ключа и CLI.",
+  "Agent plugin for PingOne multi-tenant. Includes skills and a remote MCP server that lets AI agents configure and monitor your PingOne environments.": "Плагин для мультиарендного PingOne: навыки и удалённый сервер MCP для настройки и мониторинга окружений PingOne силами ИИ-агентов.",
+  "Equip Antigravity with specialized Postman skills for the complete API lifecycle. Discover, design, test, document, mock, monitor, and improve APIs through agent-friendly, filesystem-first workflows.": "Набор навыков Postman для полного жизненного цикла API: поиск, проектирование, тестирование, документирование, моки и мониторинг API.",
+  "Set up Qodo, explore code and repository history, review local changes, and resolve pull-request findings directly from Antigravity.": "Настройка Qodo, исследование кода и истории репозитория, проверка локальных правок и исправление замечаний из пул-реквестов прямо в Antigravity.",
+  "Deploy, configure, monitor, and troubleshoot apps, databases, and infrastructure on Railway from Antigravity with Railway's agent skill and hosted MCP server.": "Публикация, настройка, мониторинг и отладка приложений, баз данных и инфраструктуры на Railway из Antigravity через навыки и облачный сервер MCP.",
+  "SEO workflows on live Semrush data: keyword research, site audits, backlinks, competitor, traffic and market analytics, PPC, and AI brand visibility.": "SEO-сценарии на живых данных Semrush: подбор ключевых слов, аудит сайтов, обратные ссылки, анализ конкурентов и трафика, PPC и видимость бренда для ИИ.",
+  "Query your SentinelOne Singularity Console from Antigravity through a self-hosted, read-only Purple AI MCP server. Requires an active console deployment, your console URL, and an API token.": "Запросы к консоли SentinelOne Singularity из Antigravity через локальный сервер MCP Purple AI (только чтение). Требуются активная консоль, её URL и API-токен.",
+  "Set up Sentry monitoring, investigate production errors, and configure alerts and releases with expert skills and live context from your Sentry projects.": "Настройка мониторинга Sentry, разбор ошибок в продакшене, настройка уведомлений и релизов с живым контекстом ваших проектов Sentry.",
+  "Triage Exabeam New-Scale alerts and cases end to end: gather the evidence, map MITRE, reach a verdict, and record it behind an approval step.": "Полный разбор оповещений и инцидентов Exabeam New-Scale: сбор данных, сопоставление с MITRE, вынесение вердикта и запись с подтверждением.",
+  "SonarQube is the AI code quality and security verification platform used by millions of developers to catch bugs, vulnerabilities, and leaked secrets. This plugin enforces those standards in the agent coding loop: 7,500+ distinct issue types, secrets scanning, agentic analysis, and quality gates across 40+ languages.": "Платформа проверки качества и безопасности кода SonarQube: поиск багов, уязвимостей и утечек секретов, более 7 500 типов проблем и контроль качества на 40+ языках прямо в цикле работы агента.",
+  "Turn an idea into a website, dashboard, report, or small web tool you can share. Build it in chat or bring your own work, and publish it with Spacefast.": "Превратите идею в сайт, дашборд, отчёт или веб-инструмент, которым можно поделиться. Создавайте в чате и публикуйте через Spacefast.",
+  "Official Supabase plugin for Antigravity with Supabase skills and MCP access for project management, database work, auth, storage, and Postgres best practices.": "Официальный плагин Supabase с навыками и доступом MCP для управления проектами, базами данных, аутентификацией, хранилищем и работы с Postgres.",
+  "Make your coding agent a better engineer": "Сделайте вашего агента более сильным инженером",
+  "Web search, content extraction, website crawling, URL discovery, and deep research for Antigravity via Tavily's hosted MCP server and skills.": "Веб-поиск, извлечение текста, обход сайтов, поиск URL и глубокое исследование через облачный сервер MCP и навыки Tavily.",
+  "Official Trello plugin with the Trello MCP server and a skill for boards, lists, cards, checklists, Inbox, and Planner.": "Официальный плагин Trello с сервером MCP и навыком для досок, списков, карточек, чек-листов, Входящих и Планировщика.",
+  "Unity's official plugin for Antigravity, with curated skills for game development, monetization, and performance optimization.": "Официальный плагин Unity для Antigravity с подобранными навыками по разработке игр, монетизации и оптимизации производительности.",
+  "Build and deploy web apps and AI agents on Vercel with skills for Next.js, AI SDK, and cloud services, plus the official Vercel MCP server.": "Создание и публикация веб-приложений и ИИ-агентов на Vercel с навыками для Next.js, AI SDK, облачных сервисов и официальным сервером MCP Vercel.",
+  "Investigate files, URLs, domains and IP addresses with VirusTotal threat intelligence, analysis and submission recovery.": "Проверка файлов, URL, доменов и IP-адресов с помощью аналитики угроз и отчётов VirusTotal.",
+  "Search and read your Wispr Flow meeting notes, transcripts, scratchpad notes, and calendar events. Read-only access to your own account.": "Поиск и чтение заметок со встреч, расшифровок, черновиков и событий календаря Wispr Flow (только чтение вашего аккаунта).",
+  "Build Wix apps and headless sites, and manage Wix stores, bookings, CMS and more, with Wix CLI skills and the official Wix MCP server.": "Создание приложений и headless-сайтов Wix, управление магазинами, бронированием и CMS с помощью навыков Wix CLI и официального сервера MCP Wix.",
+  "Build, publish, and manage WordPress.com and Jetpack-connected sites. Draft posts, edit blocks, check traffic stats, moderate comments, and manage plugins.": "Создание, публикация и управление сайтами WordPress.com и Jetpack: черновики записей, редактирование блоков, статистика трафика, модерация комментариев и плагины.",
+  "Connect 9,000+ apps to your AI workflow. Discover, enable, and execute Zapier actions and workflows directly from your client.": "Подключите более 9 000 приложений к ИИ-процессам. Находите, включайте и запускайте действия и сценарии Zapier прямо из клиента.",
+  "Manage your Bigin CRM from Antigravity: review pipelines, find contacts and deals, log calls, plan follow-ups, and email customers.": "Управление Bigin CRM из Antigravity: просмотр воронок, поиск контактов и сделок, учёт звонков, планирование задач и переписка с клиентами.",
+  "Build on Zoho CRM v8: REST API, Deluge functions, ClientScript, widgets, COQL and connections, with live CRM data through your Zoho MCP server.": "Разработка на Zoho CRM v8: REST API, функции Deluge, ClientScript, виджеты, COQL и подключения с живыми данными через сервер MCP Zoho.",
+  "Zoho Desk plugin for Antigravity. Review, prioritize, and update Zoho Desk tickets directly from Antigravity through Zoho Desk MCP and includes a Ticket Prioritization Agent for triage and priority updates.": "Плагин Zoho Desk для Antigravity: просмотр, приоритизация и обновление тикетов через Zoho Desk MCP и встроенный агент сортировки обращений.",
+  "Connect Zoho Projects to Antigravity to turn tasks and issues into working code. Access project context, investigate bugs, and update work items as you develop.": "Подключите Zoho Projects к Antigravity, чтобы превращать задачи и баги в готовый код с доступом к контексту проекта и обновлением статусов.",
+  "Run Zoho Books from Antigravity: invoicing, bills, banking, journals, projects, items, taxes, customization and automation.": "Работа с Zoho Books из Antigravity: счета, оплаты, банк, журналы, проекты, товары, налоги, настройки и автоматизация."
 };
 
   function formatTime(str) {
@@ -2249,6 +2403,100 @@
       replace: function (m) {
         return "Версия " + m[1];
       }
+    },
+    // Короткий подзаголовок настроек проекта/рабочей области (2.32.1+)
+    {
+      regex: /^Manage (\S+) (folders|resources) and settings\.$/,
+      replace: function (m) {
+        const KIND = { project: "проекта", workspace: "рабочей области" };
+        const what = m[2] === "folders" ? "папками" : "ресурсами";
+        return "Управление " + what + " " + (KIND[m[1]] || m[1]) + " и настройками.";
+      }
+    },
+    {
+      regex: /^(\d+) models? selected$/,
+      replace: function (m) {
+        return "Выбрано моделей: " + m[1];
+      }
+    },
+    {
+      regex: /^(\d+) hidden hosts?$/,
+      replace: function (m) {
+        const n = parseInt(m[1], 10);
+        return n + " " + plural(n, "скрытый хост", "скрытых хоста", "скрытых хостов");
+      }
+    },
+    {
+      regex: /^(\d+) MCP servers? failed to start$/,
+      replace: function (m) {
+        return "Не удалось запустить серверы MCP: " + m[1];
+      }
+    },
+    {
+      regex: /^Are you sure you want to delete the hook "(.+)"\?$/,
+      replace: function (m) {
+        return "Удалить хук «" + m[1] + "»?";
+      }
+    },
+    {
+      regex: /^Created automation "(.+)"\.$/,
+      replace: function (m) {
+        return "Автоматизация «" + m[1] + "» создана.";
+      }
+    },
+    {
+      regex: /^See all \((\d+)\)$/,
+      replace: function (m) {
+        return "Показать все (" + m[1] + ")";
+      }
+    },
+    {
+      regex: /^See (less|more) in (.+)$/,
+      replace: function (m) {
+        return (m[1] === "less" ? "Свернуть в " : "Ещё в ") + m[2];
+      }
+    },
+    {
+      regex: /^Connected to (.+)$/,
+      replace: function (m) {
+        return "Подключено к " + m[1];
+      }
+    },
+    {
+      regex: /^Couldn't connect to (.+)$/,
+      replace: function (m) {
+        return "Не удалось подключиться к " + m[1];
+      }
+    },
+    {
+      regex: /^Hide (.+) from this list$/,
+      replace: function (m) {
+        return "Скрыть " + m[1] + " из списка";
+      }
+    },
+    {
+      regex: /^Remove (.+) from Recent$/,
+      replace: function (m) {
+        return "Удалить " + m[1] + " из недавних";
+      }
+    },
+    {
+      regex: /^Removed (.+) from Recent$/,
+      replace: function (m) {
+        return m[1] + " удалён из недавних";
+      }
+    },
+    {
+      regex: /^(\d+) folders? in this project could not be loaded because their locations are invalid\.$/,
+      replace: function (m) {
+        return "Не удалось загрузить папки проекта (" + m[1] + "): неверный путь.";
+      }
+    },
+    {
+      regex: /^Added MCP server "(.+)", but it failed to start: (.+)$/,
+      replace: function (m) {
+        return "Сервер MCP «" + m[1] + "» добавлен, но не запустился: " + m[2];
+      }
     }
   ];
 
@@ -2441,6 +2689,65 @@
   } else {
     startObserver();
   }
+
+  // Закрепление проектов (папок) вверху боковой панели — хранится локально в localStorage.
+  (function initPinnedProjects() {
+    const STORAGE_KEY = 'antigravity_ru_pinned_projects';
+    const listeners = new Set();
+
+    function readList() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        const parsed = raw ? JSON.parse(raw) : [];
+        return Array.isArray(parsed) ? parsed.filter((x) => typeof x === 'string') : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function writeList(list) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+      } catch {}
+      listeners.forEach((fn) => {
+        try { fn(); } catch {}
+      });
+    }
+
+    window.__ruPinnedProjects = {
+      isPinned(id) {
+        return !!id && readList().includes(id);
+      },
+      toggle(id) {
+        if (!id) return;
+        const list = readList();
+        const idx = list.indexOf(id);
+        if (idx === -1) list.push(id);
+        else list.splice(idx, 1);
+        writeList(list);
+      },
+      sort(ids) {
+        if (!Array.isArray(ids) || ids.length <= 1) return ids;
+        const list = readList();
+        if (list.length === 0) return ids;
+        const pinnedSet = new Set(list);
+        const pinned = [];
+        const rest = [];
+        for (const id of ids) {
+          if (pinnedSet.has(id)) pinned.push(id);
+          else rest.push(id);
+        }
+        if (pinned.length === 0) return ids;
+        pinned.sort((a, b) => list.indexOf(a) - list.indexOf(b));
+        return [...pinned, ...rest];
+      },
+      subscribe(fn) {
+        if (typeof fn !== 'function') return () => {};
+        listeners.add(fn);
+        return () => { listeners.delete(fn); };
+      }
+    };
+  })();
 
   console.log('[i18n-ru] Russian localization fully active with ' + Object.keys(DICT).length + ' strings');
 })();
