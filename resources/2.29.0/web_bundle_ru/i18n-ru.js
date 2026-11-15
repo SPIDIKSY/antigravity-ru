@@ -1963,6 +1963,8 @@
     // Точку в конце английской фразы убираем: иначе после «ч.» выходит «ч..».
     return str
       .replace(/\.$/, '')
+      .replace(/less than a minute/gi, 'меньше минуты')
+      .replace(/less than a second/gi, 'меньше секунды')
       .replace(/(\d+)\s+days?/gi, '$1 дн.')
       .replace(/(\d+)\s+hours?/gi, '$1 ч.')
       .replace(/(\d+)\s+minutes?/gi, '$1 мин.')
@@ -2534,6 +2536,21 @@
       replace: function (m) {
         const units = { s: "с", m: "мин", h: "ч", d: "д" };
         return m[1] + " " + (units[m[2].toLowerCase()] || m[2]) + " назад";
+      }
+    },
+    // Исчерпан 5-часовой лимит (Настройки → Модели)
+    {
+      regex: /^You have hit your 5-hour limit, so the weekly limit does not currently apply\. Your 5-hour limit will refresh in (.+?)\.?$/i,
+      replace: function (m) {
+        const t = formatTime(m[1]);
+        return "Вы достигли 5-часового лимита, поэтому недельный лимит сейчас не применяется. 5-часовой лимит обновится через " + t + (t.endsWith(".") ? "" : ".");
+      }
+    },
+    {
+      regex: /^You have hit your 5-hour limit, it will refresh in (.+?)\. If on a supported paid plan, you can use AI credits in the interim\.?$/i,
+      replace: function (m) {
+        const t = formatTime(m[1]);
+        return "Вы достигли 5-часового лимита, он обновится через " + t + (t.endsWith(".") ? "" : ".") + " На поддерживаемом платном тарифе вы можете пока использовать кредиты AI.";
       }
     }
   ];
