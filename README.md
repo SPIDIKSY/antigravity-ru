@@ -11,8 +11,9 @@
 [![License](https://img.shields.io/badge/Лицензия-MIT-f59e0b?style=for-the-badge)](https://github.com/SPIDIKSY/antigravity-ru/blob/main/LICENSE)
 
 [![Telegram Chat](https://img.shields.io/badge/Наш%20Telegram--чат-Сообщить%20об%20ошибке%20%2F%20Обсуждение-26A5E4?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/spididyanty)
+[![Donate](https://img.shields.io/badge/Поддержать%20проект-DonateX-8b5cf6?style=for-the-badge&logo=heart&logoColor=white)](https://donatex.gg/donate/spidiksy)
 
-[**Быстрая установка**](#быстрая-установка-в-1-команду) • [**Скриншоты**](#скриншоты) • [**Что переведено**](#что-переведено) • [**Обновление и откат**](#управление-и-откат) • [**FAQ**](#часто-задаваемые-вопросы-faq) • [**Telegram**](https://t.me/spididyanty)
+[**Быстрая установка**](#быстрая-установка-в-1-команду) • [**Скриншоты**](#скриншоты) • [**Что переведено**](#что-переведено) • [**Обновление и откат**](#управление-и-откат) • [**FAQ**](#часто-задаваемые-вопросы-faq) • [**Telegram**](https://t.me/spididyanty) • [**Поддержать**](#поддержать-проект)
 
 </div>
 
@@ -179,3 +180,21 @@ powershell -ExecutionPolicy Bypass -Command "& ([scriptblock]::Create((Get-Conte
 <summary><b>Помогает ли русификатор обойти региональные ограничения?</b></summary>
 <b>Нет.</b> Это исключительно перевод интерфейса программы. Для работы с моделями в неподдерживаемых регионах по-прежнему необходим рабочий прокси или VPN.
 </details>
+
+---
+
+## Поддержать проект
+
+<div align="center">
+
+Если русификатор и дополнительные фичи оказались полезными, можно поддержать развитие проекта и будущие обновления под новые версии Antigravity:
+
+[**Перейти к поддержке на DonateX**](https://donatex.gg/donate/spidiksy)
+
+<br>
+
+<a href="https://donatex.gg/donate/spidiksy">
+  <img src="screenshots/donate-qr.png" alt="QR-код для поддержки проекта на DonateX" width="220">
+</a>
+
+</div>
