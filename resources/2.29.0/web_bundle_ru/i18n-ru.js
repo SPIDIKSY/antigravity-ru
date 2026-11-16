@@ -2754,44 +2754,54 @@
     startObserver();
   }
 
-  // Закрепление проектов (папок) вверху боковой панели — хранится в файле userData/ru-pinned-projects.json (и localStorage как fallback).
+  // Закрепление проектов (папок) вверху боковой панели — хранится в localStorage.
+  // Формат записи: {id, uris: string[], name: string} — позволяет находить проект по пути к папке на диске
+  // даже после смены аккаунта (UUID проекта меняется, а путь к папке — нет).
+  // Обратная совместимость: старые записи — голые строки UUID — читаются и мигрируются.
   (function initPinnedProjects() {
     const STORAGE_KEY = 'antigravity_ru_pinned_projects';
     const listeners = new Set();
     let cachedList = null;
 
+    function normalizeUri(uri) {
+      if (!uri || typeof uri !== 'string') return null;
+      let s = uri.trim().replace(/\\/g, '/').replace(/\/+$/, '');
+      try { s = decodeURIComponent(s); } catch {}
+      s = s.toLowerCase();
+      s = s.replace(/^file:\/\//, '');
+      s = s.replace(/^\/+/, '');
+      return s;
+    }
+
+    // Возвращает массив объектов {id, uris, name}. Мигрирует старые голые UUID-строки на лету.
     function readList() {
       if (cachedList !== null) return cachedList;
       try {
-        if (window.electronNative && typeof window.electronNative.getPinnedProjects === 'function') {
-          const fromFile = window.electronNative.getPinnedProjects();
-          if (Array.isArray(fromFile) && fromFile.length > 0) {
-            cachedList = fromFile.filter((x) => typeof x === 'string');
-            return cachedList;
-          }
-        }
-      } catch {}
-      try {
         const raw = localStorage.getItem(STORAGE_KEY);
         const parsed = raw ? JSON.parse(raw) : [];
-        cachedList = Array.isArray(parsed) ? parsed.filter((x) => typeof x === 'string') : [];
-        if (cachedList.length > 0 && window.electronNative && typeof window.electronNative.setPinnedProjects === 'function') {
-          window.electronNative.setPinnedProjects(cachedList).catch(() => {});
+        if (Array.isArray(parsed)) {
+          cachedList = parsed.map((x) => {
+            if (x && typeof x === 'object' && x.id) {
+              return {
+                id: x.id,
+                uris: Array.isArray(x.uris) ? x.uris : [],
+                name: typeof x.name === 'string' ? x.name : ''
+              };
+            }
+            if (typeof x === 'string') return { id: x, uris: [], name: '' };
+            return null;
+          }).filter(Boolean);
+        } else {
+          cachedList = [];
         }
-        return cachedList;
       } catch {
         cachedList = [];
-        return cachedList;
       }
+      return cachedList;
     }
 
     function writeList(list) {
       cachedList = list;
-      try {
-        if (window.electronNative && typeof window.electronNative.setPinnedProjects === 'function') {
-          window.electronNative.setPinnedProjects(list).catch(() => {});
-        }
-      } catch {}
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
       } catch {}
@@ -2800,65 +2810,133 @@
       });
     }
 
+    // Находит индекс записи в list по URI / имени / id. Возвращает -1 если не найдено.
+    function findIndex(list, projectId, folderUris, name) {
+      for (let i = 0; i < list.length; i++) {
+        const e = list[i];
+        // совпадение по URI (приоритет)
+        if (folderUris && folderUris.length && e.uris && e.uris.length) {
+          const match = folderUris.some((u) => e.uris.some((eu) => normalizeUri(u) === normalizeUri(eu)));
+          if (match) return i;
+        }
+        // совпадение по имени (если нет URI с обеих сторон)
+        if (name && e.name && name === e.name && (!folderUris || !folderUris.length || !e.uris || !e.uris.length)) {
+          return i;
+        }
+        // фолбэк: совпадение по UUID
+        if (e.id === projectId) return i;
+      }
+      return -1;
+    }
+
+    // Вспомогательный объект для извлечения URI из объекта проекта (вызывается из main.js)
+    window.__ruGetProjectInfo = function(project) {
+      if (!project) return null;
+      const resources = project.projectResources && project.projectResources.resources ? project.projectResources.resources : [];
+      const uris = [];
+      for (const r of resources) {
+        const tc = r && r.type && r.type.case;
+        const tv = r && r.type && r.type.value;
+        let uri = tc === 'folderUri' ? tv : tc === 'gitFolder' ? (tv && tv.folderUri) : null;
+        if (uri && typeof uri === 'string' && !uris.includes(uri)) uris.push(uri);
+      }
+      if (Array.isArray(project.folderUris)) {
+        for (const u of project.folderUris) {
+          if (typeof u === 'string' && !uris.includes(u)) uris.push(u);
+        }
+      }
+      if (Array.isArray(project.workspaceUris)) {
+        for (const u of project.workspaceUris) {
+          if (typeof u === 'string' && !uris.includes(u)) uris.push(u);
+        }
+      }
+      return { id: project.id, uris: uris, name: project.name || '' };
+    };
+
     window.__ruPinnedProjects = {
-      isPinned(id) {
-        return !!id && readList().includes(id);
+      isPinned(id, folderUris, name) {
+        return findIndex(readList(), id, folderUris, name) !== -1;
       },
-      toggle(id) {
+      toggle(id, folderUris, name) {
         if (!id) return;
         const list = readList().slice();
-        const idx = list.indexOf(id);
-        if (idx === -1) list.push(id);
-        else list.splice(idx, 1);
+        const idx = findIndex(list, id, folderUris, name);
+        if (idx === -1) {
+          list.push({ id: id, uris: folderUris || [], name: name || '' });
+        } else {
+          list.splice(idx, 1);
+        }
         writeList(list);
       },
-      reorderFromList(orderedIds) {
+      reorderFromList(orderedIds, uriMap) {
         if (!Array.isArray(orderedIds)) return;
         const list = readList();
         if (list.length <= 1) return;
-        const pinnedSet = new Set(list);
+        const map = uriMap || window.__ruProjectUriCache;
         const next = [];
         for (const id of orderedIds) {
-          if (pinnedSet.has(id) && !next.includes(id)) next.push(id);
+          const info = map && map.get ? map.get(id) : null;
+          const idx = findIndex(list, id, info && info.uris, info && info.name);
+          if (idx !== -1) {
+            const entry = list[idx];
+            if (!next.some((e) => e.id === entry.id)) next.push(entry);
+          }
         }
-        for (const id of list) {
-          if (!next.includes(id)) next.push(id);
+        for (const entry of list) {
+          if (!next.some((e) => e.id === entry.id)) next.push(entry);
         }
-        if (next.length === list.length && next.some((id, i) => id !== list[i])) {
+        if (next.length === list.length && next.some((e, i) => e.id !== list[i].id)) {
           writeList(next);
         }
       },
-      sort(ids) {
+      sort(ids, uriMap) {
         if (!Array.isArray(ids) || ids.length <= 1) return ids;
         const list = readList();
         if (list.length === 0) return ids;
-        const pinnedSet = new Set(list);
+        const map = uriMap || window.__ruProjectUriCache;
         const pinned = [];
         const rest = [];
         for (const id of ids) {
-          if (pinnedSet.has(id)) pinned.push(id);
+          const info = map && map.get ? map.get(id) : null;
+          const idx = findIndex(list, id, info && info.uris, info && info.name);
+          if (idx !== -1) pinned.push({ id: id, order: idx });
           else rest.push(id);
         }
         if (pinned.length === 0) return ids;
-        pinned.sort((a, b) => list.indexOf(a) - list.indexOf(b));
-        return [...pinned, ...rest];
+        pinned.sort((a, b) => a.order - b.order);
+        return [...pinned.map((x) => x.id), ...rest];
       },
-      orderGroups(groups) {
+      orderGroups(groups, uriMap) {
         if (!Array.isArray(groups)) return { pinned: [], unpinned: [] };
         const list = readList();
         if (list.length === 0) return { pinned: [], unpinned: groups };
-        const pinnedSet = new Set(list);
         const pinned = [];
         const unpinned = [];
+        let listChanged = false;
         for (const g of groups) {
-          if (g && g.id && g.id !== 'standalone' && g.id !== 'all' && g.id !== 'outside-of-project' && pinnedSet.has(g.id)) {
-            pinned.push(g);
+          if (!g || !g.id || g.id === 'standalone' || g.id === 'all' || g.id === 'outside-of-project') {
+            unpinned.push(g);
+            continue;
+          }
+          const info = uriMap && uriMap.get ? uriMap.get(g.id) : null;
+          const idx = findIndex(list, g.id, info && info.uris, info && info.name);
+          if (idx !== -1) {
+            pinned.push({ group: g, order: idx });
+            // Если у сохранённой записи не было URI, но сейчас они известны — обогащаем запись
+            if (info && info.uris && info.uris.length && (!list[idx].uris || !list[idx].uris.length)) {
+              list[idx].uris = info.uris;
+              if (info.name && !list[idx].name) list[idx].name = info.name;
+              listChanged = true;
+            }
           } else {
             unpinned.push(g);
           }
         }
-        pinned.sort((a, b) => list.indexOf(a.id) - list.indexOf(b.id));
-        return { pinned, unpinned };
+        if (listChanged) {
+          writeList(list);
+        }
+        pinned.sort((a, b) => a.order - b.order);
+        return { pinned: pinned.map((x) => x.group), unpinned: unpinned };
       },
       subscribe(fn) {
         if (typeof fn !== 'function') return () => {};
@@ -2868,7 +2946,6 @@
     };
   })();
 
-  // Перевод пунктов нативных контекстных меню Electron (ПКМ по проектам, чатам и др.).
   window.__ruTranslateMenu = function translateMenu(items) {
     if (!Array.isArray(items)) return items;
     for (const item of items) {
