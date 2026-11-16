@@ -2754,50 +2754,65 @@
     startObserver();
   }
 
-  // Закрепление проектов (папок) вверху боковой панели — хранится в localStorage.
-  // Формат записи: {id, uris: string[], name: string} — позволяет находить проект по пути к папке на диске
-  // даже после смены аккаунта (UUID проекта меняется, а путь к папке — нет).
-  // Обратная совместимость: старые записи — голые строки UUID — читаются и мигрируются.
+  // Закрепление проектов (папок) вверху боковой панели.
+  // Хранилище: постоянный файл app_storage.json через window.nativeStorage (не сбрасывается при смене аккаунта и портов)
+  // + localStorage как быстрый синхронный кэш для первого кадра.
+  // Формат записи: { id: string, ids: string[], uris: string[], name: string }
+  // Позволяет находить и сохранять проект при смене аккаунта по пути к папке на диске и названию.
   (function initPinnedProjects() {
     const STORAGE_KEY = 'antigravity_ru_pinned_projects';
     const listeners = new Set();
+    const projectRegistry = new Map();
     let cachedList = null;
 
     function normalizeUri(uri) {
       if (!uri || typeof uri !== 'string') return null;
-      let s = uri.trim().replace(/\\/g, '/').replace(/\/+$/, '');
+      let s = uri.trim();
       try { s = decodeURIComponent(s); } catch {}
-      s = s.toLowerCase();
-      s = s.replace(/^file:\/\//, '');
-      s = s.replace(/^\/+/, '');
-      return s;
+      s = s.replace(/\\/g, '/');
+      s = s.replace(/^file:\/\/(localhost)?\/?/i, '');
+      s = s.replace(/^\/+([a-zA-Z]:)/, '$1');
+      s = s.replace(/\/+/g, '/');
+      s = s.replace(/\/+$/, '');
+      return s.toLowerCase();
     }
 
-    // Возвращает массив объектов {id, uris, name}. Мигрирует старые голые UUID-строки на лету.
+    function sanitizeList(raw) {
+      if (!Array.isArray(raw)) return [];
+      return raw.map((x) => {
+        if (x && typeof x === 'object' && x.id) {
+          const ids = Array.isArray(x.ids) ? x.ids.filter((id) => typeof id === 'string') : [];
+          if (!ids.includes(x.id)) ids.push(x.id);
+          return {
+            id: x.id,
+            ids: ids,
+            uris: Array.isArray(x.uris) ? x.uris.filter((u) => typeof u === 'string') : [],
+            name: typeof x.name === 'string' ? x.name : ''
+          };
+        }
+        if (typeof x === 'string') {
+          return { id: x, ids: [x], uris: [], name: '' };
+        }
+        return null;
+      }).filter(Boolean);
+    }
+
     function readList() {
       if (cachedList !== null) return cachedList;
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
         const parsed = raw ? JSON.parse(raw) : [];
-        if (Array.isArray(parsed)) {
-          cachedList = parsed.map((x) => {
-            if (x && typeof x === 'object' && x.id) {
-              return {
-                id: x.id,
-                uris: Array.isArray(x.uris) ? x.uris : [],
-                name: typeof x.name === 'string' ? x.name : ''
-              };
-            }
-            if (typeof x === 'string') return { id: x, uris: [], name: '' };
-            return null;
-          }).filter(Boolean);
-        } else {
-          cachedList = [];
-        }
+        cachedList = sanitizeList(parsed);
       } catch {
         cachedList = [];
       }
       return cachedList;
+    }
+
+    function notifyListeners() {
+      listeners.forEach((fn) => {
+        try { fn(); } catch {}
+      });
     }
 
     function writeList(list) {
@@ -2805,64 +2820,180 @@
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
       } catch {}
-      listeners.forEach((fn) => {
-        try { fn(); } catch {}
-      });
+      if (typeof window !== 'undefined' && window.nativeStorage && typeof window.nativeStorage.updateItems === 'function') {
+        try {
+          window.nativeStorage.updateItems({ [STORAGE_KEY]: list }).catch(() => {});
+        } catch {}
+      }
+      notifyListeners();
     }
 
-    // Находит индекс записи в list по URI / имени / id. Возвращает -1 если не найдено.
+    // Фоновая гидратация из системного постоянного файла app_storage.json
+    function hydrateFromNativeStorage() {
+      if (typeof window === 'undefined' || !window.nativeStorage || typeof window.nativeStorage.getItems !== 'function') {
+        return;
+      }
+      window.nativeStorage.getItems().then((items) => {
+        if (items && Array.isArray(items[STORAGE_KEY])) {
+          const fromDisk = sanitizeList(items[STORAGE_KEY]);
+          if (fromDisk.length > 0 || (cachedList && cachedList.length === 0)) {
+            cachedList = fromDisk;
+            try {
+              localStorage.setItem(STORAGE_KEY, JSON.stringify(fromDisk));
+            } catch {}
+            notifyListeners();
+          }
+        } else if (cachedList && cachedList.length > 0) {
+          window.nativeStorage.updateItems({ [STORAGE_KEY]: cachedList }).catch(() => {});
+        }
+      }).catch(() => {});
+    }
+
+    if (typeof window !== 'undefined' && window.nativeStorage && typeof window.nativeStorage.onChanged === 'function') {
+      try {
+        window.nativeStorage.onChanged((changes) => {
+          if (changes && STORAGE_KEY in changes) {
+            const val = changes[STORAGE_KEY];
+            const parsed = Array.isArray(val) ? sanitizeList(val) : [];
+            cachedList = parsed;
+            try {
+              localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
+            } catch {}
+            notifyListeners();
+          }
+        });
+      } catch {}
+    }
+
+    hydrateFromNativeStorage();
+    if (typeof document !== 'undefined') {
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', hydrateFromNativeStorage);
+      }
+      setTimeout(hydrateFromNativeStorage, 150);
+      setTimeout(hydrateFromNativeStorage, 600);
+    }
+
+    // Находит индекс записи в list по id / URI / имени.
     function findIndex(list, projectId, folderUris, name) {
-      for (let i = 0; i < list.length; i++) {
-        const e = list[i];
-        // совпадение по URI (приоритет)
-        if (folderUris && folderUris.length && e.uris && e.uris.length) {
-          const match = folderUris.some((u) => e.uris.some((eu) => normalizeUri(u) === normalizeUri(eu)));
+      if (!Array.isArray(list)) return -1;
+      const normUris = (folderUris || []).map(normalizeUri).filter(Boolean);
+      const normName = name && typeof name === 'string' ? name.trim().toLowerCase() : '';
+
+      // 1. Поиск по UUID (текущий или известный прошлый UUID этого же проекта)
+      if (projectId) {
+        for (let i = 0; i < list.length; i++) {
+          const e = list[i];
+          if (!e) continue;
+          if (e.id === projectId) return i;
+          if (Array.isArray(e.ids) && e.ids.includes(projectId)) return i;
+        }
+      }
+
+      // 2. Поиск по нормализованному пути к папке (сохранение между разными аккаунтами)
+      if (normUris.length > 0) {
+        for (let i = 0; i < list.length; i++) {
+          const e = list[i];
+          if (!e || !e.uris || !e.uris.length) continue;
+          const entryUris = e.uris.map(normalizeUri).filter(Boolean);
+          const match = normUris.some((u) => entryUris.includes(u));
           if (match) return i;
         }
-        // совпадение по имени (если нет URI с обеих сторон)
-        if (name && e.name && name === e.name && (!folderUris || !folderUris.length || !e.uris || !e.uris.length)) {
-          return i;
-        }
-        // фолбэк: совпадение по UUID
-        if (e.id === projectId) return i;
       }
+
+      // 3. Поиск по точному имени проекта
+      if (normName) {
+        for (let i = 0; i < list.length; i++) {
+          const e = list[i];
+          if (!e || !e.name) continue;
+          if (e.name.trim().toLowerCase() === normName) return i;
+        }
+      }
+
       return -1;
     }
 
-    // Вспомогательный объект для извлечения URI из объекта проекта (вызывается из main.js)
+    // Извлечение путей и названия из любого объекта проекта
     window.__ruGetProjectInfo = function(project) {
       if (!project) return null;
-      const resources = project.projectResources && project.projectResources.resources ? project.projectResources.resources : [];
       const uris = [];
-      for (const r of resources) {
-        const tc = r && r.type && r.type.case;
-        const tv = r && r.type && r.type.value;
-        let uri = tc === 'folderUri' ? tv : tc === 'gitFolder' ? (tv && tv.folderUri) : null;
-        if (uri && typeof uri === 'string' && !uris.includes(uri)) uris.push(uri);
-      }
-      if (Array.isArray(project.folderUris)) {
-        for (const u of project.folderUris) {
-          if (typeof u === 'string' && !uris.includes(u)) uris.push(u);
+      function addUri(u) {
+        if (!u) return;
+        if (typeof u === 'string') {
+          const trimmed = u.trim();
+          if (trimmed && !uris.includes(trimmed)) uris.push(trimmed);
+        } else if (typeof u === 'object') {
+          if (typeof u.folderUri === 'string') addUri(u.folderUri);
+          if (typeof u.uri === 'string') addUri(u.uri);
+          if (u.type) {
+            if (typeof u.type === 'string') addUri(u.type);
+            if (u.type.case === 'folderUri' && typeof u.type.value === 'string') addUri(u.type.value);
+            if (u.type.case === 'gitFolder' && u.type.value) {
+              if (typeof u.type.value.folderUri === 'string') addUri(u.type.value.folderUri);
+              if (typeof u.type.value === 'string') addUri(u.type.value);
+            }
+          }
         }
+      }
+
+      const resources = project.projectResources && Array.isArray(project.projectResources.resources)
+        ? project.projectResources.resources : [];
+      for (const r of resources) addUri(r);
+
+      const envs = project.environments && Array.isArray(project.environments.environments)
+        ? project.environments.environments : [];
+      for (const env of envs) {
+        const envRes = env && env.resources && Array.isArray(env.resources.resources) ? env.resources.resources : [];
+        for (const r of envRes) addUri(r);
+      }
+
+      addUri(project.workspaceUri);
+      addUri(project.folderUri);
+      addUri(project.rootUri);
+      addUri(project.path);
+      if (Array.isArray(project.folderUris)) {
+        for (const u of project.folderUris) addUri(u);
       }
       if (Array.isArray(project.workspaceUris)) {
-        for (const u of project.workspaceUris) {
-          if (typeof u === 'string' && !uris.includes(u)) uris.push(u);
-        }
+        for (const u of project.workspaceUris) addUri(u);
       }
-      return { id: project.id, uris: uris, name: project.name || '' };
+
+      const name = typeof project.name === 'string' ? project.name.trim() : '';
+      const id = typeof project.id === 'string' ? project.id : '';
+      const info = { id, uris, name };
+      if (id) projectRegistry.set(id, info);
+      return info;
+    };
+
+    window.__ruRegisterProject = function(project) {
+      return window.__ruGetProjectInfo(project);
+    };
+
+    window.__ruRegisterProjects = function(projects) {
+      if (!Array.isArray(projects)) return;
+      for (const p of projects) {
+        if (!p) continue;
+        if (p.project) window.__ruGetProjectInfo(p.project);
+        else if (p.id) window.__ruGetProjectInfo(p);
+      }
     };
 
     window.__ruPinnedProjects = {
       isPinned(id, folderUris, name) {
-        return findIndex(readList(), id, folderUris, name) !== -1;
+        const cached = id ? projectRegistry.get(id) : null;
+        const uris = folderUris || (cached && cached.uris);
+        const pName = name || (cached && cached.name);
+        return findIndex(readList(), id, uris, pName) !== -1;
       },
       toggle(id, folderUris, name) {
         if (!id) return;
+        const cached = projectRegistry.get(id);
+        const uris = folderUris || (cached && cached.uris) || [];
+        const pName = name || (cached && cached.name) || '';
         const list = readList().slice();
-        const idx = findIndex(list, id, folderUris, name);
+        const idx = findIndex(list, id, uris, pName);
         if (idx === -1) {
-          list.push({ id: id, uris: folderUris || [], name: name || '' });
+          list.push({ id: id, ids: [id], uris: uris, name: pName });
         } else {
           list.splice(idx, 1);
         }
@@ -2875,7 +3006,7 @@
         const map = uriMap || window.__ruProjectUriCache;
         const next = [];
         for (const id of orderedIds) {
-          const info = map && map.get ? map.get(id) : null;
+          const info = (map && map.get ? map.get(id) : null) || projectRegistry.get(id);
           const idx = findIndex(list, id, info && info.uris, info && info.name);
           if (idx !== -1) {
             const entry = list[idx];
@@ -2897,7 +3028,7 @@
         const pinned = [];
         const rest = [];
         for (const id of ids) {
-          const info = map && map.get ? map.get(id) : null;
+          const info = (map && map.get ? map.get(id) : null) || projectRegistry.get(id);
           const idx = findIndex(list, id, info && info.uris, info && info.name);
           if (idx !== -1) pinned.push({ id: id, order: idx });
           else rest.push(id);
@@ -2906,32 +3037,65 @@
         pinned.sort((a, b) => a.order - b.order);
         return [...pinned.map((x) => x.id), ...rest];
       },
-      orderGroups(groups, uriMap) {
+      orderGroups(groups, uriMapOrProjects) {
         if (!Array.isArray(groups)) return { pinned: [], unpinned: [] };
+        if (Array.isArray(uriMapOrProjects)) {
+          window.__ruRegisterProjects(uriMapOrProjects);
+        }
         const list = readList();
         if (list.length === 0) return { pinned: [], unpinned: groups };
+        const map = (uriMapOrProjects && typeof uriMapOrProjects.get === 'function')
+          ? uriMapOrProjects
+          : window.__ruProjectUriCache;
         const pinned = [];
         const unpinned = [];
         let listChanged = false;
+
         for (const g of groups) {
           if (!g || !g.id || g.id === 'standalone' || g.id === 'all' || g.id === 'outside-of-project') {
             unpinned.push(g);
             continue;
           }
-          const info = uriMap && uriMap.get ? uriMap.get(g.id) : null;
-          const idx = findIndex(list, g.id, info && info.uris, info && info.name);
+          const info = (map && map.get ? map.get(g.id) : null) || projectRegistry.get(g.id);
+          const folderUris = info && info.uris ? info.uris : [];
+          const name = (info && info.name) || (g.label && typeof g.label === 'string' ? g.label : '');
+          const idx = findIndex(list, g.id, folderUris, name);
+
           if (idx !== -1) {
             pinned.push({ group: g, order: idx });
-            // Если у сохранённой записи не было URI, но сейчас они известны — обогащаем запись
-            if (info && info.uris && info.uris.length && (!list[idx].uris || !list[idx].uris.length)) {
-              list[idx].uris = info.uris;
-              if (info.name && !list[idx].name) list[idx].name = info.name;
-              listChanged = true;
+            const entry = list[idx];
+            let entryChanged = false;
+            if (!Array.isArray(entry.ids)) {
+              entry.ids = entry.id ? [entry.id] : [];
+              entryChanged = true;
             }
+            if (g.id && !entry.ids.includes(g.id)) {
+              entry.ids.push(g.id);
+              entryChanged = true;
+            }
+            if (g.id && entry.id !== g.id) {
+              entry.id = g.id;
+              entryChanged = true;
+            }
+            if (folderUris.length > 0) {
+              if (!Array.isArray(entry.uris)) entry.uris = [];
+              for (const u of folderUris) {
+                if (!entry.uris.includes(u)) {
+                  entry.uris.push(u);
+                  entryChanged = true;
+                }
+              }
+            }
+            if (name && !entry.name) {
+              entry.name = name;
+              entryChanged = true;
+            }
+            if (entryChanged) listChanged = true;
           } else {
             unpinned.push(g);
           }
         }
+
         if (listChanged) {
           writeList(list);
         }
