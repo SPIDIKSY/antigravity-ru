@@ -6,6 +6,13 @@
   'use strict';
 
   const DICT = {
+  // --- Context menu additions ---
+  "Reveal in File Explorer": "Показать в проводнике",
+  "Open in Cider": "Открыть в Cider",
+  "Archive Project": "Архивировать проект",
+  "Sort By": "Сортировка",
+  "Open in SSH Host": "Открыть на SSH-сервере",
+
   // --- Antigravity 2.33.0 & 2.32.2 New UI Strings and HTTP Errors ---
   "Connect to SSH Host": "Подключиться к SSH-серверу",
   "Connect to SSH Host…": "Подключиться к SSH-серверу…",
