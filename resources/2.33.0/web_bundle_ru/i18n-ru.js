@@ -3198,6 +3198,711 @@
     };
   })();
 
+  // =========================================================================
+  // Подсистема управления пользовательскими промптами (Prompts Manager)
+  // Хранилище: постоянный файл app_storage.json через window.nativeStorage
+  // + localStorage как быстрый синхронный кэш для первого кадра.
+  // =========================================================================
+  (function initPromptsManager() {
+    const STORAGE_KEY = 'antigravity_ru_prompts';
+    const listeners = new Set();
+    let cachedPrompts = null;
+
+    const DEFAULT_PROMPTS = [
+      {
+        id: 'prompt-auto-full',
+        title: 'Автономная работа агента (Full Auto)',
+        description: 'Инструкция для самостоятельного решения задачи от анализа до проверки без лишних вопросов.',
+        tags: ['Автономность', 'Разработка'],
+        content: `Работай полностью автономно в режиме максимальной самостоятельности:
+1. Сначала внимательно изучи контекст проекта, структуру файлов и существующие соглашения.
+2. Сформулируй чёткий план решения и следуй ему шаг за шагом.
+3. Не останавливайся для подтверждения очевидных промежуточных шагов — принимай обоснованные инженерные решения самостоятельно.
+4. Проверяй каждый шаг фактическим запуском команд, сборки или тестов. Не утверждай, что всё работает, без вывода проверки.
+5. В конце предоставь краткий структурированный отчёт: что изменено (список файлов), что проверено (команды и результат) и что осталось за рамками задачи.`,
+        isBuiltin: true
+      },
+      {
+        id: 'prompt-deep-plan',
+        title: 'Глубокое планирование и архитектура',
+        description: 'Анализ требований, краевых случаев, зависимостей и пошаговая декомпозиция до написания кода.',
+        tags: ['Планирование', 'Архитектура'],
+        content: `Проведи глубокий архитектурный анализ перед реализацией:
+1. Изучи требования и выяви скрытые зависимости, ограничения и краевые случаи.
+2. Предложи 2-3 варианта архитектурного решения с плюсами, минусами и твоей обоснованной рекомендацией.
+3. Декомпозируй выбранное решение на независимые проверяемые этапы (от данных и логики к UI и интеграции).
+4. Опиши стратегию тестирования и отката в случае проблем.
+5. Жди согласования плана перед написанием кода.`,
+        isBuiltin: true
+      },
+      {
+        id: 'prompt-code-audit',
+        title: 'Аудит и рефакторинг кода',
+        description: 'Поиск скрытых багов, утечек ресурсов, уязвимостей и повышение читаемости.',
+        tags: ['Аудит', 'Качество кода'],
+        content: `Проведи аудит и рефакторинг указанного модуля/файлов:
+1. Проверь код на потенциальные баги, утечки ресурсов, гонки (race conditions) и необработанные ошибки на границах системы.
+2. Проверь соответствие стилю проекта, читаемость и избыточность (удали мёртвый код и дублирование).
+3. Не ломай существующий API и контракты вызовов.
+4. До и после изменений проверь сборку и тесты.
+5. Дай отчёт со списком конкретных правок и замерами (если оптимизировалась производительность).`,
+        isBuiltin: true
+      },
+      {
+        id: 'prompt-debugging',
+        title: 'Системная отладка (Debugging)',
+        description: 'Воспроизведение, локализация корня проблемы, точечное исправление и проверка.',
+        tags: ['Отладка', 'Баги'],
+        content: `Найди и устрани причину проблемы по методологии системной отладки:
+1. Точно воспроизведи ошибку или изучи стектрейс и логи.
+2. Определи корневую причину (root cause), а не маскируй симптомы костылями.
+3. Сформулируй гипотезу и проверь её минимальным изменением или логами.
+4. Внеси точечное исправление, не затрагивая несвязанную логику.
+5. Запусти тесты и убедись, что баг устранён и регрессий нет.`,
+        isBuiltin: true
+      }
+    ];
+
+    function sanitizePrompts(raw) {
+      if (!Array.isArray(raw)) return [];
+      return raw.map((x) => {
+        if (!x || typeof x !== 'object') return null;
+        const id = typeof x.id === 'string' && x.id.trim() ? x.id : ('prompt-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6));
+        const title = typeof x.title === 'string' && x.title.trim() ? x.title.trim() : 'Без названия';
+        const description = typeof x.description === 'string' ? x.description.trim() : '';
+        const content = typeof x.content === 'string' ? x.content : '';
+        const tags = Array.isArray(x.tags)
+          ? x.tags.map(t => String(t).trim()).filter(Boolean)
+          : (typeof x.tags === 'string' ? x.tags.split(',').map(t => t.trim()).filter(Boolean) : []);
+        const isBuiltin = !!x.isBuiltin;
+        return { id, title, description, content, tags, isBuiltin };
+      }).filter(Boolean);
+    }
+
+    function readPrompts() {
+      if (cachedPrompts !== null) return cachedPrompts;
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          cachedPrompts = sanitizePrompts(parsed);
+        }
+      } catch {}
+      if (!cachedPrompts || cachedPrompts.length === 0) {
+        cachedPrompts = DEFAULT_PROMPTS.slice();
+      }
+      return cachedPrompts;
+    }
+
+    function notifyListeners() {
+      listeners.forEach((fn) => {
+        try { fn(); } catch {}
+      });
+    }
+
+    function writePrompts(list) {
+      cachedPrompts = list;
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+      } catch {}
+      if (typeof window !== 'undefined' && window.nativeStorage && typeof window.nativeStorage.updateItems === 'function') {
+        try {
+          window.nativeStorage.updateItems({ [STORAGE_KEY]: list }).catch(() => {});
+        } catch {}
+      }
+      notifyListeners();
+    }
+
+    function hydrateFromNativeStorage() {
+      if (typeof window === 'undefined' || !window.nativeStorage || typeof window.nativeStorage.getItems !== 'function') {
+        return;
+      }
+      window.nativeStorage.getItems().then((items) => {
+        if (items && Array.isArray(items[STORAGE_KEY])) {
+          const fromDisk = sanitizePrompts(items[STORAGE_KEY]);
+          if (fromDisk.length > 0) {
+            cachedPrompts = fromDisk;
+            try {
+              localStorage.setItem(STORAGE_KEY, JSON.stringify(fromDisk));
+            } catch {}
+            notifyListeners();
+          }
+        } else if (cachedPrompts && cachedPrompts.length > 0) {
+          window.nativeStorage.updateItems({ [STORAGE_KEY]: cachedPrompts }).catch(() => {});
+        }
+      }).catch(() => {});
+    }
+
+    if (typeof window !== 'undefined' && window.nativeStorage && typeof window.nativeStorage.onChanged === 'function') {
+      try {
+        window.nativeStorage.onChanged((changes) => {
+          if (changes && STORAGE_KEY in changes) {
+            const val = changes[STORAGE_KEY];
+            const parsed = Array.isArray(val) ? sanitizePrompts(val) : DEFAULT_PROMPTS.slice();
+            cachedPrompts = parsed;
+            try {
+              localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
+            } catch {}
+            notifyListeners();
+          }
+        });
+      } catch {}
+    }
+
+    hydrateFromNativeStorage();
+    if (typeof document !== 'undefined') {
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', hydrateFromNativeStorage);
+      }
+      setTimeout(hydrateFromNativeStorage, 200);
+      setTimeout(hydrateFromNativeStorage, 800);
+    }
+
+    window.__ruPrompts = {
+      getPrompts() {
+        return readPrompts();
+      },
+      savePrompt(item) {
+        if (!item) return;
+        const list = readPrompts().slice();
+        const id = item.id || ('prompt-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6));
+        const tags = Array.isArray(item.tags)
+          ? item.tags
+          : (typeof item.tags === 'string' ? item.tags.split(',').map(s => s.trim()).filter(Boolean) : []);
+        const entry = {
+          id: id,
+          title: (item.title || 'Новый промпт').trim(),
+          description: (item.description || '').trim(),
+          content: item.content || '',
+          tags: tags,
+          isBuiltin: !!item.isBuiltin
+        };
+        const idx = list.findIndex(p => p.id === id);
+        if (idx >= 0) {
+          list[idx] = entry;
+        } else {
+          list.unshift(entry);
+        }
+        writePrompts(list);
+        return entry;
+      },
+      deletePrompt(id) {
+        if (!id) return;
+        const list = readPrompts().filter(p => p.id !== id);
+        writePrompts(list);
+      },
+      resetToDefaults() {
+        writePrompts(DEFAULT_PROMPTS.slice());
+      },
+      subscribe(fn) {
+        if (typeof fn !== 'function') return () => {};
+        listeners.add(fn);
+        return () => { listeners.delete(fn); };
+      },
+      insertPromptIntoChat(content, navigate) {
+        if (!content) return false;
+        if (typeof window.__ruInsertIntoActiveEditor === 'function' && window.__ruInsertIntoActiveEditor(content)) {
+          return true;
+        }
+        window.__ruPendingPromptToInsert = content;
+        if (typeof navigate === 'function') {
+          navigate({ to: '/' });
+        } else {
+          try {
+            window.location.hash = '#/';
+          } catch {}
+        }
+        return true;
+      }
+    };
+
+    // Компонент страницы «Мои промпты» в разделе «Дополнения»
+    window.__ruRenderPromptsPage = function renderPromptsPage(D, Nq, searchQuery, SI) {
+      const [prompts, setPrompts] = D.useState(() => window.__ruPrompts.getPrompts());
+      D.useEffect(() => {
+        return window.__ruPrompts.subscribe(() => {
+          setPrompts(window.__ruPrompts.getPrompts());
+        });
+      }, []);
+
+      const [selectedTag, setSelectedTag] = D.useState('all');
+      const [copiedId, setCopiedId] = D.useState(null);
+      const [modalState, setModalState] = D.useState(null); // null или { id, title, description, content, tags }
+
+      let navigate = null;
+      try {
+        if (typeof SI === 'function') navigate = SI();
+      } catch {}
+
+      const allTags = D.useMemo(() => {
+        const s = new Set();
+        prompts.forEach(p => (p.tags || []).forEach(t => s.add(t)));
+        return Array.from(s);
+      }, [prompts]);
+
+      const q = (searchQuery || '').trim().toLowerCase();
+      const filtered = D.useMemo(() => {
+        return prompts.filter(p => {
+          if (selectedTag !== 'all' && !(p.tags || []).includes(selectedTag)) {
+            return false;
+          }
+          if (!q) return true;
+          return (p.title || '').toLowerCase().includes(q) ||
+            (p.description || '').toLowerCase().includes(q) ||
+            (p.content || '').toLowerCase().includes(q) ||
+            (p.tags || []).some(t => t.toLowerCase().includes(q));
+        });
+      }, [prompts, selectedTag, q]);
+
+      const handleCopy = D.useCallback((p) => {
+        try {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(p.content);
+          } else {
+            const ta = document.createElement('textarea');
+            ta.value = p.content;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+          }
+          setCopiedId(p.id);
+          setTimeout(() => setCopiedId(null), 2000);
+        } catch (err) {
+          console.error('Ошибка копирования промпта:', err);
+        }
+      }, []);
+
+      const handleInsert = D.useCallback((p) => {
+        window.__ruPrompts.insertPromptIntoChat(p.content, navigate);
+      }, [navigate]);
+
+      const handleDelete = D.useCallback((p) => {
+        if (confirm('Удалить промпт «' + p.title + '»?')) {
+          window.__ruPrompts.deletePrompt(p.id);
+        }
+      }, []);
+
+      const handleReset = D.useCallback(() => {
+        if (confirm('Сбросить список промптов к стандартным шаблонам? Пользовательские изменения будут заменены.')) {
+          window.__ruPrompts.resetToDefaults();
+        }
+      }, []);
+
+      const handleOpenCreate = D.useCallback(() => {
+        setModalState({ id: '', title: '', description: '', content: '', tags: [] });
+      }, []);
+
+      const handleOpenEdit = D.useCallback((p) => {
+        setModalState({
+          id: p.id,
+          title: p.title,
+          description: p.description,
+          content: p.content,
+          tags: p.tags ? p.tags.slice() : [],
+          isBuiltin: p.isBuiltin
+        });
+      }, []);
+
+      const handleSaveModal = D.useCallback((formData) => {
+        if (!formData.title.trim()) {
+          alert('Введите название промпта');
+          return;
+        }
+        if (!formData.content.trim()) {
+          alert('Введите текст промпта');
+          return;
+        }
+        window.__ruPrompts.savePrompt(formData);
+        setModalState(null);
+      }, []);
+
+      return D.createElement('div', { className: 'flex flex-col gap-6 w-full animate-in fade-in duration-200' },
+        // Верхняя панель: теги фильтрации и кнопки управления
+        D.createElement('div', { className: 'flex flex-wrap items-center justify-between gap-3 border-b border-border/60 pb-4' },
+          D.createElement('div', { className: 'flex flex-wrap items-center gap-1.5' },
+            D.createElement('button', {
+              type: 'button',
+              onClick: () => setSelectedTag('all'),
+              className: 'px-2.5 py-1 rounded-lg text-xs font-medium cursor-pointer transition-colors ' +
+                (selectedTag === 'all'
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-secondary/40 text-secondary-foreground hover:bg-secondary hover:text-foreground')
+            }, 'Все (' + prompts.length + ')'),
+            allTags.map(tag => {
+              const count = prompts.filter(p => (p.tags || []).includes(tag)).length;
+              const isActive = selectedTag === tag;
+              return D.createElement('button', {
+                key: tag,
+                type: 'button',
+                onClick: () => setSelectedTag(tag),
+                className: 'px-2.5 py-1 rounded-lg text-xs font-medium cursor-pointer transition-colors ' +
+                  (isActive
+                    ? 'bg-primary text-primary-foreground'
+                    : 'bg-secondary/40 text-secondary-foreground hover:bg-secondary hover:text-foreground')
+              }, tag + ' (' + count + ')');
+            })
+          ),
+          D.createElement('div', { className: 'flex items-center gap-2' },
+            D.createElement('button', {
+              type: 'button',
+              onClick: handleReset,
+              title: 'Сбросить к исходным шаблонам',
+              className: 'inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs text-muted-foreground hover:text-foreground hover:bg-muted transition-colors cursor-pointer border border-border/40'
+            },
+              D.createElement(Nq, { name: 'settings_backup_restore', size: 14 }),
+              'Сброс'
+            ),
+            D.createElement('button', {
+              type: 'button',
+              onClick: handleOpenCreate,
+              className: 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-primary text-primary-foreground hover:bg-primary/90 transition-colors cursor-pointer shadow-sm'
+            },
+              D.createElement(Nq, { name: 'add', size: 16 }),
+              'Добавить промпт'
+            )
+          )
+        ),
+
+        // Список / Сетка карточек
+        filtered.length === 0
+          ? D.createElement('div', { className: 'flex flex-col items-center justify-center p-12 text-center border border-dashed border-border rounded-xl text-muted-foreground gap-3' },
+              D.createElement(Nq, { name: 'bookmark_border', size: 36, className: 'opacity-40' }),
+              D.createElement('p', { className: 'text-sm font-medium' }, 'Промпты не найдены'),
+              D.createElement('p', { className: 'text-xs opacity-75' }, 'Попробуйте изменить поисковый запрос или добавьте новый промпт.'),
+              D.createElement('button', {
+                type: 'button',
+                onClick: handleOpenCreate,
+                className: 'mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-primary text-primary-foreground hover:bg-primary/90 transition-colors cursor-pointer'
+              },
+                D.createElement(Nq, { name: 'add', size: 14 }),
+                'Создать первый промпт'
+              )
+            )
+          : D.createElement('div', { className: 'grid grid-cols-1 md:grid-cols-2 gap-4' },
+              filtered.map(p => {
+                const isCopied = copiedId === p.id;
+                return D.createElement('div', {
+                  key: p.id,
+                  className: 'flex flex-col justify-between rounded-xl border border-border bg-card p-4 transition-all duration-150 hover:border-border/80 hover:shadow-md'
+                },
+                  // Верх карточки
+                  D.createElement('div', { className: 'flex flex-col gap-2' },
+                    D.createElement('div', { className: 'flex items-start justify-between gap-2' },
+                      D.createElement('div', { className: 'flex flex-col min-w-0' },
+                        D.createElement('h3', { className: 'font-semibold text-foreground text-sm leading-snug break-words' }, p.title),
+                        p.description && D.createElement('p', { className: 'text-xs text-muted-foreground mt-0.5 line-clamp-2' }, p.description)
+                      ),
+                      // Кнопки управления (редактировать/удалить)
+                      D.createElement('div', { className: 'flex items-center gap-1 shrink-0' },
+                        D.createElement('button', {
+                          type: 'button',
+                          onClick: () => handleOpenEdit(p),
+                          title: 'Редактировать',
+                          className: 'p-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors cursor-pointer'
+                        }, D.createElement(Nq, { name: 'edit', size: 15 })),
+                        D.createElement('button', {
+                          type: 'button',
+                          onClick: () => handleDelete(p),
+                          title: 'Удалить',
+                          className: 'p-1 rounded-md text-muted-foreground hover:text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer'
+                        }, D.createElement(Nq, { name: 'delete', size: 15 }))
+                      )
+                    ),
+                    // Теги
+                    p.tags && p.tags.length > 0 && D.createElement('div', { className: 'flex flex-wrap gap-1 mt-1' },
+                      p.tags.map(t => D.createElement('span', {
+                        key: t,
+                        className: 'inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-secondary text-secondary-foreground'
+                      }, t))
+                    ),
+                    // Блок содержимого
+                    D.createElement('div', {
+                      className: 'mt-2 p-2.5 rounded-lg bg-muted/40 border border-border/50 font-mono text-xs text-foreground/90 whitespace-pre-wrap max-h-36 overflow-y-auto select-text leading-relaxed'
+                    }, p.content)
+                  ),
+
+                  // Нижние действия
+                  D.createElement('div', { className: 'flex items-center justify-between gap-2 mt-4 pt-3 border-t border-border/40' },
+                    D.createElement('button', {
+                      type: 'button',
+                      onClick: () => handleInsert(p),
+                      className: 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 text-xs font-medium cursor-pointer transition-colors'
+                    },
+                      D.createElement(Nq, { name: 'arrow_forward', size: 14 }),
+                      'Вставить в чат'
+                    ),
+                    D.createElement('button', {
+                      type: 'button',
+                      onClick: () => handleCopy(p),
+                      className: 'inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs transition-colors cursor-pointer ' +
+                        (isCopied
+                          ? 'bg-green-500/10 text-green-600 dark:text-green-400 font-medium'
+                          : 'bg-secondary/40 text-secondary-foreground hover:bg-secondary hover:text-foreground')
+                    },
+                      D.createElement(Nq, { name: isCopied ? 'check' : 'content_copy', size: 14 }),
+                      isCopied ? 'Скопировано!' : 'Скопировать'
+                    )
+                  )
+                );
+              })
+            ),
+
+        // Модальное окно создания / редактирования
+        modalState && D.createElement(PromptEditModal, {
+          D: D,
+          Nq: Nq,
+          initialData: modalState,
+          onClose: () => setModalState(null),
+          onSave: handleSaveModal
+        })
+      );
+    };
+
+    // Компонент формы модального окна
+    function PromptEditModal({ D, Nq, initialData, onClose, onSave }) {
+      const [title, setTitle] = D.useState(initialData.title || '');
+      const [tags, setTags] = D.useState((initialData.tags || []).join(', '));
+      const [description, setDescription] = D.useState(initialData.description || '');
+      const [content, setContent] = D.useState(initialData.content || '');
+
+      D.useEffect(() => {
+        function onKeyDown(e) {
+          if (e.key === 'Escape') onClose();
+        }
+        window.addEventListener('keydown', onKeyDown);
+        return () => window.removeEventListener('keydown', onKeyDown);
+      }, [onClose]);
+
+      return D.createElement('div', {
+        className: 'fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-150',
+        onClick: (e) => { if (e.target === e.currentTarget) onClose(); }
+      },
+        D.createElement('div', {
+          className: 'bg-card border border-border rounded-2xl shadow-2xl max-w-xl w-full p-6 flex flex-col gap-4 animate-in zoom-in-95 duration-150'
+        },
+          D.createElement('div', { className: 'flex items-center justify-between border-b border-border/60 pb-3' },
+            D.createElement('h2', { className: 'text-base font-semibold text-foreground m-0' },
+              initialData.id ? 'Редактировать промпт' : 'Новый промпт'
+            ),
+            D.createElement('button', {
+              type: 'button',
+              onClick: onClose,
+              className: 'p-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors cursor-pointer'
+            }, D.createElement(Nq, { name: 'close', size: 18 }))
+          ),
+
+          D.createElement('div', { className: 'flex flex-col gap-3' },
+            D.createElement('div', { className: 'flex flex-col gap-1' },
+              D.createElement('label', { className: 'text-xs font-medium text-foreground' }, 'Название *'),
+              D.createElement('input', {
+                type: 'text',
+                value: title,
+                onChange: e => setTitle(e.target.value),
+                placeholder: 'Например: Автономный рефакторинг',
+                className: 'px-3 py-2 rounded-lg bg-muted/50 border border-border text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-primary transition-colors'
+              })
+            ),
+
+            D.createElement('div', { className: 'flex flex-col gap-1' },
+              D.createElement('label', { className: 'text-xs font-medium text-foreground' }, 'Теги (через запятую)'),
+              D.createElement('input', {
+                type: 'text',
+                value: tags,
+                onChange: e => setTags(e.target.value),
+                placeholder: 'Автономность, Планирование, Код',
+                className: 'px-3 py-2 rounded-lg bg-muted/50 border border-border text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-primary transition-colors'
+              })
+            ),
+
+            D.createElement('div', { className: 'flex flex-col gap-1' },
+              D.createElement('label', { className: 'text-xs font-medium text-foreground' }, 'Краткое описание'),
+              D.createElement('input', {
+                type: 'text',
+                value: description,
+                onChange: e => setDescription(e.target.value),
+                placeholder: 'Для чего предназначен этот шаблон',
+                className: 'px-3 py-2 rounded-lg bg-muted/50 border border-border text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-primary transition-colors'
+              })
+            ),
+
+            D.createElement('div', { className: 'flex flex-col gap-1' },
+              D.createElement('label', { className: 'text-xs font-medium text-foreground' }, 'Текст промпта *'),
+              D.createElement('textarea', {
+                rows: 8,
+                value: content,
+                onChange: e => setContent(e.target.value),
+                placeholder: 'Введите текст инструкций или промпта...',
+                className: 'px-3 py-2 rounded-lg bg-muted/50 border border-border text-xs font-mono text-foreground placeholder:text-muted-foreground outline-none focus:border-primary transition-colors resize-y leading-relaxed'
+              })
+            )
+          ),
+
+          D.createElement('div', { className: 'flex items-center justify-end gap-2 pt-2 border-t border-border/40' },
+            D.createElement('button', {
+              type: 'button',
+              onClick: onClose,
+              className: 'px-4 py-2 rounded-lg text-xs font-medium text-secondary-foreground hover:bg-muted transition-colors cursor-pointer'
+            }, 'Отмена'),
+            D.createElement('button', {
+              type: 'button',
+              onClick: () => onSave({
+                id: initialData.id,
+                title: title,
+                tags: tags,
+                description: description,
+                content: content,
+                isBuiltin: initialData.isBuiltin
+              }),
+              className: 'px-4 py-2 rounded-lg text-xs font-medium bg-primary text-primary-foreground hover:bg-primary/90 transition-colors cursor-pointer shadow-sm'
+            }, 'Сохранить')
+          )
+        )
+      );
+    }
+
+    // Компонент быстрой кнопки и выпадающего меню в панели ввода чата
+    window.__ruRenderPromptQuickButton = function renderPromptQuickButton(D, Nq, lexicalRef, SI) {
+      const [isOpen, setIsOpen] = D.useState(false);
+      const [query, setQuery] = D.useState('');
+      const [prompts, setPrompts] = D.useState(() => window.__ruPrompts.getPrompts());
+      const buttonRef = D.useRef(null);
+      const popoverRef = D.useRef(null);
+
+      D.useEffect(() => {
+        return window.__ruPrompts.subscribe(() => {
+          setPrompts(window.__ruPrompts.getPrompts());
+        });
+      }, []);
+
+      D.useEffect(() => {
+        window.__ruOpenQuickPicker = () => setIsOpen(true);
+        return () => { window.__ruOpenQuickPicker = null; };
+      }, []);
+
+      D.useEffect(() => {
+        if (!isOpen) return;
+        function onPointerDown(e) {
+          if (popoverRef.current && !popoverRef.current.contains(e.target) && !buttonRef.current?.contains(e.target)) {
+            setIsOpen(false);
+          }
+        }
+        document.addEventListener('pointerdown', onPointerDown);
+        return () => document.removeEventListener('pointerdown', onPointerDown);
+      }, [isOpen]);
+
+      let navigate = null;
+      try {
+        if (typeof SI === 'function') navigate = SI();
+      } catch {}
+
+      const q = query.trim().toLowerCase();
+      const items = D.useMemo(() => {
+        if (!q) return prompts;
+        return prompts.filter(p =>
+          (p.title || '').toLowerCase().includes(q) ||
+          (p.description || '').toLowerCase().includes(q) ||
+          (p.tags || []).some(t => t.toLowerCase().includes(q))
+        );
+      }, [prompts, q]);
+
+      const handleSelectPrompt = D.useCallback((p) => {
+        if (typeof window.__ruInsertIntoActiveEditor === 'function') {
+          window.__ruInsertIntoActiveEditor(p.content);
+        }
+        setIsOpen(false);
+      }, []);
+
+      const handleGoToManager = D.useCallback(() => {
+        setIsOpen(false);
+        if (navigate) {
+          navigate({ to: '/customizations/prompts' });
+        } else {
+          try { window.location.hash = '#/customizations/prompts'; } catch {}
+        }
+      }, [navigate]);
+
+      return D.createElement('div', { className: 'relative shrink-0 flex items-center' },
+        D.createElement('button', {
+          ref: buttonRef,
+          type: 'button',
+          title: 'Мои промпты (быстрый выбор)',
+          'aria-label': 'Мои промпты',
+          onClick: () => setIsOpen(!isOpen),
+          className: 'agy-overlay-item flex items-center justify-center h-7 w-7 rounded-lg transition-colors cursor-pointer outline-none shrink-0 ' +
+            (isOpen ? 'bg-secondary text-foreground' : 'text-muted-foreground hover:text-foreground hover:bg-muted')
+        }, D.createElement(Nq, { name: 'bookmark', size: 16 })),
+
+        // Всплывающее меню
+        isOpen && D.createElement('div', {
+          ref: popoverRef,
+          className: 'absolute bottom-full mb-2 left-0 z-50 w-80 max-h-96 rounded-xl border border-border bg-card shadow-2xl flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-100'
+        },
+          // Шапка меню
+          D.createElement('div', { className: 'p-2.5 border-b border-border/60 flex items-center justify-between gap-2 bg-muted/30' },
+            D.createElement('div', { className: 'flex items-center gap-1.5' },
+              D.createElement(Nq, { name: 'bookmark', size: 15, className: 'text-primary' }),
+              D.createElement('span', { className: 'text-xs font-semibold text-foreground' }, 'Мои промпты')
+            ),
+            D.createElement('span', { className: 'text-[10px] text-muted-foreground bg-secondary px-1.5 py-0.5 rounded' }, prompts.length)
+          ),
+
+          // Поле быстрого поиска
+          D.createElement('div', { className: 'p-2 border-b border-border/40' },
+            D.createElement('div', { className: 'flex items-center gap-1.5 px-2 py-1 rounded-lg bg-muted/60 border border-border/50 text-xs' },
+              D.createElement(Nq, { name: 'search', size: 14, className: 'text-muted-foreground shrink-0' }),
+              D.createElement('input', {
+                type: 'text',
+                autoFocus: true,
+                value: query,
+                onChange: e => setQuery(e.target.value),
+                placeholder: 'Поиск промпта...',
+                className: 'w-full bg-transparent outline-none text-foreground placeholder:text-muted-foreground text-xs'
+              }),
+              query && D.createElement('button', {
+                type: 'button',
+                onClick: () => setQuery(''),
+                className: 'text-muted-foreground hover:text-foreground cursor-pointer'
+              }, D.createElement(Nq, { name: 'close', size: 13 }))
+            )
+          ),
+
+          // Список элементов
+          D.createElement('div', { className: 'flex-1 overflow-y-auto max-h-56 p-1 flex flex-col gap-0.5 [scrollbar-gutter:stable]' },
+            items.length === 0
+              ? D.createElement('div', { className: 'p-4 text-center text-xs text-muted-foreground' }, 'Промпты не найдены')
+              : items.map(p => {
+                  return D.createElement('div', {
+                    key: p.id,
+                    onClick: () => handleSelectPrompt(p),
+                    className: 'flex flex-col gap-0.5 p-2 rounded-lg hover:bg-muted cursor-pointer transition-colors text-left group'
+                  },
+                    D.createElement('div', { className: 'flex items-center justify-between gap-1.5' },
+                      D.createElement('span', { className: 'text-xs font-medium text-foreground group-hover:text-primary transition-colors truncate' }, p.title),
+                      p.tags && p.tags[0] && D.createElement('span', { className: 'text-[9px] px-1.5 py-0.2 rounded bg-secondary text-secondary-foreground shrink-0' }, p.tags[0])
+                    ),
+                    p.description && D.createElement('span', { className: 'text-[11px] text-muted-foreground line-clamp-1' }, p.description),
+                    D.createElement('span', { className: 'text-[10px] text-muted-foreground/75 font-mono line-clamp-1 mt-0.5' }, p.content)
+                  );
+                })
+          ),
+
+          // Подвал меню
+          D.createElement('div', { className: 'p-2 border-t border-border/60 bg-muted/20 flex items-center justify-between text-xs' },
+            D.createElement('button', {
+              type: 'button',
+              onClick: handleGoToManager,
+              className: 'text-xs text-primary hover:underline flex items-center gap-1 cursor-pointer font-medium'
+            },
+              D.createElement(Nq, { name: 'open_in_new', size: 13 }),
+              'Все промпты во вкладке →'
+            )
+          )
+        )
+      );
+    };
+  })();
+
   window.__ruTranslateMenu = function translateMenu(items) {
     if (!Array.isArray(items)) return items;
     for (const item of items) {
