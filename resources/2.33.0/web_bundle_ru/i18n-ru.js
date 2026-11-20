@@ -3623,19 +3623,11 @@
                   ),
 
                   // Нижние действия
-                  D.createElement('div', { className: 'flex items-center justify-between gap-2 mt-4 pt-3 border-t border-border/40' },
-                    D.createElement('button', {
-                      type: 'button',
-                      onClick: () => handleInsert(p),
-                      className: 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 text-xs font-medium cursor-pointer transition-colors'
-                    },
-                      D.createElement(Nq, { name: 'arrow_forward', size: 14 }),
-                      'Вставить в чат'
-                    ),
+                  D.createElement('div', { className: 'flex items-center justify-end gap-2 mt-4 pt-3 border-t border-border/40' },
                     D.createElement('button', {
                       type: 'button',
                       onClick: () => handleCopy(p),
-                      className: 'inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs transition-colors cursor-pointer ' +
+                      className: 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs transition-colors cursor-pointer ' +
                         (isCopied
                           ? 'bg-green-500/10 text-green-600 dark:text-green-400 font-medium'
                           : 'bg-secondary/40 text-secondary-foreground hover:bg-secondary hover:text-foreground')
