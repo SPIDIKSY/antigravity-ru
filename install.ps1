@@ -20,7 +20,7 @@ param(
 )
 
 # Поддерживаемые версии Antigravity, для которых подготовлены файлы в resources\<версия>\.
-$SupportedVersions = @("2.25.0", "2.26.0", "2.28.0", "2.29.0", "2.29.1", "2.31.0", "2.31.2", "2.32.1", "2.33.0")
+$SupportedVersions = @("2.25.0", "2.26.0", "2.28.0", "2.29.0", "2.29.1", "2.31.0", "2.31.2", "2.32.1", "2.33.0", "2.34.0")
 
 $Host.UI.RawUI.WindowTitle = "Antigravity 2.0 - Русификатор"
 
@@ -193,7 +193,8 @@ if ([string]::IsNullOrWhiteSpace($ScriptDir) -or (-not (Test-Path "$ScriptDir\re
 $TempDir = $null
 if ($IsRemote) {
     Write-Host "[*] Загрузка актуальных файлов локализации с GitHub..." -ForegroundColor Cyan
-    $ZipUrl = "https://github.com/SPIDIKSY/antigravity-ru/archive/refs/heads/main.zip"
+    $ReleaseUrl = "https://github.com/SPIDIKSY/antigravity-ru/releases/download/v$ChosenVersion/antigravity-ru-$ChosenVersion.zip"
+    $FallbackZipUrl = "https://github.com/SPIDIKSY/antigravity-ru/archive/refs/heads/main.zip"
     $TempDir = Join-Path $env:TEMP ("antigravity_ru_" + [guid]::NewGuid().ToString().Substring(0, 8))
     $TempZip = "$TempDir.zip"
 
@@ -202,15 +203,32 @@ if ($IsRemote) {
         [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
         $oldProgress = $ProgressPreference
         $ProgressPreference = 'SilentlyContinue'
-        Invoke-WebRequest -Uri $ZipUrl -OutFile $TempZip -UseBasicParsing
+
+        $downloaded = $false
+        # Сначала пробуем скачать легковесный архив нужной версии из GitHub Releases (~10 МБ вместо 230+ МБ)
+        try {
+            Write-Host "[*] Загрузка пакета v$ChosenVersion из GitHub Releases (~10 МБ)..." -ForegroundColor Gray
+            Invoke-WebRequest -Uri $ReleaseUrl -OutFile $TempZip -UseBasicParsing -ErrorAction Stop
+            $downloaded = $true
+        } catch {
+            Write-Host "[!] Пакет релиза v$ChosenVersion не найден, загрузка полного репозитория..." -ForegroundColor Yellow
+            Invoke-WebRequest -Uri $FallbackZipUrl -OutFile $TempZip -UseBasicParsing -ErrorAction Stop
+            $downloaded = $true
+        }
+
         $ProgressPreference = $oldProgress
         Expand-Archive -Path $TempZip -DestinationPath $TempDir -Force
         
-        $extractedRoot = Get-ChildItem -Path $TempDir -Directory | Select-Object -First 1
-        if ($extractedRoot -and (Test-Path (Join-Path $extractedRoot.FullName "resources\$ChosenVersion\app.asar"))) {
-            $ScriptDir = $extractedRoot.FullName
+        # Поиск распакованных ресурсов (в корне архива релиза или в подпапке репозитория)
+        if (Test-Path "$TempDir\resources\$ChosenVersion\app.asar") {
+            $ScriptDir = $TempDir
         } else {
-            $ScriptDir = Join-Path $TempDir "antigravity-ru-main"
+            $extractedRoot = Get-ChildItem -Path $TempDir -Directory | Select-Object -First 1
+            if ($extractedRoot -and (Test-Path (Join-Path $extractedRoot.FullName "resources\$ChosenVersion\app.asar"))) {
+                $ScriptDir = $extractedRoot.FullName
+            } else {
+                $ScriptDir = Join-Path $TempDir "antigravity-ru-main"
+            }
         }
 
         if (-not (Test-Path "$ScriptDir\resources\$ChosenVersion\app.asar")) {
