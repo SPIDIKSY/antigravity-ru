@@ -3836,10 +3836,11 @@
     }
 
     // Компонент быстрой кнопки и выпадающего меню в панели ввода чата
-    window.__ruRenderPromptQuickButton = function renderPromptQuickButton(D, Nq, lexicalRef, SI) {
+    window.__ruRenderPromptQuickButton = function renderPromptQuickButton(D, Nq, lexicalRef, SI, TooltipComp) {
       const [isOpen, setIsOpen] = D.useState(false);
       const [query, setQuery] = D.useState('');
       const [prompts, setPrompts] = D.useState(() => window.__ruPrompts.getPrompts());
+      const tooltipId = D.useId();
       const buttonRef = D.useRef(null);
       const popoverRef = D.useRef(null);
 
@@ -3900,12 +3901,13 @@
         D.createElement('button', {
           ref: buttonRef,
           type: 'button',
-          title: 'Мои промпты (быстрый выбор)',
+          'data-tooltip-id': tooltipId,
           'aria-label': 'Мои промпты',
           onClick: () => setIsOpen(!isOpen),
           className: 'agy-overlay-item flex items-center justify-center h-7 w-7 rounded-lg transition-colors cursor-pointer outline-none shrink-0 ' +
             (isOpen ? 'bg-secondary text-foreground' : 'text-muted-foreground hover:text-foreground hover:bg-muted')
         }, D.createElement(Nq, { name: 'bookmark', size: 16 })),
+        TooltipComp && !isOpen ? D.createElement(TooltipComp, { id: tooltipId, place: 'top' }, 'Мои промпты') : null,
 
         // Всплывающее меню
         isOpen && D.createElement('div', {
