@@ -79,12 +79,27 @@ function patchExtractedAsar(extractedDir) {
         'Paste and Match Style': 'Вставить с сохранением стиля',
         'Select All': 'Выделить всё',
         'Delete': 'Удалить',
+        'Find': 'Найти',
         'Speech': 'Речь',
         'Start Speaking': 'Начать воспроизведение',
         'Stop Speaking': 'Остановить воспроизведение',
+        'Transformations': 'Преобразования',
+        'Make Upper Case': 'ПРОПИСНЫЕ',
+        'Make Lower Case': 'строчные',
+        'Capitalize': 'С Заглавной',
+        'Substitutions': 'Замены',
+        'Show Substitutions': 'Показать замены',
+        'Smart Copy/Paste': 'Смарт-копирование/вставка',
+        'Smart Quotes': 'Смарт-кавычки',
+        'Smart Dashes': 'Смарт-тире',
+        'Text Replacement': 'Замена текста',
+        'Start Dictation…': 'Начать диктовку…',
+        'Emoji & Symbols': 'Эмодзи и символы',
         'Reload': 'Перезагрузить',
         'Force Reload': 'Принудительная перезагрузка',
+        'Toggle Developer Tools': 'Инструменты разработчика',
         'Toggle Full Screen': 'Полноэкранный режим',
+        'Actual Size': 'Реальный размер',
         'Reset Zoom': 'Сбросить масштаб',
         'Zoom In': 'Увеличить',
         'Zoom Out': 'Уменьшить',
@@ -94,12 +109,28 @@ function patchExtractedAsar(extractedDir) {
         'Zoom': 'Масштабировать',
         'Close': 'Закрыть',
         'Close Window': 'Закрыть окно',
+        'Bring All to Front': 'Все окна — на передний план',
+        'Services': 'Службы',
+        'Hide Others': 'Скрыть остальные',
+        'Show All': 'Показать все',
         'Quit': 'Выход'
+    };
+    const ROLE_TRANSLATIONS = {
+        'about': \`О программе \${electron_1.app.getName()}\`,
+        'hide': \`Скрыть \${electron_1.app.getName()}\`,
+        'hideothers': 'Скрыть остальные',
+        'unhide': 'Показать все',
+        'quit': \`Завершить \${electron_1.app.getName()}\`,
+        'services': 'Службы',
+        'front': 'Все окна — на передний план'
     };
     function translateMenuItems(items) {
         if (!items) return;
         items.forEach(item => {
-            if (item.label && MENU_TRANSLATIONS[item.label]) {
+            const role = item.role ? item.role.toLowerCase() : '';
+            if (role && ROLE_TRANSLATIONS[role]) {
+                item.label = ROLE_TRANSLATIONS[role];
+            } else if (item.label && MENU_TRANSLATIONS[item.label]) {
                 item.label = MENU_TRANSLATIONS[item.label];
             }
             if (item.submenu && item.submenu.items) {
@@ -131,10 +162,11 @@ function patchExtractedAsar(extractedDir) {
     }
   }
 
-  // 4. main.js: диалоги выхода
+  // 4. main.js: диалоги выхода и Dock-меню macOS
   const mainPath = path.join(extractedDir, 'dist/main.js');
   if (fs.existsSync(mainPath)) {
     let main = fs.readFileSync(mainPath, 'utf8');
+    main = main.replace("label: 'New Window'", "label: 'Новое окно'");
     main = main.replace("label: 'No agents running'", "label: 'Нет запущенных агентов'");
     main = main.replace("label: `Open ${electron_1.app.getName()}`", "label: `Открыть ${electron_1.app.getName()}`");
     main = main.replace("label: 'Quit'", "label: 'Выход'");
@@ -147,16 +179,22 @@ function patchExtractedAsar(extractedDir) {
     console.log('[+] dist/main.js успешно пропатчен');
   }
 
-  // 5. updater.js: отключение фонового автообновления
+  // 5. updater.js: отключение фонового автообновления и перевод меню/диалогов
   const updaterPath = path.join(extractedDir, 'dist/updater.js');
   if (fs.existsSync(updaterPath)) {
     let upd = fs.readFileSync(updaterPath, 'utf8');
     const updFn = 'function checkForUpdates(isManual = false) {';
     if (upd.includes(updFn) && !upd.includes('if (!isManual) return;')) {
       upd = upd.replace(updFn, 'function checkForUpdates(isManual = false) {\n    if (!isManual) return;');
-      fs.writeFileSync(updaterPath, upd, 'utf8');
-      console.log('[+] dist/updater.js успешно пропатчен');
     }
+    upd = upd.replace('MenuUpdateStep["CheckForUpdates"] = "Check for Updates";', 'MenuUpdateStep["CheckForUpdates"] = "Проверить обновления";');
+    upd = upd.replace('MenuUpdateStep["CheckingForUpdates"] = "Checking for Updates...";', 'MenuUpdateStep["CheckingForUpdates"] = "Проверка обновлений...";');
+    upd = upd.replace('MenuUpdateStep["DownloadingUpdate"] = "Downloading Update...";', 'MenuUpdateStep["DownloadingUpdate"] = "Загрузка обновления...";');
+    upd = upd.replace('MenuUpdateStep["RestartToUpdate"] = "Restart to Update";', 'MenuUpdateStep["RestartToUpdate"] = "Перезапустить для обновления";');
+    upd = upd.replace("title: 'Check for Updates',", "title: 'Проверка обновлений',");
+    upd = upd.replace("message: 'No updates available',", "message: 'Обновлений нет',");
+    fs.writeFileSync(updaterPath, upd, 'utf8');
+    console.log('[+] dist/updater.js успешно пропатчен');
   }
 
   // 6. loadingOverlay.js: экран предзагрузки

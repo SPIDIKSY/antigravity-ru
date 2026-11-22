@@ -2,11 +2,11 @@
 
 # 🇷🇺 Русификатор Antigravity 2
 
-**Полный перевод десктопного приложения Antigravity 2 (Windows) на русский язык**  
+**Полный перевод десктопного приложения Antigravity 2 (Windows и macOS Intel) на русский язык**  
 Интерфейс, все разделы настроек, профили безопасности, системные меню и панель изменений — в одну команду.
 
 [![Antigravity Version](https://img.shields.io/badge/Antigravity-2.34.0-6366f1?style=for-the-badge&logo=google&logoColor=white)](https://github.com/SPIDIKSY/antigravity-ru)
-[![Platform](https://img.shields.io/badge/Платформа-Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/SPIDIKSY/antigravity-ru)
+[![Platform](https://img.shields.io/badge/Платформа-Windows%20%7C%20macOS%20(Intel)-0078D6?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/SPIDIKSY/antigravity-ru)
 [![Translated](https://img.shields.io/badge/Перевод-1600%2B%20строк-10b981?style=for-the-badge)](https://github.com/SPIDIKSY/antigravity-ru)
 [![License](https://img.shields.io/badge/Лицензия-MIT-f59e0b?style=for-the-badge)](https://github.com/SPIDIKSY/antigravity-ru/blob/main/LICENSE)
 
@@ -27,7 +27,8 @@
 > **Поддерживаемые версии Antigravity:** `2.34.0`, `2.33.0`, `2.32.1`, `2.31.2`, `2.31.0`, `2.29.1`, `2.29.0`, `2.28.0`, `2.26.0`, `2.25.0`.
 > Установщик автоматически определяет версию установленного Antigravity и выбирает подходящий набор файлов. В старых наборах доступен перевод возможностей того времени (например, цветные упоминания — начиная с 2.28.0).
 > Если у вас другая версия — рекомендуется обновить Antigravity. Поставить набор 2.34.0 принудительно (на свой риск):
-> `& ([scriptblock]::Create((irm https://raw.githubusercontent.com/SPIDIKSY/antigravity-ru/main/install.ps1))) -Force`
+> - Windows (PowerShell): `& ([scriptblock]::Create((irm https://raw.githubusercontent.com/SPIDIKSY/antigravity-ru/main/install.ps1))) -Force`
+> - macOS (Terminal): `curl -fsSL https://raw.githubusercontent.com/SPIDIKSY/antigravity-ru/main/install.sh | bash -s -- --force`
 
 > [!NOTE]
 > **Кастомные нововведения (сверх стандартного перевода):**
@@ -39,16 +40,28 @@
 
 ## Быстрая установка (в 1 команду)
 
+### Windows (PowerShell)
+
 Откройте **PowerShell** и выполните одну строку:
 
 ```powershell
 irm https://raw.githubusercontent.com/SPIDIKSY/antigravity-ru/main/install.ps1 | iex
 ```
 
+### macOS (Intel / Терминал)
+
+> Поддерживается **macOS на базе Intel (`x86_64`)**.
+
+Откройте **Терминал** и выполните одну строку:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/SPIDIKSY/antigravity-ru/main/install.sh | bash
+```
+
 **Что сделает установщик за пару секунд:**
-1. Найдёт установленный `Antigravity` на вашем ПК.
-2. Создаст резервную копию оригинального файла `app.asar.original_backup`.
-3. Скачает свежий языковой пакет с GitHub и применит русификацию.
+1. Найдёт установленный `Antigravity` (`Antigravity.exe` на Windows или `/Applications/Antigravity.app` на macOS).
+2. Создаст резервную копию оригинальных файлов (`app.asar.original_backup` на Windows / `.antigravity_ru_backup` на macOS).
+3. Скачает свежий языковой пакет с GitHub, применит русификацию (на macOS также обновит `ElectronAsarIntegrity` и переподпишет бандл `codesign`).
 
 После завершения просто **перезапустите Antigravity**.
 
@@ -92,7 +105,7 @@ irm https://raw.githubusercontent.com/SPIDIKSY/antigravity-ru/main/install.ps1 |
 | **Расход токенов** | Статистика контекста на правила (`Rules`), навыки (`Skills`) и MCP-серверы с выпадающими списками. |
 | **Контроль версий (Git)** | Незафиксированные файлы, изменения агента, переключение веток и статусы репозитория. |
 | **Поиск и навигация** | Переведены все подсказки, фильтры и плейсхолдеры в строках поиска. |
-| **Системные меню Windows** | Верхнее меню (`Файл`, `Правка`, `Вид`, `Окно`, `Справка`), иконка в трее, экран запуска и диалоги выхода. |
+| **Системные меню Windows и macOS** | Верхнее меню (`Файл`, `Правка`, `Вид`, `Окно`, `Справка`, меню приложения macOS), меню в трее / Dock, экран запуска и диалоги выхода. |
 | **Защита от слёта** | Фоновое автообновление отключено, чтобы русификатор не сбрасывался сам по себе во время работы. |
 
 ---
@@ -101,31 +114,41 @@ irm https://raw.githubusercontent.com/SPIDIKSY/antigravity-ru/main/install.ps1 |
 
 ### Как вернуть английский язык (Откат к оригиналу)
 
-Откройте **PowerShell** и выполните одну строку (скачивать репозиторий не нужно):
-
+**Windows (PowerShell):**
 ```powershell
 & ([scriptblock]::Create((irm https://raw.githubusercontent.com/SPIDIKSY/antigravity-ru/main/install.ps1))) -Uninstall
 ```
-Оригинальный `app.asar` мгновенно восстановится из резервной копии.
+
+**macOS (Терминал):**
+```bash
+curl -fsSL https://raw.githubusercontent.com/SPIDIKSY/antigravity-ru/main/install.sh | bash -s -- --uninstall
+```
+Оригинальный `app.asar` (и оригинальная цифровая подпись Google на macOS) мгновенно восстановятся из резервной копии.
 
 ### Что делать, когда выйдет новая версия Antigravity
 
 1. Обновите Antigravity вручную через меню приложения: фоновое автообновление при установленном русификаторе отключено.
-2. Снова выполните команду в PowerShell:
-   ```powershell
-   irm https://raw.githubusercontent.com/SPIDIKSY/antigravity-ru/main/install.ps1 | iex
-   ```
+2. Снова выполните команду установки для вашей ОС:
+   - **Windows (PowerShell):**
+     ```powershell
+     irm https://raw.githubusercontent.com/SPIDIKSY/antigravity-ru/main/install.ps1 | iex
+     ```
+   - **macOS (Терминал):**
+     ```bash
+     curl -fsSL https://raw.githubusercontent.com/SPIDIKSY/antigravity-ru/main/install.sh | bash
+     ```
 
 <details>
 <summary><b>Установка вручную через Git (для разработчиков)</b></summary>
 <br>
 
-Если вы хотите склонировать репозиторий локально и запускать установщик вручную. Поддерживаются как стандартный **Windows PowerShell 5.1** (`powershell`), так и **PowerShell 7** (`pwsh`):
+Если вы хотите склонировать репозиторий локально и запускать установщик вручную. Поддерживаются **Windows PowerShell 5.1** (`powershell`), **PowerShell 7** (`pwsh`) и **macOS** (`bash` / `zsh`):
 
 ```bash
 git clone https://github.com/SPIDIKSY/antigravity-ru.git
 cd antigravity-ru
 
+# --- Windows (PowerShell) ---
 # Обычная установка
 powershell -ExecutionPolicy Bypass -Command "& ([scriptblock]::Create((Get-Content install.ps1 -Raw -Encoding UTF8))) -Install"
 
@@ -134,6 +157,19 @@ powershell -ExecutionPolicy Bypass -Command "& ([scriptblock]::Create((Get-Conte
 
 # Удаление русификации
 powershell -ExecutionPolicy Bypass -Command "& ([scriptblock]::Create((Get-Content install.ps1 -Raw -Encoding UTF8))) -Uninstall"
+
+# --- macOS (Терминал) ---
+# Интерактивное меню (установка / удаление)
+./install.sh
+
+# Обычная установка
+./install.sh --install
+
+# Установка без принудительного закрытия запущенных окон Antigravity
+./install.sh --install --no-kill
+
+# Удаление русификации
+./install.sh --uninstall
 ```
 </details>
 
@@ -163,7 +199,10 @@ powershell -ExecutionPolicy Bypass -Command "& ([scriptblock]::Create((Get-Conte
 
 <details open>
 <summary><b>Как поставить русский язык в Antigravity?</b></summary>
-Откройте PowerShell и выполните: <code>irm https://raw.githubusercontent.com/SPIDIKSY/antigravity-ru/main/install.ps1 | iex</code>.
+<ul>
+  <li><b>Windows:</b> откройте PowerShell и выполните <code>irm https://raw.githubusercontent.com/SPIDIKSY/antigravity-ru/main/install.ps1 | iex</code></li>
+  <li><b>macOS:</b> откройте Терминал и выполните <code>curl -fsSL https://raw.githubusercontent.com/SPIDIKSY/antigravity-ru/main/install.sh | bash</code></li>
+</ul>
 </details>
 
 <br>

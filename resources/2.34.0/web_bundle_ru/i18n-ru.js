@@ -1858,7 +1858,31 @@
   "Discard comment draft": "Удалить черновик комментария",
   "Resume comment draft": "Восстановить черновик комментария",
   "Resume 1 comment draft": "Восстановить 1 черновик комментария",
+  "Reveal in Finder": "Показать в Finder",
+  "Show in File Manager": "Показать в файловом менеджере",
   "Enable macOS Permissions": "Включить разрешения macOS",
+  "macOS Permissions Ready": "Разрешения macOS настроены",
+  "✓ macOS permissions granted": "✓ Разрешения macOS предоставлены",
+  "1. Accessibility": "1. Универсальный доступ",
+  "2. Screen Recording": "2. Запись экрана",
+  "Allowed ✓": "Разрешено ✓",
+  "Missing": "Нет доступа",
+  "Waiting…": "Ожидание…",
+  "Needs relaunch": "Нужен перезапуск",
+  "Open System Settings ↗": "Открыть Настройки ↗",
+  "Open ↗": "Открыть ↗",
+  "Reopen ↗": "Открыть снова ↗",
+  "Settings ↗": "Настройки ↗",
+  "Relaunch ↻": "Перезапустить ↻",
+  "Continue Task →": "Продолжить задачу →",
+  "In System Settings, turn on ": "В «Системных настройках» включите ",
+  ". If it isn't in the list, drag it in from the small window next to System Settings.": ". Если приложения нет в списке, перетащите его из небольшого окна рядом с «Системными настройками».",
+  "In System Settings, click ": "В «Системных настройках» нажмите ",
+  ", choose": ", выберите",
+  ", then turn it on.": " и включите переключатель.",
+  "Already on? Select ": "Уже включено? Выберите ",
+  "drag it back in from the small window.": "перетащите его обратно из небольшого окна.",
+  " and add it again.": " и добавьте заново.",
   "Relaunch the app once to activate Screen Recording.": "Перезапустите приложение, чтобы активировать запись экрана.",
   "Relaunches the app": "Перезапускает приложение",
   "Enable this plugin to manage its accounts.": "Включите этот плагин, чтобы управлять его аккаунтами.",
@@ -2639,6 +2663,26 @@
       replace: function (m) {
         const t = formatTime(m[1]);
         return "Вы достигли 5-часового лимита, он обновится через " + t + (t.endsWith(".") ? "" : ".") + " На поддерживаемом платном тарифе вы можете пока использовать кредиты AI.";
+      }
+    },
+    // Разрешения и уведомления macOS
+    {
+      regex: /^Relaunch (.+) to finish Screen Recording\.$/,
+      replace: function (m) {
+        return "Перезапустите " + m[1] + ", чтобы завершить настройку записи экрана.";
+      }
+    },
+    {
+      regex: /^(.+) needs (Accessibility|Screen Recording|both) to use your computer\.$/,
+      replace: function (m) {
+        const target = m[2] === "Accessibility" ? "доступ к «Универсальному доступу»" : (m[2] === "Screen Recording" ? "разрешение на «Запись экрана»" : "оба разрешения (Универсальный доступ и Запись экрана)");
+        return m[1] + " требуется " + target + " для управления компьютером.";
+      }
+    },
+    {
+      regex: /^Can't access "(.+)"\. macOS privacy settings are blocking Antigravity from this location\. Allow Antigravity in System Settings > Privacy & Security > Files and Folders \(or Full Disk Access\)\.$/,
+      replace: function (m) {
+        return "Нет доступа к «" + m[1] + "». Настройки конфиденциальности macOS блокируют доступ Antigravity к этому расположению. Разрешите доступ в «Системные настройки» > «Конфиденциальность и безопасность» > «Файлы и папки» (или «Полный доступ к диску»).";
       }
     }
   ];
