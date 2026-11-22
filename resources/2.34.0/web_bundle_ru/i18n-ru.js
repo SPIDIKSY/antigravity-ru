@@ -2684,6 +2684,26 @@
       replace: function (m) {
         return "Нет доступа к «" + m[1] + "». Настройки конфиденциальности macOS блокируют доступ Antigravity к этому расположению. Разрешите доступ в «Системные настройки» > «Конфиденциальность и безопасность» > «Файлы и папки» (или «Полный доступ к диску»).";
       }
+    },
+    // Персональные приветствия на стартовом экране
+    {
+      regex: /^Hey (.+), what should we build today\?$/,
+      replace: function (m) {
+        if (DICT[m[0]]) return DICT[m[0]];
+        return "Привет, " + m[1] + "! Что создадим сегодня?";
+      }
+    },
+    {
+      regex: /^Welcome back, (.+)\. Where should we pick up\?$/,
+      replace: function (m) {
+        return "С возвращением, " + m[1] + ". С чего продолжим?";
+      }
+    },
+    {
+      regex: /^Good to see you, (.+)\. What['’]s next\?$/,
+      replace: function (m) {
+        return "Рад вас видеть, " + m[1] + ". Что делаем дальше?";
+      }
     }
   ];
 
