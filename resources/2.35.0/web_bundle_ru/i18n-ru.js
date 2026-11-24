@@ -4006,8 +4006,11 @@
     };
 
     // Компонент страницы «Мои промпты» в разделе «Дополнения»
+    let __PromptsPageComp = null;
     window.__ruRenderPromptsPage = function renderPromptsPage(D, Nq, searchQuery, SI) {
-      const [prompts, setPrompts] = D.useState(() => window.__ruPrompts.getPrompts());
+      if (!__PromptsPageComp) {
+        __PromptsPageComp = function PromptsPage({ D, Nq, searchQuery, SI }) {
+          const [prompts, setPrompts] = D.useState(() => window.__ruPrompts.getPrompts());
       D.useEffect(() => {
         return window.__ruPrompts.subscribe(() => {
           setPrompts(window.__ruPrompts.getPrompts());
@@ -4238,6 +4241,9 @@
           onSave: handleSaveModal
         })
       );
+        };
+      }
+      return D.createElement(__PromptsPageComp, { D, Nq, searchQuery, SI });
     };
 
     // Компонент формы модального окна
@@ -4343,8 +4349,11 @@
     }
 
     // Компонент быстрой кнопки и выпадающего меню в панели ввода чата
+    let __PromptQuickButtonComp = null;
     window.__ruRenderPromptQuickButton = function renderPromptQuickButton(D, Nq, lexicalRef, SI, TooltipComp) {
-      const [isOpen, setIsOpen] = D.useState(false);
+      if (!__PromptQuickButtonComp) {
+        __PromptQuickButtonComp = function PromptQuickButton({ D, Nq, lexicalRef, SI, TooltipComp }) {
+          const [isOpen, setIsOpen] = D.useState(false);
       const [query, setQuery] = D.useState('');
       const [prompts, setPrompts] = D.useState(() => window.__ruPrompts.getPrompts());
       const tooltipId = D.useId();
@@ -4483,6 +4492,9 @@
           )
         )
       );
+        };
+      }
+      return D.createElement(__PromptQuickButtonComp, { D, Nq, lexicalRef, SI, TooltipComp });
     };
   })();
 
