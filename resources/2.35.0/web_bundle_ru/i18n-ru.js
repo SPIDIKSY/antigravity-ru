@@ -3475,7 +3475,11 @@
       window.nativeStorage.getItems().then((items) => {
         if (items && Array.isArray(items[STORAGE_KEY])) {
           const fromDisk = sanitizeList(items[STORAGE_KEY]);
-          if (fromDisk.length > 0 || (cachedList && cachedList.length === 0)) {
+          const current = readList();
+          if (
+            (fromDisk.length > 0 || current.length === 0) &&
+            JSON.stringify(fromDisk) !== JSON.stringify(current)
+          ) {
             cachedList = fromDisk;
             try {
               localStorage.setItem(STORAGE_KEY, JSON.stringify(fromDisk));
@@ -3494,11 +3498,14 @@
           if (changes && STORAGE_KEY in changes) {
             const val = changes[STORAGE_KEY];
             const parsed = Array.isArray(val) ? sanitizeList(val) : [];
-            cachedList = parsed;
-            try {
-              localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
-            } catch {}
-            notifyListeners();
+            const current = readList();
+            if (JSON.stringify(parsed) !== JSON.stringify(current)) {
+              cachedList = parsed;
+              try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
+              } catch {}
+              notifyListeners();
+            }
           }
         });
       } catch {}
@@ -3617,6 +3624,81 @@
       }
     };
 
+    function isNonProjectGroupId(id) {
+      if (!id || typeof id !== 'string') return true;
+      return (
+        id === 'standalone' ||
+        id === 'all' ||
+        id === 'outside-of-project' ||
+        id === 'main-section-header' ||
+        id === 'pinned' ||
+        id === 'pinned-projects' ||
+        id === 'section-coordinator' ||
+        id.startsWith('inbox-') ||
+        id.startsWith('status-') ||
+        id.startsWith('location-') ||
+        id.startsWith('repo:') ||
+        id.startsWith('convgroup:') ||
+        id.startsWith('section-')
+      );
+    }
+
+    let pendingAliasTimer = null;
+    const pendingAliases = new Map();
+
+    // Сохраняет новые псевдонимы ID/URI проектов асинхронно и без notifyListeners(),
+    // чтобы чистый вызов orderGroups внутри React useMemo никогда не запускал цикл перерендеров (#301).
+    function schedulePassiveAliasSync() {
+      if (pendingAliasTimer !== null) return;
+      pendingAliasTimer = setTimeout(() => {
+        pendingAliasTimer = null;
+        if (pendingAliases.size === 0) return;
+        const patches = Array.from(pendingAliases.entries());
+        pendingAliases.clear();
+
+        const base = readList();
+        const nextList = base.map((e) => ({
+          ...e,
+          ids: Array.isArray(e.ids) ? e.ids.slice() : (e.id ? [e.id] : []),
+          uris: Array.isArray(e.uris) ? e.uris.slice() : []
+        }));
+        let changed = false;
+
+        for (const [entryId, patch] of patches) {
+          const target = nextList.find((e) => e.id === entryId);
+          if (!target) continue;
+          for (const aid of patch.ids) {
+            if (aid && !target.ids.includes(aid)) {
+              target.ids.push(aid);
+              changed = true;
+            }
+          }
+          for (const uri of patch.uris) {
+            if (uri && !target.uris.includes(uri)) {
+              target.uris.push(uri);
+              changed = true;
+            }
+          }
+          if (patch.name && !target.name) {
+            target.name = patch.name;
+            changed = true;
+          }
+        }
+
+        if (changed) {
+          cachedList = nextList;
+          try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(nextList));
+          } catch {}
+          if (typeof window !== 'undefined' && window.nativeStorage && typeof window.nativeStorage.updateItems === 'function') {
+            try {
+              window.nativeStorage.updateItems({ [STORAGE_KEY]: nextList }).catch(() => {});
+            } catch {}
+          }
+        }
+      }, 0);
+    }
+
     window.__ruPinnedProjects = {
       isPinned(id, folderUris, name) {
         const cached = id ? projectRegistry.get(id) : null;
@@ -3688,55 +3770,50 @@
           : window.__ruProjectUriCache;
         const pinned = [];
         const unpinned = [];
-        let listChanged = false;
+        let needsSync = false;
 
         for (const g of groups) {
-          if (!g || !g.id || g.id === 'standalone' || g.id === 'all' || g.id === 'outside-of-project') {
+          if (!g || isNonProjectGroupId(g.id)) {
             unpinned.push(g);
             continue;
           }
-          const info = (map && map.get ? map.get(g.id) : null) || projectRegistry.get(g.id);
-          const folderUris = info && info.uris ? info.uris : [];
+          const rawId = g.id.endsWith(':merged') ? g.id.slice(0, -7) : g.id;
+          if (isNonProjectGroupId(rawId)) {
+            unpinned.push(g);
+            continue;
+          }
+          const info = (map && map.get ? (map.get(rawId) || map.get(g.id)) : null) ||
+            projectRegistry.get(rawId) || projectRegistry.get(g.id);
+          const folderUris = info && Array.isArray(info.uris) ? info.uris : [];
           const name = (info && info.name) || (g.label && typeof g.label === 'string' ? g.label : '');
-          const idx = findIndex(list, g.id, folderUris, name);
+          const idx = findIndex(list, rawId, folderUris, name);
 
           if (idx !== -1) {
             pinned.push({ group: g, order: idx });
             const entry = list[idx];
-            let entryChanged = false;
-            if (!Array.isArray(entry.ids)) {
-              entry.ids = entry.id ? [entry.id] : [];
-              entryChanged = true;
-            }
-            if (g.id && !entry.ids.includes(g.id)) {
-              entry.ids.push(g.id);
-              entryChanged = true;
-            }
-            if (g.id && entry.id !== g.id) {
-              entry.id = g.id;
-              entryChanged = true;
-            }
-            if (folderUris.length > 0) {
-              if (!Array.isArray(entry.uris)) entry.uris = [];
-              for (const u of folderUris) {
-                if (!entry.uris.includes(u)) {
-                  entry.uris.push(u);
-                  entryChanged = true;
-                }
+            const entryIds = Array.isArray(entry.ids) ? entry.ids : (entry.id ? [entry.id] : []);
+            const entryUris = Array.isArray(entry.uris) ? entry.uris : [];
+            const missingId = rawId && rawId !== entry.id && !entryIds.includes(rawId);
+            const missingUris = folderUris.filter((u) => u && !entryUris.includes(u));
+            const missingName = name && !entry.name;
+            if (missingId || missingUris.length > 0 || missingName) {
+              let patch = pendingAliases.get(entry.id);
+              if (!patch) {
+                patch = { ids: new Set(), uris: new Set(), name: '' };
+                pendingAliases.set(entry.id, patch);
               }
+              if (missingId) patch.ids.add(rawId);
+              for (const u of missingUris) patch.uris.add(u);
+              if (missingName && !patch.name) patch.name = name;
+              needsSync = true;
             }
-            if (name && !entry.name) {
-              entry.name = name;
-              entryChanged = true;
-            }
-            if (entryChanged) listChanged = true;
           } else {
             unpinned.push(g);
           }
         }
 
-        if (listChanged) {
-          writeList(list);
+        if (needsSync) {
+          schedulePassiveAliasSync();
         }
         pinned.sort((a, b) => a.order - b.order);
         return { pinned: pinned.map((x) => x.group), unpinned: unpinned };
@@ -3894,12 +3971,15 @@
         if (!items) return;
         if (Array.isArray(items[STORAGE_KEY])) {
           const fromDisk = sanitizePrompts(items[STORAGE_KEY]);
+          const current = readPrompts();
           if (fromDisk.length > 0) {
-            cachedPrompts = fromDisk;
-            try {
-              localStorage.setItem(STORAGE_KEY, JSON.stringify(fromDisk));
-            } catch {}
-            notifyListeners();
+            if (JSON.stringify(fromDisk) !== JSON.stringify(current)) {
+              cachedPrompts = fromDisk;
+              try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(fromDisk));
+              } catch {}
+              notifyListeners();
+            }
             return;
           }
         }
@@ -3928,11 +4008,14 @@
           if (changes && STORAGE_KEY in changes) {
             const val = changes[STORAGE_KEY];
             const parsed = Array.isArray(val) ? sanitizePrompts(val) : DEFAULT_PROMPTS.slice();
-            cachedPrompts = parsed;
-            try {
-              localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
-            } catch {}
-            notifyListeners();
+            const current = readPrompts();
+            if (JSON.stringify(parsed) !== JSON.stringify(current)) {
+              cachedPrompts = parsed;
+              try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
+              } catch {}
+              notifyListeners();
+            }
           }
         });
       } catch {}
