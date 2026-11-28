@@ -2,10 +2,10 @@
 
 # 🇷🇺 Русификатор Antigravity 2
 
-**Полный перевод Antigravity 2 для Windows и macOS (Intel) в одну команду.**
+**Полный перевод Antigravity 2 для Windows и macOS (Intel и Apple Silicon) в одну команду.**
 
 [![Antigravity](https://img.shields.io/badge/Antigravity-2.36.0-6366f1?style=for-the-badge&logo=google&logoColor=white)](https://github.com/SPIDIKSY/antigravity-ru)
-[![Platform](https://img.shields.io/badge/Windows%20%7C%20macOS%20Intel-0078D6?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/SPIDIKSY/antigravity-ru)
+[![Platform](https://img.shields.io/badge/Windows%20%7C%20macOS%20Intel%20%2B%20Apple%20Silicon-0078D6?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/SPIDIKSY/antigravity-ru)
 [![License](https://img.shields.io/badge/MIT-License-f59e0b?style=for-the-badge)](https://github.com/SPIDIKSY/antigravity-ru/blob/main/LICENSE)
 
 [![Telegram](https://img.shields.io/badge/Telegram--чат-Вопросы%20и%20баги-26A5E4?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/spididyanty)
@@ -27,7 +27,7 @@
   ```powershell
   & ([scriptblock]::Create((irm https://raw.githubusercontent.com/SPIDIKSY/antigravity-ru/main/install.ps1))) -Force
   ```
-- **macOS Intel (Терминал):**
+- **macOS (Intel и Apple Silicon, Терминал):**
   ```bash
   curl -fsSL https://raw.githubusercontent.com/SPIDIKSY/antigravity-ru/main/install.sh | bash -s -- --force
   ```
@@ -62,13 +62,17 @@
 irm https://raw.githubusercontent.com/SPIDIKSY/antigravity-ru/main/install.ps1 | iex
 ```
 
-### macOS Intel (`x86_64`, Терминал)
+### macOS (Intel `x86_64` и Apple Silicon `arm64`, Терминал)
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/SPIDIKSY/antigravity-ru/main/install.sh | bash
 ```
 
 Установщик автоматически создаст резервную копию оригинальных файлов и применит перевод, после чего перезапустите Antigravity. Проекты, чаты, ключи API и аккаунт Google не затрагиваются.
+
+При установке macOS может запросить у Terminal разрешение управлять другими приложениями. Если появится системный запрос, разрешите доступ. Если macOS заблокирует изменение приложения, откройте «Настройки системы → Конфиденциальность и безопасность → Управление приложениями» и разрешите Terminal.
+
+Установщик может запросить пароль учётной записи Mac с правами администратора для sudo. При вводе символы пароля не отображаются.
 
 ---
 
@@ -114,7 +118,7 @@ curl -fsSL https://raw.githubusercontent.com/SPIDIKSY/antigravity-ru/main/instal
 & ([scriptblock]::Create((irm https://raw.githubusercontent.com/SPIDIKSY/antigravity-ru/main/install.ps1))) -Uninstall
 ```
 
-**macOS Intel (Терминал):**
+**macOS (Intel и Apple Silicon, Терминал):**
 ```bash
 curl -fsSL https://raw.githubusercontent.com/SPIDIKSY/antigravity-ru/main/install.sh | bash -s -- --uninstall
 ```
@@ -136,7 +140,7 @@ powershell -ExecutionPolicy Bypass -Command "& ([scriptblock]::Create((Get-Conte
 powershell -ExecutionPolicy Bypass -Command "& ([scriptblock]::Create((Get-Content install.ps1 -Raw -Encoding UTF8))) -Install -NoKill"
 powershell -ExecutionPolicy Bypass -Command "& ([scriptblock]::Create((Get-Content install.ps1 -Raw -Encoding UTF8))) -Uninstall"
 
-# macOS Intel (Терминал)
+# macOS (Intel и Apple Silicon, Терминал)
 ./install.sh                    # интерактивное меню
 ./install.sh --install          # установка
 ./install.sh --install --no-kill # без закрытия Antigravity
