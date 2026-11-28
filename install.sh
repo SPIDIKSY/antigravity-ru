@@ -14,6 +14,12 @@ REQUESTED_DIR=""
 
 TEMP_DIR=""
 TEMP_ZIP=""
+INSTALL_STAGE=""
+ROLLBACK_ACTIVE=false
+OLD_BUNDLE_SAVED=false
+OLD_ASAR_SAVED=false
+NEW_BUNDLE_INSTALLED=false
+NEW_ASAR_INSTALLED=false
 SUDO_CMD=""
 
 # Цвета для терминала (отключаются при перенаправлении вывода)
@@ -30,6 +36,23 @@ else
 fi
 
 cleanup() {
+    if [ -n "$INSTALL_STAGE" ] && [ -d "$INSTALL_STAGE" ]; then
+        if [ "$ROLLBACK_ACTIVE" = true ]; then
+            if [ "$NEW_ASAR_INSTALLED" = true ]; then
+                run_priv rm -f "$TARGET_ASAR" 2>/dev/null || true
+            fi
+            if [ "$OLD_ASAR_SAVED" = true ] && [ -f "$INSTALL_STAGE/app.asar.previous" ]; then
+                run_priv mv "$INSTALL_STAGE/app.asar.previous" "$TARGET_ASAR" 2>/dev/null || true
+            fi
+            if [ "$NEW_BUNDLE_INSTALLED" = true ]; then
+                run_priv rm -rf "$TARGET_BUNDLE" 2>/dev/null || true
+            fi
+            if [ "$OLD_BUNDLE_SAVED" = true ] && [ -d "$INSTALL_STAGE/web_bundle_ru.previous" ]; then
+                run_priv mv "$INSTALL_STAGE/web_bundle_ru.previous" "$TARGET_BUNDLE" 2>/dev/null || true
+            fi
+        fi
+        run_priv rm -rf "$INSTALL_STAGE" 2>/dev/null || true
+    fi
     if [ -n "$TEMP_DIR" ] && [ -d "$TEMP_DIR" ]; then
         rm -rf "$TEMP_DIR" 2>/dev/null || true
     fi
@@ -426,6 +449,30 @@ fi
 ensure_write_access
 stop_antigravity
 
+SOURCE_ASAR="$SOURCE_DIR/resources/$CHOSEN_VERSION/app.asar"
+SOURCE_BUNDLE="$SOURCE_DIR/resources/$CHOSEN_VERSION/web_bundle_ru"
+if [ ! -s "$SOURCE_ASAR" ] || [ ! -d "$SOURCE_BUNDLE" ] || [ ! -r "$SOURCE_BUNDLE/index.html" ] || [ ! -r "$SOURCE_BUNDLE/main.js" ] || [ ! -r "$SOURCE_BUNDLE/i18n-ru.js" ]; then
+    printf "${C_RED}[-] В архиве отсутствуют читаемые файлы русификации для версии %s. Установка отменена.\n" "$CHOSEN_VERSION"
+    exit 1
+fi
+
+# Подготовить оба ресурса рядом с приложением до замены установленных файлов.
+INSTALL_STAGE="$RESOURCES_DIR/.antigravity_ru_stage_$$"
+if ! run_priv mkdir -p "$INSTALL_STAGE"; then
+    printf "${C_RED}[-] Не удалось создать временную папку установки.\n"
+    exit 1
+fi
+if ! run_priv cp -R "$SOURCE_BUNDLE" "$INSTALL_STAGE/web_bundle_ru" || ! run_priv cp -f "$SOURCE_ASAR" "$INSTALL_STAGE/app.asar"; then
+    printf "${C_RED}[-] Не удалось подготовить файлы установки в папке приложения. Проверьте свободное место и права доступа.\n"
+    exit 1
+fi
+if ! run_priv test -s "$INSTALL_STAGE/app.asar" || ! run_priv test -r "$INSTALL_STAGE/web_bundle_ru/index.html" || ! run_priv test -r "$INSTALL_STAGE/web_bundle_ru/main.js" || ! run_priv test -r "$INSTALL_STAGE/web_bundle_ru/i18n-ru.js"; then
+    printf "${C_RED}[-] Подготовленные файлы неполные или недоступны для чтения. Установка отменена.\n"
+    exit 1
+fi
+
+ROLLBACK_ACTIVE=true
+
 # 1. Резервная копия оригинального ядра и подписи Google
 IS_CLEAN=false
 if [ -f "$TARGET_ASAR" ] && ! LC_ALL=C grep -F -q "web_bundle_ru" "$TARGET_ASAR"; then
@@ -446,16 +493,44 @@ else
     printf "${C_YELLOW}[!] Внимание: текущий app.asar уже модифицирован, а резервная копия отсутствует. Откат будет невозможен.${C_RESET}\n"
 fi
 
-# 2. Копирование интерфейсного бандла web_bundle_ru
-printf "${C_CYAN}[*] Копирование языкового бандла (web_bundle_ru для %s)...${C_RESET}\n" "$CHOSEN_VERSION"
-if [ -d "$TARGET_BUNDLE" ]; then
-    run_priv rm -rf "$TARGET_BUNDLE"
+# 2. Поменять языковой бандл и ядро только после проверки обеих копий.
+printf "${C_CYAN}[*] Установка файлов русификации (версия %s)...${C_RESET}\n" "$CHOSEN_VERSION"
+if [ -e "$TARGET_BUNDLE" ]; then
+    if ! run_priv mv "$TARGET_BUNDLE" "$INSTALL_STAGE/web_bundle_ru.previous"; then
+        printf "${C_RED}[-] Не удалось сохранить текущий языковой бандл. Установка отменена.\n"
+        exit 1
+    fi
+    OLD_BUNDLE_SAVED=true
 fi
-run_priv cp -R "$SOURCE_DIR/resources/$CHOSEN_VERSION/web_bundle_ru" "$TARGET_BUNDLE"
+if [ -e "$TARGET_ASAR" ]; then
+    if ! run_priv mv "$TARGET_ASAR" "$INSTALL_STAGE/app.asar.previous"; then
+        printf "${C_RED}[-] Не удалось сохранить текущий app.asar. Установка отменена.\n"
+        exit 1
+    fi
+    OLD_ASAR_SAVED=true
+fi
+if ! run_priv mv "$INSTALL_STAGE/web_bundle_ru" "$TARGET_BUNDLE"; then
+    printf "${C_RED}[-] Не удалось установить web_bundle_ru. Предыдущие файлы будут восстановлены.\n"
+    exit 1
+fi
+NEW_BUNDLE_INSTALLED=true
+if ! run_priv mv "$INSTALL_STAGE/app.asar" "$TARGET_ASAR"; then
+    printf "${C_RED}[-] Не удалось установить app.asar. Предыдущие файлы будут восстановлены.\n"
+    exit 1
+fi
+NEW_ASAR_INSTALLED=true
 
-# 3. Копирование русифицированного app.asar
-printf "${C_CYAN}[*] Установка локализованного ядра Electron (app.asar для %s)...${C_RESET}\n" "$CHOSEN_VERSION"
-run_priv cp -f "$SOURCE_DIR/resources/$CHOSEN_VERSION/app.asar" "$TARGET_ASAR"
+if ! run_priv test -s "$TARGET_ASAR" || ! run_priv test -r "$TARGET_BUNDLE/index.html" || ! run_priv test -r "$TARGET_BUNDLE/main.js" || ! run_priv test -r "$TARGET_BUNDLE/i18n-ru.js"; then
+    printf "${C_RED}[-] После установки файлы не прошли проверку чтения. Предыдущие файлы будут восстановлены.\n"
+    exit 1
+fi
+
+ROLLBACK_ACTIVE=false
+if ! run_priv rm -rf "$INSTALL_STAGE"; then
+    printf "${C_RED}[-] Не удалось удалить временные файлы установки.\n"
+    exit 1
+fi
+INSTALL_STAGE=""
 
 # 4. Обновление ElectronAsarIntegrity в Info.plist (SHA-256 JSON-заголовка app.asar)
 if /usr/libexec/PlistBuddy -c "Print :ElectronAsarIntegrity:Resources/app.asar:hash" "$INFO_PLIST" >/dev/null 2>&1; then
