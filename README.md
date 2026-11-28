@@ -4,7 +4,7 @@
 
 **Полный перевод Antigravity 2 для Windows и macOS (Intel) в одну команду.**
 
-[![Antigravity](https://img.shields.io/badge/Antigravity-2.35.0-6366f1?style=for-the-badge&logo=google&logoColor=white)](https://github.com/SPIDIKSY/antigravity-ru)
+[![Antigravity](https://img.shields.io/badge/Antigravity-2.36.0-6366f1?style=for-the-badge&logo=google&logoColor=white)](https://github.com/SPIDIKSY/antigravity-ru)
 [![Platform](https://img.shields.io/badge/Windows%20%7C%20macOS%20Intel-0078D6?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/SPIDIKSY/antigravity-ru)
 [![License](https://img.shields.io/badge/MIT-License-f59e0b?style=for-the-badge)](https://github.com/SPIDIKSY/antigravity-ru/blob/main/LICENSE)
 
@@ -19,8 +19,9 @@
 <summary><b>Поддерживаемые версии и принудительная установка</b></summary>
 <br>
 
-Поддерживаются версии: `2.35.0`, `2.34.0`, `2.33.0`, `2.32.1`, `2.31.2`, `2.31.0`, `2.29.1`, `2.29.0`, `2.28.0`, `2.26.0`, `2.25.0`.  
-Установщик сам определяет установленную версию. Если у вас другая версия — поставьте набор `2.35.0` принудительно (на свой риск):
+Поддерживаются версии: `2.36.0`, `2.35.0`, `2.34.0`, `2.33.0`, `2.32.1`, `2.31.2`, `2.31.0`, `2.29.1`, `2.29.0`, `2.28.0`, `2.26.0`, `2.25.0`.
+
+Установщик сам определяет установленную версию. Если её нет в списке, откройте консоль, скопируйте подходящую команду ниже целиком, вставьте и нажмите Enter. Будет установлен самый новый набор (2.36.0); при несовпадении версий приложение может работать неправильно:
 
 - **Windows (PowerShell):**
   ```powershell

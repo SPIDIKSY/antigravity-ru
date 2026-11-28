@@ -20,7 +20,7 @@ param(
 )
 
 # Поддерживаемые версии Antigravity, для которых подготовлены файлы в resources\<версия>\.
-$SupportedVersions = @("2.25.0", "2.26.0", "2.28.0", "2.29.0", "2.29.1", "2.31.0", "2.31.2", "2.32.1", "2.33.0", "2.34.0", "2.35.0")
+$SupportedVersions = @("2.25.0", "2.26.0", "2.28.0", "2.29.0", "2.29.1", "2.31.0", "2.31.2", "2.32.1", "2.33.0", "2.34.0", "2.35.0", "2.36.0")
 
 $Host.UI.RawUI.WindowTitle = "Antigravity 2.0 - Русификатор"
 
@@ -171,8 +171,9 @@ if ($SupportedVersions -contains $AppVersion) {
     Write-Host "[!] У вас Antigravity $AppVersion, а русификатор поддерживает версии: $($SupportedVersions -join ', ')." -ForegroundColor Yellow
     if (-not $Force) {
         Write-Host "[-] Установка отменена: файлы от другой версии могут сломать приложение." -ForegroundColor Red
-        Write-Host "    Обновите Antigravity или запустите установку с параметром -Force:" -ForegroundColor White
+        Write-Host "    Скопируйте команду целиком, вставьте её в PowerShell и нажмите Enter:" -ForegroundColor White
         Write-Host "    & ([scriptblock]::Create((irm https://raw.githubusercontent.com/SPIDIKSY/antigravity-ru/main/install.ps1))) -Force" -ForegroundColor Gray
+        Write-Host "    Она установит набор для $($SupportedVersions[$SupportedVersions.Count - 1]); при несовпадении версий приложение может работать неправильно." -ForegroundColor Yellow
         return
     }
     $ChosenVersion = $SupportedVersions[$SupportedVersions.Count - 1]

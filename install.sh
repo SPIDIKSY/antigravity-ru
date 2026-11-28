@@ -4,7 +4,7 @@
 
 set -u
 
-SUPPORTED_VERSIONS=("2.25.0" "2.26.0" "2.28.0" "2.29.0" "2.29.1" "2.31.0" "2.31.2" "2.32.1" "2.33.0" "2.34.0" "2.35.0")
+SUPPORTED_VERSIONS=("2.25.0" "2.26.0" "2.28.0" "2.29.0" "2.29.1" "2.31.0" "2.31.2" "2.32.1" "2.33.0" "2.34.0" "2.35.0" "2.36.0")
 
 INSTALL_MODE=false
 UNINSTALL_MODE=false
@@ -48,7 +48,7 @@ print_usage() {
   --install, -Install       Установить русификацию
   --uninstall, -Uninstall   Удалить русификацию и вернуть оригинал
   --no-kill, -NoKill        Не закрывать запущенный Antigravity автоматически
-  --force, -Force           Установить самую новую локализацию при несовпадении версии
+  --force, -Force           Установить самый новый набор, даже если версия приложения не совпадает
   --app-dir, -AppDir <путь> Путь к Antigravity.app или папке с ним
   -h, --help                Показать справку
 EOF
@@ -362,8 +362,9 @@ if [ -z "$CHOSEN_VERSION" ]; then
     printf "${C_YELLOW}[!] У вас Antigravity %s, а русификатор поддерживает версии: %s.${C_RESET}\n" "$APP_VERSION" "${SUPPORTED_VERSIONS[*]}"
     if [ "$FORCE" = false ]; then
         printf "${C_RED}[-] Установка отменена: файлы от другой версии могут сломать приложение.${C_RESET}\n"
-        printf "${C_WHITE}    Обновите Antigravity или запустите установку с параметром --force:${C_RESET}\n"
+        printf "${C_WHITE}    Скопируйте команду целиком, вставьте её в Терминал и нажмите Enter:${C_RESET}\n"
         printf "${C_GRAY}    curl -fsSL https://raw.githubusercontent.com/SPIDIKSY/antigravity-ru/main/install.sh | bash -s -- --force${C_RESET}\n"
+        printf "${C_YELLOW}    Будет установлен самый новый набор; при несовпадении версий приложение может работать неправильно.${C_RESET}\n"
         exit 1
     fi
     CHOSEN_VERSION="${SUPPORTED_VERSIONS[${#SUPPORTED_VERSIONS[@]}-1]}"
