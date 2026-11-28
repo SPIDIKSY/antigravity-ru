@@ -451,7 +451,7 @@ stop_antigravity
 
 SOURCE_ASAR="$SOURCE_DIR/resources/$CHOSEN_VERSION/app.asar"
 SOURCE_BUNDLE="$SOURCE_DIR/resources/$CHOSEN_VERSION/web_bundle_ru"
-if [ ! -s "$SOURCE_ASAR" ] || [ ! -d "$SOURCE_BUNDLE" ] || [ ! -r "$SOURCE_BUNDLE/index.html" ] || [ ! -r "$SOURCE_BUNDLE/main.js" ] || [ ! -r "$SOURCE_BUNDLE/i18n-ru.js" ]; then
+if [ ! -s "$SOURCE_ASAR" ] || [ ! -r "$SOURCE_ASAR" ] || [ ! -d "$SOURCE_BUNDLE" ] || [ ! -r "$SOURCE_BUNDLE/index.html" ] || [ ! -r "$SOURCE_BUNDLE/main.js" ] || [ ! -r "$SOURCE_BUNDLE/i18n-ru.js" ]; then
     printf "${C_RED}[-] В архиве отсутствуют читаемые файлы русификации для версии %s. Установка отменена.\n" "$CHOSEN_VERSION"
     exit 1
 fi
