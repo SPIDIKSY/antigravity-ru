@@ -14,6 +14,7 @@ REQUESTED_DIR=""
 
 TEMP_DIR=""
 TEMP_ZIP=""
+LOG_FILE=""
 INSTALL_STAGE=""
 ROLLBACK_ACTIVE=false
 OLD_BUNDLE_SAVED=false
@@ -50,6 +51,12 @@ cleanup() {
             if [ "$OLD_BUNDLE_SAVED" = true ] && [ -d "$INSTALL_STAGE/web_bundle_ru.previous" ]; then
                 run_priv mv "$INSTALL_STAGE/web_bundle_ru.previous" "$TARGET_BUNDLE" 2>/dev/null || true
             fi
+            if [ -f "$INSTALL_STAGE/Info.plist.previous" ]; then
+                run_priv cp -pf "$INSTALL_STAGE/Info.plist.previous" "$INFO_PLIST" 2>/dev/null || true
+            fi
+            if [ -f "$INSTALL_STAGE/CodeResources.previous" ]; then
+                run_priv cp -pf "$INSTALL_STAGE/CodeResources.previous" "$CODE_RESOURCES" 2>/dev/null || true
+            fi
         fi
         run_priv rm -rf "$INSTALL_STAGE" 2>/dev/null || true
     fi
@@ -60,7 +67,15 @@ cleanup() {
         rm -f "$TEMP_ZIP" 2>/dev/null || true
     fi
 }
-trap cleanup EXIT
+
+finish() {
+    local exit_code=$?
+    cleanup
+    if [ "$exit_code" -ne 0 ] && [ -n "$LOG_FILE" ]; then
+        printf "${C_RED}[-] Установщик завершился с кодом %s. Журнал: %s${C_RESET}\n" "$exit_code" "$LOG_FILE" >&2
+    fi
+}
+trap finish EXIT
 
 print_usage() {
     cat <<EOF
@@ -125,6 +140,17 @@ if [ "$(uname -s)" != "Darwin" ]; then
     printf "    Для Windows используйте install.ps1.\n"
     exit 1
 fi
+
+LOG_DIR="${HOME:-/tmp}/Library/Logs"
+LOG_FILE="$LOG_DIR/antigravity-ru-install-$(date +%Y%m%d-%H%M%S).log"
+if ! mkdir -p "$LOG_DIR" 2>/dev/null || ! (umask 077; : > "$LOG_FILE"); then
+    LOG_FILE=""
+    printf "${C_YELLOW}[!] Не удалось создать файл журнала; вывод останется только в Терминале.${C_RESET}\n"
+else
+    exec > >(tee -a "$LOG_FILE") 2>&1
+    printf "${C_CYAN}[*] Журнал установки: %s${C_RESET}\n" "$LOG_FILE"
+fi
+printf "${C_CYAN}[*] Архитектура Mac: %s${C_RESET}\n" "$(uname -m)"
 
 normalize_app_bundle() {
     local p="$1"
@@ -224,6 +250,9 @@ if [ -z "$APP_BUNDLE" ]; then
 fi
 
 printf "${C_GREEN}[+] Найден Antigravity: %s${C_RESET}\n" "$APP_BUNDLE"
+if [ -f "$APP_BUNDLE/Contents/MacOS/Antigravity" ]; then
+    printf "${C_CYAN}[*] Исполняемый файл приложения: %s${C_RESET}\n" "$(/usr/bin/file "$APP_BUNDLE/Contents/MacOS/Antigravity" 2>&1)"
+fi
 
 # 2. Определение режима работы
 if [ "$INSTALL_MODE" = false ] && [ "$UNINSTALL_MODE" = false ]; then
@@ -326,38 +355,60 @@ if [ "$UNINSTALL_MODE" = true ]; then
 
     restored=false
     if [ -f "$BACKUP_DIR/app.asar" ]; then
-        run_priv cp -pf "$BACKUP_DIR/app.asar" "$TARGET_ASAR"
-        [ -f "$BACKUP_DIR/Info.plist" ] && run_priv cp -pf "$BACKUP_DIR/Info.plist" "$INFO_PLIST"
-        [ -f "$BACKUP_DIR/Antigravity" ] && run_priv cp -pf "$BACKUP_DIR/Antigravity" "$MAIN_BIN"
-        if [ -f "$BACKUP_DIR/CodeResources" ]; then
-            run_priv mkdir -p "$CONTENTS_DIR/_CodeSignature"
-            run_priv cp -pf "$BACKUP_DIR/CodeResources" "$CODE_RESOURCES"
+        if ! run_priv cp -pf "$BACKUP_DIR/app.asar" "$TARGET_ASAR" || ! run_priv cmp -s "$BACKUP_DIR/app.asar" "$TARGET_ASAR"; then
+            printf "${C_RED}[-] Не удалось восстановить и проверить app.asar. Резервная копия сохранена.${C_RESET}\n"
+            exit 1
         fi
-        run_priv rm -rf "$BACKUP_DIR"
+        if [ -f "$BACKUP_DIR/Info.plist" ] && ! run_priv cp -pf "$BACKUP_DIR/Info.plist" "$INFO_PLIST"; then
+            printf "${C_RED}[-] Не удалось восстановить Info.plist. Резервная копия сохранена.${C_RESET}\n"
+            exit 1
+        fi
+        if [ -f "$BACKUP_DIR/Antigravity" ] && ! run_priv cp -pf "$BACKUP_DIR/Antigravity" "$MAIN_BIN"; then
+            printf "${C_RED}[-] Не удалось восстановить исполняемый файл приложения. Резервная копия сохранена.${C_RESET}\n"
+            exit 1
+        fi
+        if [ -f "$BACKUP_DIR/CodeResources" ]; then
+            if ! run_priv mkdir -p "$CONTENTS_DIR/_CodeSignature" || ! run_priv cp -pf "$BACKUP_DIR/CodeResources" "$CODE_RESOURCES"; then
+                printf "${C_RED}[-] Не удалось восстановить CodeResources. Резервная копия сохранена.${C_RESET}\n"
+                exit 1
+            fi
+        fi
         restored=true
         printf "${C_GREEN}[+] Оригинальный app.asar и подпись Apple/Google полностью восстановлены.${C_RESET}\n"
     elif [ -f "$LEGACY_BACKUP_ASAR" ]; then
-        run_priv cp -pf "$LEGACY_BACKUP_ASAR" "$TARGET_ASAR"
+        if ! run_priv cp -pf "$LEGACY_BACKUP_ASAR" "$TARGET_ASAR" || ! run_priv cmp -s "$LEGACY_BACKUP_ASAR" "$TARGET_ASAR"; then
+            printf "${C_RED}[-] Не удалось восстановить и проверить app.asar из старой резервной копии.${C_RESET}\n"
+            exit 1
+        fi
         restored=true
         printf "${C_GREEN}[+] Оригинальный app.asar восстановлен из резервной копии.${C_RESET}\n"
     else
-        printf "${C_YELLOW}[!] Резервная копия не найдена. Файл app.asar не изменён.${C_RESET}\n"
+        printf "${C_RED}[-] Резервная копия app.asar не найдена. Ничего не удалено; откат не выполнен.${C_RESET}\n"
+        exit 1
     fi
 
     if [ -d "$TARGET_BUNDLE" ]; then
-        run_priv rm -rf "$TARGET_BUNDLE"
+        if ! run_priv rm -rf "$TARGET_BUNDLE" || [ -e "$TARGET_BUNDLE" ]; then
+            printf "${C_RED}[-] Не удалось удалить web_bundle_ru.${C_RESET}\n"
+            exit 1
+        fi
         printf "${C_GREEN}[+] Каталог web_bundle_ru удалён.${C_RESET}\n"
     fi
 
     if [ "$restored" = true ] && command -v codesign >/dev/null 2>&1; then
-        if run_priv codesign --verify --deep --strict "$APP_BUNDLE" >/dev/null 2>&1; then
-            printf "${C_GREEN}[+] Проверка цифровой подписи пройдена успешно.${C_RESET}\n"
+        if ! run_priv codesign --verify --deep --strict "$APP_BUNDLE"; then
+            printf "${C_RED}[-] Файлы восстановлены, но проверка подписи не прошла. Откат не подтверждён.${C_RESET}\n"
+            exit 1
         fi
+        printf "${C_GREEN}[+] Проверка цифровой подписи пройдена.${C_RESET}\n"
     fi
 
+    if [ -d "$BACKUP_DIR" ] && ! run_priv rm -rf "$BACKUP_DIR"; then
+        printf "${C_YELLOW}[!] Оригинал восстановлен, но не удалось удалить резервную копию.${C_RESET}\n"
+    fi
     echo ""
     printf "${C_GREEN}==========================================================${C_RESET}\n"
-    printf "${C_GREEN}  Оригинальная версия Antigravity 2.0 восстановлена!      ${C_RESET}\n"
+    printf "${C_GREEN}  Оригинальные файлы Antigravity восстановлены и проверены. ${C_RESET}\n"
     printf "${C_GREEN}==========================================================${C_RESET}\n"
     exit 0
 fi
@@ -372,6 +423,7 @@ if [ -z "$APP_VERSION" ]; then
     printf "${C_RED}[-] Не удалось определить версию Antigravity из Info.plist.${C_RESET}\n"
     exit 1
 fi
+printf "${C_CYAN}[*] Версия установленного приложения: %s${C_RESET}\n" "$APP_VERSION"
 
 CHOSEN_VERSION=""
 for v in "${SUPPORTED_VERSIONS[@]}"; do
@@ -393,6 +445,7 @@ if [ -z "$CHOSEN_VERSION" ]; then
     CHOSEN_VERSION="${SUPPORTED_VERSIONS[${#SUPPORTED_VERSIONS[@]}-1]}"
     printf "${C_YELLOW}[*] Параметр --force: устанавливается набор для %s (самый новый доступный).${C_RESET}\n" "$CHOSEN_VERSION"
 fi
+printf "${C_CYAN}[*] Выбран набор локализации: %s${C_RESET}\n" "$CHOSEN_VERSION"
 
 # Поиск локальных ресурсов или загрузка с GitHub
 SOURCE_DIR=""
@@ -415,6 +468,7 @@ if [ -z "$SOURCE_DIR" ]; then
     TEMP_ZIP="${TEMP_DIR}.zip"
 
     printf "${C_GRAY}[*] Загрузка пакета v%s из GitHub Releases...${C_RESET}\n" "$CHOSEN_VERSION"
+    printf "${C_GRAY}    URL: %s${C_RESET}\n" "$RELEASE_URL"
     if ! curl -fsSL "$RELEASE_URL" -o "$TEMP_ZIP" 2>/dev/null; then
         printf "${C_YELLOW}[!] Пакет релиза v%s не найден, загрузка полного репозитория...${C_RESET}\n" "$CHOSEN_VERSION"
         if ! curl -fsSL "$FALLBACK_ZIP_URL" -o "$TEMP_ZIP"; then
@@ -459,11 +513,27 @@ if [ ! -s "$SOURCE_ASAR" ] || [ ! -r "$SOURCE_ASAR" ] || [ ! -d "$SOURCE_BUNDLE"
     printf "${C_RED}[-] В архиве отсутствуют читаемые файлы русификации для версии %s. Установка отменена.\n" "$CHOSEN_VERSION"
     exit 1
 fi
+if ! LC_ALL=C grep -F -q -- "--web_bundle_path=" "$SOURCE_ASAR" || ! LC_ALL=C grep -F -q "web_bundle_ru" "$SOURCE_ASAR"; then
+    printf "${C_RED}[-] app.asar в пакете не содержит подключения web_bundle_ru. Этот пакет не подготовлен для русификации.${C_RESET}\n"
+    exit 1
+fi
+SOURCE_ASAR_SHA256="$(/usr/bin/shasum -a 256 "$SOURCE_ASAR" | awk '{print $1}')"
+if [ "${#SOURCE_ASAR_SHA256}" -ne 64 ]; then
+    printf "${C_RED}[-] Не удалось получить SHA-256 app.asar из пакета.${C_RESET}\n"
+    exit 1
+fi
+printf "${C_GREEN}[+] Пакет содержит подключение --web_bundle_path и файлы интерфейса.${C_RESET}\n"
+printf "${C_CYAN}[*] Источник файлов: %s${C_RESET}\n" "$SOURCE_DIR"
+printf "${C_CYAN}[*] SHA-256 app.asar из пакета: %s${C_RESET}\n" "$SOURCE_ASAR_SHA256"
 
 # Подготовить оба ресурса рядом с приложением до замены установленных файлов.
 INSTALL_STAGE="$RESOURCES_DIR/.antigravity_ru_stage_$$"
 if ! run_priv mkdir -p "$INSTALL_STAGE"; then
     printf "${C_RED}[-] Не удалось создать временную папку установки.\n"
+    exit 1
+fi
+if ! run_priv cp -pf "$INFO_PLIST" "$INSTALL_STAGE/Info.plist.previous" || { [ -f "$CODE_RESOURCES" ] && ! run_priv cp -pf "$CODE_RESOURCES" "$INSTALL_STAGE/CodeResources.previous"; }; then
+    printf "${C_RED}[-] Не удалось сохранить файлы подписи для безопасного отката. Установка остановлена.\n"
     exit 1
 fi
 if ! run_priv cp -R "$SOURCE_BUNDLE" "$INSTALL_STAGE/web_bundle_ru" || ! run_priv cp -f "$SOURCE_ASAR" "$INSTALL_STAGE/app.asar"; then
@@ -474,6 +544,11 @@ if ! run_priv test -s "$INSTALL_STAGE/app.asar" || ! run_priv test -r "$INSTALL_
     printf "${C_RED}[-] Подготовленные файлы неполные или недоступны для чтения. Установка отменена.\n"
     exit 1
 fi
+if ! run_priv cmp -s "$SOURCE_ASAR" "$INSTALL_STAGE/app.asar" || ! run_priv diff -qr "$SOURCE_BUNDLE" "$INSTALL_STAGE/web_bundle_ru"; then
+    printf "${C_RED}[-] Проверка временных копий не прошла: они отличаются от файлов пакета.${C_RESET}\n"
+    exit 1
+fi
+printf "${C_GREEN}[+] Проверка временных копий пройдена.${C_RESET}\n"
 
 ROLLBACK_ACTIVE=true
 
@@ -485,11 +560,22 @@ fi
 
 if [ "$IS_CLEAN" = true ]; then
     printf "${C_CYAN}[*] Обнаружен чистый оригинальный app.asar, сохранение резервной копии...${C_RESET}\n"
-    run_priv mkdir -p "$BACKUP_DIR"
-    run_priv cp -pf "$TARGET_ASAR" "$BACKUP_DIR/app.asar"
-    run_priv cp -pf "$INFO_PLIST" "$BACKUP_DIR/Info.plist"
-    [ -f "$MAIN_BIN" ] && run_priv cp -pf "$MAIN_BIN" "$BACKUP_DIR/Antigravity"
-    [ -f "$CODE_RESOURCES" ] && run_priv cp -pf "$CODE_RESOURCES" "$BACKUP_DIR/CodeResources"
+    if ! run_priv mkdir -p "$BACKUP_DIR" || ! run_priv cp -pf "$TARGET_ASAR" "$BACKUP_DIR/app.asar" || ! run_priv cp -pf "$INFO_PLIST" "$BACKUP_DIR/Info.plist"; then
+        printf "${C_RED}[-] Не удалось создать резервную копию ядра и Info.plist. Установка остановлена.${C_RESET}\n"
+        exit 1
+    fi
+    if ! run_priv cmp -s "$TARGET_ASAR" "$BACKUP_DIR/app.asar"; then
+        printf "${C_RED}[-] Резервная копия app.asar не совпадает с оригиналом. Установка остановлена.${C_RESET}\n"
+        exit 1
+    fi
+    if [ -f "$MAIN_BIN" ] && ! run_priv cp -pf "$MAIN_BIN" "$BACKUP_DIR/Antigravity"; then
+        printf "${C_RED}[-] Не удалось сохранить исполняемый файл в резервную копию. Установка остановлена.${C_RESET}\n"
+        exit 1
+    fi
+    if [ -f "$CODE_RESOURCES" ] && ! run_priv cp -pf "$CODE_RESOURCES" "$BACKUP_DIR/CodeResources"; then
+        printf "${C_RED}[-] Не удалось сохранить CodeResources в резервную копию. Установка остановлена.${C_RESET}\n"
+        exit 1
+    fi
     printf "${C_GREEN}[+] Резервная копия сохранена в .antigravity_ru_backup${C_RESET}\n"
 elif [ -f "$BACKUP_DIR/app.asar" ] || [ -f "$LEGACY_BACKUP_ASAR" ]; then
     printf "${C_GRAY}[*] Резервная копия уже существует.${C_RESET}\n"
@@ -528,13 +614,12 @@ if ! run_priv test -s "$TARGET_ASAR" || ! run_priv test -r "$TARGET_BUNDLE/index
     printf "${C_RED}[-] После установки файлы не прошли проверку чтения. Предыдущие файлы будут восстановлены.\n"
     exit 1
 fi
-
-ROLLBACK_ACTIVE=false
-if ! run_priv rm -rf "$INSTALL_STAGE"; then
-    printf "${C_RED}[-] Не удалось удалить временные файлы установки.\n"
+if ! run_priv cmp -s "$SOURCE_ASAR" "$TARGET_ASAR" || ! run_priv diff -qr "$SOURCE_BUNDLE" "$TARGET_BUNDLE" || ! LC_ALL=C grep -F -q -- "--web_bundle_path=" "$TARGET_ASAR" || ! LC_ALL=C grep -F -q "web_bundle_ru" "$TARGET_ASAR"; then
+    printf "${C_RED}[-] Проверка установленных файлов не прошла: файлы не совпадают с пакетом или подключение web_bundle_ru отсутствует.${C_RESET}\n"
     exit 1
 fi
-INSTALL_STAGE=""
+printf "${C_GREEN}[+] Проверка установленных файлов пройдена: содержимое совпадает с пакетом.${C_RESET}\n"
+printf "${C_CYAN}[*] SHA-256 установленного app.asar: %s${C_RESET}\n" "$(/usr/bin/shasum -a 256 "$TARGET_ASAR" | awk '{print $1}')"
 
 # 4. Обновление ElectronAsarIntegrity в Info.plist (SHA-256 JSON-заголовка app.asar)
 if /usr/libexec/PlistBuddy -c "Print :ElectronAsarIntegrity:Resources/app.asar:hash" "$INFO_PLIST" >/dev/null 2>&1; then
@@ -545,28 +630,58 @@ if /usr/libexec/PlistBuddy -c "Print :ElectronAsarIntegrity:Resources/app.asar:h
         read($fh, my $json, $jlen) == $jlen or die;
         print $json;
     ' "$TARGET_ASAR" | /usr/bin/shasum -a 256 | awk '{print $1}')"
-    if [ -n "$ASAR_HEADER_HASH" ]; then
-        run_priv /usr/libexec/PlistBuddy -c "Set :ElectronAsarIntegrity:Resources/app.asar:hash $ASAR_HEADER_HASH" "$INFO_PLIST"
+    case "$ASAR_HEADER_HASH" in
+        ""|*[!0-9a-fA-F]*)
+            printf "${C_RED}[-] Не удалось вычислить SHA-256 заголовка app.asar. Установка не подтверждена.${C_RESET}\n"
+            exit 1
+            ;;
+    esac
+    if [ "${#ASAR_HEADER_HASH}" -ne 64 ]; then
+        printf "${C_RED}[-] Получен некорректный SHA-256 заголовка app.asar. Установка не подтверждена.${C_RESET}\n"
+        exit 1
     fi
+    if ! run_priv /usr/libexec/PlistBuddy -c "Set :ElectronAsarIntegrity:Resources/app.asar:hash $ASAR_HEADER_HASH" "$INFO_PLIST"; then
+        printf "${C_RED}[-] Не удалось обновить ElectronAsarIntegrity в Info.plist. Установка не подтверждена.${C_RESET}\n"
+        exit 1
+    fi
+    if ! /usr/libexec/PlistBuddy -c "Print :ElectronAsarIntegrity:Resources/app.asar:hash" "$INFO_PLIST" | LC_ALL=C grep -F -q "$ASAR_HEADER_HASH"; then
+        printf "${C_RED}[-] Проверка ElectronAsarIntegrity в Info.plist не прошла. Установка не подтверждена.${C_RESET}\n"
+        exit 1
+    fi
+    printf "${C_GREEN}[+] ElectronAsarIntegrity обновлена и проверена.${C_RESET}\n"
+else
+    printf "${C_GRAY}[*] ElectronAsarIntegrity в Info.plist отсутствует; отдельное обновление хеша не требуется.${C_RESET}\n"
 fi
 
 # 5. Снятие карантина (если был) и переподпись бандла ad-hoc с сохранением entitlements
 printf "${C_CYAN}[*] Обновление цифровой подписи macOS (с сохранением прав доступа)...${C_RESET}\n"
 run_priv xattr -dr com.apple.quarantine "$APP_BUNDLE" >/dev/null 2>&1 || true
-if ! run_priv codesign --force --sign - --preserve-metadata=entitlements "$APP_BUNDLE" >/dev/null 2>&1; then
-    printf "${C_RED}[-] Ошибка переподписи %s. Возможно, приложение заблокировано или не хватает прав.${C_RESET}\n" "$APP_BUNDLE"
+if ! run_priv codesign --force --sign - --preserve-metadata=entitlements "$APP_BUNDLE"; then
+    printf "${C_RED}[-] Не удалось переподписать приложение. Установка не подтверждена.${C_RESET}\n"
     exit 1
 fi
 
-if ! run_priv codesign --verify --deep --strict "$APP_BUNDLE" >/dev/null 2>&1; then
-    printf "${C_YELLOW}[!] Предупреждение: codesign --verify сообщил о расхождении подписи.${C_RESET}\n"
+if ! run_priv codesign --verify --deep --strict "$APP_BUNDLE"; then
+    printf "${C_RED}[-] Проверка подписи не прошла. Файлы скопированы, но установку нельзя считать подтверждённой.${C_RESET}\n"
+    exit 1
 fi
+printf "${C_GREEN}[+] Проверка подписи приложения пройдена.${C_RESET}\n"
+
+ROLLBACK_ACTIVE=false
+if ! run_priv rm -rf "$INSTALL_STAGE"; then
+    printf "${C_RED}[-] Не удалось удалить временные файлы установки.\n"
+    exit 1
+fi
+INSTALL_STAGE=""
 
 echo ""
 printf "${C_GREEN}==========================================================${C_RESET}\n"
-printf "${C_GREEN}  Русификация Antigravity 2.0 (набор v%s) установлена!  ${C_RESET}\n" "$CHOSEN_VERSION"
+printf "${C_GREEN}  Файлы перевода (набор v%s) скопированы и проверены.  ${C_RESET}\n" "$CHOSEN_VERSION"
 printf "${C_GREEN}==========================================================${C_RESET}\n"
 printf "${C_WHITE}• Все ваши проекты, чаты, сессии и ключи полностью сохранены.${C_RESET}\n"
-printf "${C_WHITE}• Запустите Antigravity, чтобы начать работу на русском!${C_RESET}\n"
+printf "${C_WHITE}• Запустите Antigravity: установщик проверил файлы, но не проверяет язык окна приложения.${C_RESET}\n"
 printf "${C_GRAY}• Для отката запустите скрипт с параметром --uninstall${C_RESET}\n"
+if [ -n "$LOG_FILE" ]; then
+    printf "${C_GRAY}• Если перевод не появился, отправьте журнал: %s${C_RESET}\n" "$LOG_FILE"
+fi
 echo ""
