@@ -344,6 +344,10 @@ stop_antigravity() {
             sleep 1
         fi
     fi
+    if pgrep -x "Antigravity" >/dev/null 2>&1; then
+        printf "${C_RED}[-] Antigravity не закрылся. Установка отменена, закройте приложение вручную и повторите запуск.${C_RESET}\n"
+        return 1
+    fi
 }
 
 # --- РЕЖИМ УДАЛЕНИЯ (ВОССТАНОВЛЕНИЕ ОРИГИНАЛА) ---
@@ -351,7 +355,9 @@ if [ "$UNINSTALL_MODE" = true ]; then
     echo ""
     printf "${C_CYAN}[*] Восстановление оригинальной версии от Google...${C_RESET}\n"
     ensure_write_access
-    stop_antigravity
+    if ! stop_antigravity; then
+        exit 1
+    fi
 
     restored=false
     if [ -f "$BACKUP_DIR/app.asar" ]; then
@@ -505,7 +511,9 @@ printf "${C_GRAY}    Разрешите доступ в системном за�
 printf "${C_GRAY}    Может понадобиться пароль администратора Mac для sudo; вводимые символы не отображаются.${C_RESET}\n"
 
 ensure_write_access
-stop_antigravity
+if ! stop_antigravity; then
+    exit 1
+fi
 
 SOURCE_ASAR="$SOURCE_DIR/resources/$CHOSEN_VERSION/app.asar"
 SOURCE_BUNDLE="$SOURCE_DIR/resources/$CHOSEN_VERSION/web_bundle_ru"
@@ -674,12 +682,23 @@ if ! run_priv rm -rf "$INSTALL_STAGE"; then
 fi
 INSTALL_STAGE=""
 
+if [ "$NO_KILL" = true ]; then
+    printf "${C_YELLOW}[!] Antigravity не перезапущен из-за параметра --no-kill. Откройте его вручную после закрытия старого окна.${C_RESET}\n"
+else
+    printf "${C_CYAN}[*] Запуск установленной копии Antigravity: %s${C_RESET}\n" "$APP_BUNDLE"
+    if ! open "$APP_BUNDLE"; then
+        printf "${C_RED}[-] Файлы установлены, но macOS не смогла открыть Antigravity из указанной папки.${C_RESET}\n"
+        exit 1
+    fi
+    printf "${C_GREEN}[+] Запрос на запуск установленной копии отправлен macOS.${C_RESET}\n"
+fi
+
 echo ""
 printf "${C_GREEN}==========================================================${C_RESET}\n"
 printf "${C_GREEN}  Файлы перевода (набор v%s) скопированы и проверены.  ${C_RESET}\n" "$CHOSEN_VERSION"
 printf "${C_GREEN}==========================================================${C_RESET}\n"
 printf "${C_WHITE}• Все ваши проекты, чаты, сессии и ключи полностью сохранены.${C_RESET}\n"
-printf "${C_WHITE}• Запустите Antigravity: установщик проверил файлы, но не проверяет язык окна приложения.${C_RESET}\n"
+printf "${C_WHITE}• Проверьте язык в открывшемся окне Antigravity.${C_RESET}\n"
 printf "${C_GRAY}• Для отката запустите скрипт с параметром --uninstall${C_RESET}\n"
 if [ -n "$LOG_FILE" ]; then
     printf "${C_GRAY}• Если перевод не появился, отправьте журнал: %s${C_RESET}\n" "$LOG_FILE"
